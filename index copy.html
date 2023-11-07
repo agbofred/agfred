@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .top-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    overflow: hidden;
+  }
+
+  .top-menu a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  .top-menu a:hover {
+    background-color: #555;
+  }
+  .content {
+    padding-top: 60px; /* Add padding to account for fixed menu */
+    padding-left: 30px;
+    text-align: justify;
+  }
+  .two-column-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .column {
+    flex: 1;
+    padding: 20px;
+    border: 0px solid #ccc;
+    box-sizing: border-box;
+  }
+  .custom-list {
+    list-style:circle; /* Remove default bullets */
+    padding-left: 0; /* Remove default padding */
+    text-align: justify;
+  }
+
+  .custom-list li {
+    margin-bottom: 10px; /* Add spacing between items */
+  }
+</style>
+<title>Fred's page</title>
+</head>
+<body>
+  <div class="top-menu">
+    <a href="index.html">Home</a>
+    <a href="aboutme.html">About me</a>
+    <!--<a href="#services">Services</a>
+    <a href="#contact">Contact</a> -->
+  </div>
+
+  <div class="content">
+    <h1>Welcome to my website</h1>
+    <div class="two-column-container">
+        <div class="column">
+            <img src="images/fredprofile.jpg" width="200">
+            <p style="padding-left: 10px;"> <strong> Fred Agbo</strong>, PhD <em>(he/him)</em>
+            <br>Assistant Professor of Computer Science 
+            <br> Willamette University, Salem OR, 97301, USA <br>
+            fjagbo at willamette.edu 
+
+            </p>
+        </div>
+        <div class="column">
+            <h2>Education</h2>
+            <ul class="custom-list">
+                <li>PhD in Computer Science, University of Eastern Finland - 2022</li>
+                <li>MSc in Computer Science, University of Ilorin - 2017</li>
+                <li>BSc in Computer Science, University of Jos - 2013</li>
+            </ul>
+            
+        </div>
+    </div>
+    <hr>
+    <h2>My Courses</h2>
+    <div>
+        
+    </div>
+    <hr>
+    <h2>My Research (coming soon)</h2>
+    <div>
+
+        
+    </div>
+    <hr>
+    <p> </p>
+  </div>
+</body>
+</html>
