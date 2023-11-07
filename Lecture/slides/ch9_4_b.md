@@ -379,3 +379,27 @@ class Employee:
 		self.salary = new_salary
 ```
 
+## Maps and Dictionaries
+- A common form of information associates pairs of data values
+	- Commonly called a _map_ in computer science
+	- Python calls such a structure a _dictionary_
+- A dictionary associates two different values:
+	- A simple value called the _key_, which is often a string but doesn't need to be
+	- A larger and more complex object called the _value_
+- This idea of associating pairs of values is exhibited all over in the real world
+	- Actual dictionaries! The words are the keys, the definitions the values.
+	- Web addresses! Keys are the urls, the values are the webpage contents.
+
+## Creating Dictionaries
+- Python dictionaries use squiggly brackets ```{}``` to enclose their contents
+- Can create an empty dictionary by providing no key-value pairs:
+  ```python
+  empty_dict = {}
+  ```
+- If creating a dictionary with key-value pairs
+	- Keys are separated from values with a colon ```:```
+	- Pairs are separated by a comma ```,```
+  ```python
+  generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}
+  ```
+
