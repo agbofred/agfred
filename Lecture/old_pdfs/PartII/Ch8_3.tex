@@ -1,0 +1,286 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics, multicol}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Methods of Playing Nice}
+\author{Jed Rembold}
+\date{March 30, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item HW8 is out! But due date postponed.
+				\item You should be able to do everything on it after today though regardless.
+			\end{itemize}
+		\item We'll talk about the upcoming midterm here in a moment
+		\item Friday is the last day to choose C/NC for any class
+			\begin{itemize}
+				\item If you want and have questions/concerns, I am happy to chat about it with you
+			\end{itemize}
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Midterm Plans}
+	\medskip
+	\begin{itemize}
+		\item Given that people are now scattered across the nation (and globe), it doesn't make much sense to try to hold a synchronized test
+		\item I still need feedback about what you have learned, so we are switching to a mini-project model
+		\item Deliverables due on Friday night:
+			\begin{itemize}
+				\item 1-2 python scripts of your own devising that do something concrete (ie. they have a specific objective that they deliver on)
+				\item A short write-up for each script.
+			\end{itemize}
+		\item I'm pushing back HW8 to be due at the same time as HW9 next week.
+			\begin{itemize}
+				\item HW9 was going to be short anyways, so it should not add a huge burden on your time.
+				\item HW8 is already posted of course, so if you finish the midterm project up early you can certainly start (or continue) working on it.
+			\end{itemize}
+			
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Scripts}
+	\begin{itemize}
+		\item There are 50+ learning objectives on the study guide. Your scripts combined should check off at least 20 different objectives.
+		\item You can maybe achieve all that in one script, which is fine, but aim for two. No more than two scripts though, you should be able to fit everything into 2 scripts without difficulty.
+		\item Your scripts can solve problems similar to those we've looked at already this semester, but the problem they are solving should be a new one.
+		\item You are welcome to use the internet, your book, etc for help, but your work should be your own, and you are to work independently.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Explanation Writeups}
+	\begin{itemize}
+		\item For each script, include a separate short write-up about that script. The write-up should include:
+			\begin{itemize}
+				\item A description of what problem the script was attempting to solve
+				\item A list of what learning objectives the script fulfills
+				\item For each learning objective, include the line number(s) where that objective is first fulfilled
+			\end{itemize}
+			
+	\end{itemize}
+	
+\end{frame}
+
+
+
+
+%\begin{frame}{Test Results}
+	%\begin{columns}
+		%\column{0.5\textwidth}
+		%\begin{center}
+			%\begin{tikzpicture}
+				%\begin{axis}[
+					%ymin=0,
+					%ytick = 0,
+					%xlabel = Raw Score,
+					%]
+				%\addplot [
+					%fill=Orange,
+					%draw=Orange!50!black,
+					%hist={bins=4,density}
+				%] table [y index=0] {Data/Test1Results.csv};
+				%\addplot [ultra thick,Blue] gnuplot [raw gnuplot] {plot 'Data/Test1Results.csv' u 1:(1./14.) smooth kdensity};
+				%\end{axis}
+			%\end{tikzpicture}
+		%\end{center}
+		%\column{0.5\textwidth}
+		%\begin{itemize}
+			%\item High: 104\%
+			%\item Mean: 85\%
+			%\item Std: 12.7\%
+		%\end{itemize}
+	%\end{columns}
+%\end{frame}
+
+%\begin{frame}{Test Discussion}e
+	%\begin{itemize}
+		%\item Rapidly going over the test and what I was looking for on each problem
+		%\item Bring any issues to me along with your test to my office hours
+			%\begin{itemize}
+				%\item If you feel strongly that I missed something you feel you should have gotten points for
+				%\item If I lost the ability to add when totaling your score
+				%\item Or if anything else looks amiss
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\begin{columns}
+		\column{0.4\textwidth}
+		The code block to the right starts defining a class. Only 1 of the below options for defining the \pyi{increment} method will work. Which one?
+		\column{0.6\textwidth}
+		\begin{pythoncode}
+			class BestCounter:
+				def __init__(self, start):
+					self.counter = start
+		\end{pythoncode}
+	\end{columns}
+	\begin{multicols}{2}
+	\begin{poll}
+		\footnotesize
+	\item	
+		\begin{pythoncode}
+			def increment(self,value):
+				counter += value
+		\end{pythoncode}
+
+	\item
+		\begin{pythoncode}
+			def increment(value):
+				counter += self.value
+		\end{pythoncode}
+
+	\item
+		\begin{pythoncode}
+			def increment(self,value):
+				self.counter += self.value
+		\end{pythoncode}
+
+	\item
+		\begin{pythoncode}
+			def increment(self,value):
+				self.counter += value
+		\end{pythoncode}
+	\end{poll}
+	\end{multicols}
+	\exsol{D}
+	
+	
+\end{frame}
+
+
+
+
+\begin{frame}[fragile]{Accessing and Using Methods}
+	\begin{itemize}
+		\item After definition, you have two main ways to access and use the method
+	\end{itemize}
+		\begin{itemize}
+			\item \alert{Dot Notation (Conventional):}
+			\begin{pythoncode}
+				c = Coordinate(3,4)
+				O = Coordinate(0,0)
+				print(c.distance(O))
+			\end{pythoncode}
+			\item \alert{Function Notation:}
+				\begin{pythoncode}
+					c = Coordinate(3,4)
+					O = Coordinate(0,0)
+					print(Coordinate.distance(c,O))
+				\end{pythoncode}
+		\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Representation}
+	\begin{itemize}
+		\item Printing out an object that you just created as an instance of a class will look ugly
+			\begin{pythoncode}[style=output]
+				>>> c = Coordinate(3,4)
+				>>> print(c)
+				<__main__.Coordinate object at 0x7f942ba13550>}
+			\end{pythoncode}
+		\item Can provide methods to teach the interpreter how your object should be represented or displayed when printed
+			\begin{itemize}
+				\item Special methods, so have double underscores before and after
+				\begin{itemize}
+					\item \pyi{__str__}: Informal string representation
+					\item \pyi{__repr__}: Formal string representation
+				\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{A question of formality}
+	\begin{itemize}
+		\item Formal String representation
+			\begin{itemize}
+				\item Commonly used in debugging
+				\item Needs to contain all the information about the class in unambigous way
+				\item ``What information would I need to exactly replicate this object?''
+			\end{itemize}
+		\item Informal String representation
+			\begin{itemize}
+				\item What is printed or converted to with \pyi{str()}
+				\item Goal is to be easily readable by humans
+				\item If not defined, \pyi{print} will fall back on using \pyi{repr()}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Emulating buildin functions}
+	\begin{itemize}
+		\item When I add two strings together, they really get concatenated.
+			\begin{itemize}
+				\item Why?
+			\end{itemize}
+		\item For any defined type (class), you can specify or ``override'' how Python's default functions interact with objects of that type
+			\begin{itemize}
+				\item Basically any math or boolean operation can be specified
+				\item All use the leading and following double underscores
+				\item Reverse versions of many exist
+			\end{itemize}
+		\item Examples:
+			\begin{itemize}
+				\item \pyi{A + B == A.__add__(B)}
+				\item \pyi{A * B == A.__mul__(B)}
+				\item \pyi{B * A == A.__rmul__(B)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Special Methods}
+	\begin{center}
+		\begin{tabular}{crc}
+			\toprule
+			Multiplication & \pyi{A * B} & \pyi{__mul__} \\
+			Addition & \pyi{A + B} & \pyi{__add__} \\
+			Subtraction & \pyi{A - B} & \pyi{__sub__}\\
+			Float Division & \pyi{A / B} & \pyi{__truediv__}\\
+			Int Division & \pyi{A // B} & \pyi{__floordiv__}\\
+			Raise to power & \pyi{A ** B} & \pyi{__pow__}\\
+			Equals & \pyi{A == B} & \pyi{__eq__} \\
+			Not equals & \pyi{A != B} & \pyi{__ne__}\\
+			\bottomrule
+		\end{tabular}
+	\end{center}
+	\vspace{5mm}
+	More exist and can be found \link{https://docs.python.org/3.3/reference/datamodel.html\#emulating-numeric-types}{here}.
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

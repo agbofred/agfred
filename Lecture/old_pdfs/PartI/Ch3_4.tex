@@ -1,0 +1,185 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage[]{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Chop in 10, throw away half}
+\author{Jed Rembold}
+\date{February 14, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Happy Valentines Day!
+		\item Homework 3 due tonight!
+		\item I'll aim to get Homework 4 posted sometime tomorrow or early Sunday
+		\item Will be wrapping up with Chapter 3 on Monday, maybe starting a smidge of Chapter 4
+		\item No lab today! I'll be sticking around for a while if you just need to get work done on the homework though!
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Review Question}
+	The height of a particular thrown ball is given by
+	\[h = 2 + 10t - \frac{1}{2}gt^2\]
+	where $g=9.81$. Suppose you wanted to solve the time at which the ball struck the ground ($h=0$), with an $\varepsilon$ value of \SI{0.1}{\meter}. Which of the below potential solutions would meet your criteria?
+	\begin{poll}
+	\item \SI{2.14}{\s}
+	\item \SI{2.22}{\s}
+	\item \SI{2.26}{\s}
+	\item \SI{2.30}{\s}
+	\end{poll}
+	\exsol{\SI{2.22}{\s}}
+\end{frame}
+
+%\begin{frame}{Number Game Guessing Example}
+	%Let's write a program to try to guess an unknown number between 1 and 100. Essentially, let's write a program to play the game you wrote on HW2.
+%\end{frame}
+
+%\begin{frame}{Cube root of 27 (with Bisection!)}
+	%Let's implement a bisection search in our program to find the cube root of 27. How does the number of iterations required to find an answer compare to what we had with exhaustive enumeration?
+%\end{frame}
+
+\begin{frame}{Multiplying Rabbits}
+	Suppose we have a breed of rabbit where each pairing of rabbits produces 4 offspring each year. We also know a certain constant percentage of the rabbit population dies each year due to predators or natural causes. If we start with 10 rabbits and have 1000 rabbits 10 years later, what is the yearly rabbit death percentage? We are ok with an error of $\pm 2$ rabbits.
+\end{frame}
+
+\begin{frame}{Intersection of Two Lines on Interval}
+	Suppose you have two lines given by the equations:
+	\begin{align*}
+		y = Ax + B \\
+		y = Cx + D
+	\end{align*}
+	Write a program to return the intersection point of the two lines with an epsilon of 0.01 on the interval between 0 and 10. If no point is found or exists, print a message stating as much.
+\end{frame}
+
+\begin{frame}[fragile]{When \pyi{1 != 1}}
+	\begin{pythoncode}
+		x = 0
+		for i in range(10):
+			x += 0.1
+		if x == 1.0:
+			print('x is 1!')
+		else:
+			print('x is not 1!')
+	\end{pythoncode}
+	\pause
+	\begin{alertblock}{Crisis!}
+		What is happening to the computer's ability to do basic math?!
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}{10 Types of Numbers}
+	\begin{columns}
+		\column{0.5\textwidth}
+		\begin{block}{Decimal}
+			\begin{itemize}
+				\item Each digit represents different powers of 10
+					{\footnotesize
+						\[123 = (\num{1e2}) + (\num{2e1}) + (3\times10^0)\]
+					}
+				\item Sig Digit and Exponent:
+					{\footnotesize
+						\[5.62 = \num{562e-2} = (562, -2) \]
+					}
+			\end{itemize}
+		\end{block}
+		\column{0.5\textwidth}
+		\begin{block}{Binary}
+			\begin{itemize}
+				\item Each digit represents different powers of 2
+					{\footnotesize
+						\[101 = (1\times2^2) + (0\times2^1) + (1\times2^0)\]
+					}
+				\item Sig Digit and Exponent:
+					{\footnotesize
+						\[10100 = 20 = 5\times2^2 = (101,1)\]
+					}
+			\end{itemize}
+		\end{block}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Floating Binary}
+	\vspace{5mm}
+	\begin{itemize}
+		\item Say we want to convert the value $\tfrac{7}{8}$ to binary floating point. How would we do it?
+			\pause
+			\[\frac{7}{8} = \frac{7}{2^3} = 7\times2^{-3} = (111,-11)\]
+		\pause
+		\item But now how would we convert $0.1 = \tfrac{1}{10}$?
+			\pause
+			\[\frac{1}{10} = \frac{1}{2^3 + 2}\]
+			\pause
+			\begin{itemize}
+				\item We can't express the denominator nicely as a power of 2!
+				\item We have to resort to fractions that are close but have a perfect power of 2 in the denominator.
+					\begin{itemize}
+						\item $\tfrac{3}{32} = 0.09375$
+							\vspace{1mm}
+						\item $\tfrac{25}{256} = 0.09765625$
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Repercussions}
+	\begin{itemize}
+		\item Best we can do:
+			\[\frac{3602879701896397}{2^{55}} = 0.10000000000000000555111512312578270\]
+		\item When doing operations on these numbers, extra decimals get rounded off
+		\item Rounding errors mean you'll occasionally see values, close, but not exactly equal to what you would expect
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Floating Takeaways}
+	\begin{itemize}
+		\item You can't get around this sort of rounding error. It is intrinsic to how the computers work with numbers.
+		\item Be careful using \pyi{==} for number comparisons. Rounding might cause unexpected falsehoods!
+			\begin{itemize}
+				\item Far better to check if two numbers are within some small margin of one another
+			\end{itemize}
+		\item Rounding errors will usually average out between being too big or too little
+			\begin{itemize}
+				\item Means even after many calculations they should be small
+				\item Repeated calculations of certain types though accumulate errors in the same direction and cause decided issues.
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}{Convergence}
+	%\begin{center}
+		%\begin{tikzpicture}
+			%\begin{axis}[
+				%width = \textwidth,
+				%height = 7cm,
+				%xlabel = Iterations,
+				%ylabel = Distance from Target,
+				%legend style = {fill=BG, draw = Purple},
+				%legend pos = south east,
+				%grid = major,
+				%grid style = {dotted}
+				%]
+				%\addplot[Blue,mark=*] table[x=Iter, y=Exh, col sep=comma] {Data/Convergence.csv};
+				%\addplot[Orange,mark=*,sharp plot] table[x=Iter, y=Bis, col sep=comma] {Data/Convergence.csv};
+				%\legend{Exhaustive Enumeration, Bisection Search}
+			%\end{axis}
+		%\end{tikzpicture}
+	%\end{center}
+%\end{frame}
+
+
+
+
+\end{document}

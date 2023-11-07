@@ -1,0 +1,258 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+
+% NOTE TO SELF!!!!!!!!!!
+% Moving this lecture 1 day ahead of Newton-Raphson to better fit homework timelines
+
+%Preamble
+\title{Function over Form}
+\author{Jed Rembold}
+\date{February 17, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item I'm still grading HW3, sorry. Hoping to get scores send out by tonight
+				\item HW4 has been posted. You should be able to start looking at Problem 3 after today.
+			\end{itemize}
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Review Question}
+	How would the fraction $\tfrac{9}{16}$ be represented in binary floating point?
+	\begin{poll}
+	\item (1001, -100)
+	\item (111, -101)
+	\item (1111, -111)
+	\item (1100, 101)
+	\end{poll}
+	\exsol{(1001, -100)}
+\end{frame}
+
+%\begin{frame}{Review Question}
+	%In which of the below situations would using the Newton-Raphson approach to find a solution be potentially useful?
+	%\begin{poll}
+		%\item Finding an integer solution $a$ and $b$ for $a^2 + b^2 = 450$. 
+		%\item Finding two prime numbers that sum to 100
+		%\item Finding the square root of a number
+		%\item Finding the number of ways in which 5 chips can be drawn from a bag containing chips of 7 different colors
+	%\end{poll}
+%\end{frame}
+
+\begin{frame}{The Story So Far}
+	\begin{itemize}
+		\item We've already looked at
+			\begin{itemize}
+				\item numbers
+				\item variable assignments
+				\item input and output
+				\item comparisons
+				\item loops
+			\end{itemize}
+		\item This enough to be Turing complete!
+		\item What more do we want?
+			\begin{itemize}
+				\item Improved usability!
+					\begin{itemize}
+						\item Ability to reuse code
+						\item Ability to generalize code
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Function Objectives}
+	\vspace{5mm}
+	\begin{itemize}
+		\item<1-> Already familiar with a small host of built-in functions:
+			\begin{itemize}
+				\item \pyi{print}
+				\item \pyi{abs}
+				\item \pyi{len}
+				\item etc
+			\end{itemize}
+		\item<2-> You don't care what code happens when you run those, you care that they perform a particular task for you
+		\item<3-> You pass them some input (or inputs) and expect the expression to return some output (or outputs)
+			\begin{itemize}
+				\item Looks like: \texttt{<output> = function(<input>)}
+				\item \pyi{5 == abs(-5)}
+				\item \pyi{11 == len('long string')}
+			\end{itemize}
+		\item<4-> Would be very useful to be able to define our own functions
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Defining Functions}
+	\begin{itemize}[<+->]
+		\item We can define a new function like:
+			{\small
+				\begin{pythoncode}[moredelim={[is][\color{Blue}]{@}{@}}]
+					def @<name of function>@ (@<list of formal parameters>@):
+						@<body of function>@
+				\end{pythoncode}
+			}
+		\item Syntax: Starts with \pyi{def}, then function name, then parenthesis, then colon
+		\item Pieces:
+			\begin{itemize}
+				\item name of function: mandatory -- what you want the function to be called
+				\item list of formal parameters: optional -- potential parameters or ``inputs'' you want to pass to the function
+				\item body of function: mandatory -- whatever you want the function to do. May or may not include a \pyi{return} statement
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Varied Uses}
+	\vspace{5mm}
+	\begin{itemize}[<+->]
+		\item As a way to group code
+			\begin{pythoncode}
+				def print_stuff():
+					print('Stuff 1')
+					print('Stuff 2')
+			\end{pythoncode}
+		\item As a way to provide input to a group of code
+			\begin{pythoncode}
+				def print_mult_of_A(A):
+					print(A, 2*A, 3*A, 4*A, 5*A)
+			\end{pythoncode}
+		\item As a machine that takes some input and provides some output for later use
+			\begin{pythoncode}
+				def calc_year_savings(init_amt):
+					for i in range(12):
+						init_amt += init_amt*0.03/12
+					return init_amt
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Functional Vocab}
+	\begin{description}
+		\item[Formal Parameters:] The variable names used in the defining of the function which will be assigned to actual literals upon function call
+		\item[Actual Parameters or Arguments:] The numbers or other literals passed to the function which are assigned the formal parameter variable names
+		\item[Function Definition:] Where the function is actually defined, in terms of formal parameters
+		\item[Function Call (or Invocation):] Where the function is used in the code, with accompanying arguments passed to the function. 
+	\end{description}
+\end{frame}
+
+\begin{frame}[fragile]{The Flow}
+	\begin{columns}
+		\column{0.6\textwidth}
+		{\footnotesize
+			\begin{pythoncode}[numbers=left]
+			|def year_savings(init_amt, int_rate):|
+				for i in range(12):
+					init_amt *= (1+int_rate/12)
+				return init_amt
+
+			|amount = 100
+			rate = 0
+			while rate < 1:
+				print("Savings:", |
+					|year_savings(amount, rate))|
+				|rate += 0.05|
+
+			print('All done!')
+		\end{pythoncode}
+		}
+		\column{0.4\textwidth}
+		\begin{itemize}
+			\item<1,5> Function definition with formal parameters (1)
+			\item<2,5> Normal code (6-9)
+			\item<3,5> Function call with current \pyi{amount} and \pyi{rate} bound to formal parameters (9-10)
+				\begin{itemize}
+					\item Iterate across 12 months calculating compound interest (2-3)
+					\item Return final value (4)
+				\end{itemize}
+			\item<4,5> Resume main code block and increase rate (11)
+		\end{itemize}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Common Mistakes}
+	\begin{itemize}[<+->]
+		\item Make sure you have parentheses in your function definition, even if you are not supplying any parameters!
+		\item That colon and indenting your function code block are still mandatory, just like with \pyi{if} statements or loops
+		\item You do not need a \pyi{return} statement, the function will automatically return \pyi{None} if it reaches the end of the function code without encountering one
+		\item \pyi{return} statements will break out of the function code as soon as they are called, rejoining the main code flow.
+			\begin{itemize}
+				\item You can't return something midway through a function and then return more things later. It all has to be at once.
+				\item You can use this in certain situations as a clever \pyi{break} statement, getting you out of a loop earlier than you otherwise would
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Example: Summing Primes}
+	\begin{example}
+		Let's look at the problem where we'd like to find all the positive pairs of prime numbers that sum to 100. Here we'll define a function called \pyi{is_prime} to help us out and greatly simplify our code.
+	\end{example}
+\end{frame}
+
+%\begin{frame}[fragile]{The Word is Key}
+	%\vspace{5mm}
+	%\begin{itemize}[<+->]
+		%\item So far we have looked at a positional way to assign arguments to formal parameters
+			%\begin{itemize}
+				%\item The first argument to the first parameter, the second to the second, etc
+					%\begin{center}
+						%\begin{pythoncode}
+							%def func(first, second, third):
+								%print(first, second, third)
+
+							%func(1,2,3)
+							%func(2,6,4)
+						%\end{pythoncode}
+					%\end{center}
+			%\end{itemize}
+		%\item Can also write explicitly with keyword arguments!
+			%\begin{itemize}
+				%\item If you do so, the position no longer matters
+					%\begin{center}
+						%\begin{pythoncode}
+							%func(third=4, first=2, second=6)
+						%\end{pythoncode}
+					%\end{center}
+			%\end{itemize}
+		%\item \textcolor{Red}{All keyword arguments must come after any positional arguments!}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{Default Slide Title}
+	%\begin{itemize}[<+->]
+		%\item Can also specify default values for a formal parameter
+			%\begin{pythoncode}
+				%def func(name='Jed', age=34)
+					%print('My name is', name, 'and I am', age)
+			%\end{pythoncode}
+		%\item You then don't need to always provide that actual parameter
+		%\item If setting any parameters out of order though, you \alert{must} indicate them through keywords.
+			%\begin{pythoncode}
+				%func()
+				%func('Bob',25)
+				%func('Larry')
+				%func(age=68)
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+
+
+
+
+\end{document}
+

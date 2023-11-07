@@ -1,0 +1,9 @@
+[duration]
+60
+[start_time]
+10:20
+[font_size]
+24
+[notes]
+### 4
+Solution: \pyi {\{\['A','B'\]: \{1,2\}\}}

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold &amp; Fred Agbo">
+  <meta name="dcterms.date" content="2023-09-13">
+  <title>Testing Ranges</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Testing Ranges</h1>
+  <p class="author">Jed Rembold &amp; Fred Agbo</p>
+  <p class="date">September 13, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Problem Set 2 is posted and due on Tuesday next week <strong><em>at
+12 noon</em></strong>
+<ul>
+<li>Feedback for PS1 will be ready by tomorrow! Don’t just look at the
+scores (which could be quite good). <strong>Look at the
+comments</strong></li>
+</ul></li>
+<li>If you have just joined the course and not in section yet, see me
+after to class to fill out the form</li>
+<li>We will be concluding chapter 2 of the text today. Hope eveyone is
+reading the text along</li>
+<li>Polling continues today! Remember to use this link <a
+href="https://www.polleverywhere.com/agbofred203">https://www.polleverywhere.com/agbofred203</a>
+when it becomes <strong>active</strong></li>
+</ul>
+<!--
+## Review Question
+:::::cols
+::::col
+What would be the printed output of the code to the right?
+
+:::poll
+#. 12
+#. 13
+#. 14
+#. 15
+:::
+::::
+::::col
+```python
+A = "hots"
+B = ["fire", A + A]
+C = A[3] + A[1]
+B += C + C[0]
+D = B[0] + B[1] + B[2]
+print(len(D))
+```
+
+::::
+:::::
+
+## Boolean Expressions
+- Python defines two types of operators that work with Boolean data: _relational operators_ and _logical operators_
+- Relational operators compare values of other types and produce a `True`/`False` result:
+
+    ---- ----------------- - - - ---- --------------------
+    `==` Equals                  `!=` Not equals
+     `<` Less than               `<=` Less than or equal too
+     `>` Greater than            `>=` Greater than or equal to
+    ---- ----------------- - - - ---- --------------------
+- Be careful! `==` _compares_ two booleans. A single `=` _assigns_ a variable. The odds are high you'll use one when you meant the other at least once this semester!
+
+
+## The Vulcan Way
+- Logical operators act on Boolean pairings
+
+    Operator | Description
+    ---|---
+    `A and B` | True if both terms True, False otherwise
+    `A or B` | True if _any_ term is True, False otherwise
+    `not A` | True if A False, False if A True (opposite)
+
+::: incremental
+- Order of operations follows parentheses and then proceeds left to right
+- Careful that `or` is still `True` if both options are `True` 
+- Similarly, careful with combining `not` with `and` and `or`
+    - "Not A or B" in common English is not the same as `not A or B`
+:::
+-->
+</section>
+<section id="review-question" class="slide level2">
+<h2>Review Question</h2>
+<p>What value is printed when the code to the right runs?</p>
+<div class="cols">
+<div class="col">
+<div class="poll">
+<ol>
+<li><code class="python">True</code></li>
+<li><code class="python">False</code></li>
+<li><code class="python">"4Quiz"</code></li>
+<li>This would give an error</li>
+</ol>
+</div>
+</div>
+<div class="col" style="flex-grow:2;">
+<pre ><code class="python">A = 10
+B = 4
+C = "Quiz"
+A *= len(C)
+if A > 40 and C != "C":
+    print(str(B)+C)
+else:
+    print(A < B or not (C == "C"))
+</code></pre>
+</div>
+</div>
+<!--
+## Shorting the Circuit
+- Python evaluates _and_ and _or_ operators using a strategy called _short-circuit mode_
+- Only evaluates the right operand if it actually needs to
+    - Example: if `n=0`, then the `x % n == 0` is never actually checked in the statement
+
+        ```python
+        n != 0 and x % n == 0
+        ```
+
+        since `n != 0` already is `False` and `False and ` _anything_ is always `False`
+- Can use short-circuit to prevent errors: the above `x % n == 0` statement would have erred out if `n=0`
+
+
+
+## Sentinels
+- Many programs in programming can be approached similarly by using a particular _idiom_ or _pattern_
+- A common one with repetition is to use a variable to keep track of the loop state until something particular happens (the sentinel is triggered)
+<br><br>
+
+```python
+finished = False
+while not finished:
+    line = input("Enter a number: ")
+    if line == "":
+        finished = True
+    else:
+        print(line)
+```
+
+## Understanding Check
+::::: cols
+
+:::: col
+```python
+x = 7
+y = 0
+while x >= 0:
+    y += x
+    x -= 2
+print(y)
+```
+::::
+
+:::: col
+What will the printed output of the code to the left?
+
+:::{.poll}
+#. 15
+#. 16
+#. 28
+#. Infinite Loop
+:::
+::::
+
+:::::
+-->
+</section>
+<section id="sentinels" class="slide level2">
+<h2>Sentinels</h2>
+<ul>
+<li>Many programs in programming can be approached similarly by using a
+particular <em>idiom</em> or <em>pattern</em>
+<!--- A common one with repetition is to use a variable to keep track of the loop state until something particular happens (the sentinel is triggered)--></li>
+</ul>
+<div class="cols">
+<div class="col">
+<div class="block" name="Loop Until..." style="font-size:.75em">
+<ul>
+<li><p>Using a variable to track/control a loop state</p>
+<pre ><code class="python" style="width:100%">finished = False
+while not finished:
+    line = input("Enter a number: ")
+    if line == "":
+        finished = True
+    else:
+        print(line)</code></pre></li>
+</ul>
+</div>
+</div>
+<div class="col">
+<div class="block" name="Building Sequences" style="font-size:.75em">
+<ul>
+<li><p>Building up a sequence from nothing using concatenation</p>
+<pre ><code class="python" style="width:100%">new = ""
+word = "fantastical"
+i = 0
+while i < len(word):
+    new += word[i]
+    i += 2</code></pre></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="visiting-the-libraryies" class="slide level2">
+<h2>Visiting the library(ies)</h2>
+<ul>
+<li>A huge strength of Python is that it offers a very large number of
+code collections called <em>libraries</em>
+<ul>
+<li>Can save you the effort from writing that code yourself!</li>
+</ul></li>
+<li>Requires you to <em>import</em> that library, which can take several
+different forms
+<ul>
+<li><p>Most common is to use <code class="python">import</code> to grab
+everything in a library</p>
+<pre ><code class="python">import math</code></pre>
+<ul>
+<li>You must then access any function in that library using its
+<em>fully qualified name</em>, which includes the library name
+(<code class="python">var = math.sqrt(4)</code>)</li>
+</ul></li>
+<li><p>Can also use <code class="python">from ... import</code> to grab
+specific functions from the library</p>
+<pre ><code class="python">from math import sqrt</code></pre>
+<ul>
+<li>You do not need to use the library name then when you call it
+(<code class="python">var = sqrt(4)</code>)</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="useful-math-definitions" class="slide level2">
+<h2>Useful <code class="python">math</code> definitions</h2>
+<div style="font-size:.9em">
+<table>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="python">math.pi</code></td>
+<td>The mathematical constant <span
+class="math inline">\(\pi\)</span></td>
+</tr>
+<tr class="even">
+<td><code class="python">math.e</code></td>
+<td>The mathematical constant <span
+class="math inline">\(e\)</span></td>
+</tr>
+<tr class="odd">
+<td><code class="python">math.sqrt(x)</code></td>
+<td>The square root of x</td>
+</tr>
+<tr class="even">
+<td><code class="python">math.log(x)</code></td>
+<td>The natural logarithm of x</td>
+</tr>
+<tr class="odd">
+<td><code class="python">math.log10(x)</code></td>
+<td>The base 10 logarithm of x</td>
+</tr>
+<tr class="even">
+<td><code class="python">math.sin(x)</code></td>
+<td>The sine of x in radians</td>
+</tr>
+<tr class="odd">
+<td><code class="python">math.cos(x)</code></td>
+<td>The cosine of x in radians</td>
+</tr>
+<tr class="even">
+<td><code class="python">math.asin(x)</code></td>
+<td>The arcsin of x</td>
+</tr>
+<tr class="odd">
+<td><code class="python">math.degrees(x)</code></td>
+<td>Converts from radians to degrees</td>
+</tr>
+<tr class="even">
+<td><code class="python">math.radians(x)</code></td>
+<td>Converts from degrees to radians</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="extra-if-functionality" class="slide level2">
+<h2>Extra <code class="python">if</code> functionality</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>Karel could only use <code class="python">if</code> and
+<code class="python">else</code></li>
+<li>Python also supports as <code class="python">elif</code>
+statement</li>
+<li>Let’s you chain together multiple mutually exclusive condition
+checks</li>
+<li>You can include as many <code class="python">elif</code> chained
+statements as you want</li>
+</ul>
+</div>
+<div class="col">
+<pre ><code class="python" style="max-height:900px; font-size:0.75em">if condition_1:
+    # Run this code if 
+    # condition 1 is true
+elif condition_2:
+    # This code runs if 
+    # condition 1 is false
+    # but condition 2 is true
+elif condition_3:
+    # Runs if both condition 1
+    # and 2 fail but condition
+    # 3 is true
+else:
+    # This code runs if 
+    # all above conditions 
+    # fail</code></pre>
+</div>
+</div>
+</section>
+<section id="for-loop-anatomy" class="slide level2">
+<h2>For Loop Anatomy</h2>
+<ul>
+<li><p>We have already seen <code class="python">for</code> loops in
+Karel, but let’s expand on their use:</p></li>
+<li><p>The more general syntax of a <code class="python">for</code> loop
+looks like:</p>
+<pre ><code class="python">for variable_name in sequence:
+    # code to loop over</code></pre>
+<ul>
+<li><code class="python">variable_name</code> is a variable name that
+will be assigned every value in the sequence over the course of the
+loop</li>
+<li><code class="python">sequence</code> is any expression that produces
+a variable that supports iteration
+<ul>
+<li>We’ve already seen <code class="python">range()</code> fill this
+role</li>
+<li><strong>Any</strong> sequence works though! So strings and lists can
+also be looped over!</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="the-range-iterable" class="slide level2">
+<h2>The <code class="python">range()</code> iterable</h2>
+<ul>
+<li>Need an easy way to produce or describe a range of numeric
+values</li>
+<li>The built-in <code class="python">range()</code> function handles
+this and produces the needed iterable object</li>
+<li>Takes 1, 2, or 3 arguments:
+<ul>
+<li>Start (default 0): where to start the sequence at</li>
+<li>Stop (mandatory): the sequence ends just <em>below</em> this value
+(does not include it!)</li>
+<li>Step (default 1): what value the sequence counts by <br><br></li>
+</ul></li>
+</ul>
+<div class="block" name="Warning!">
+<p>Be careful, the <code class="python">range</code> function will stop
+one step <em>before</em> the final stop value.</p>
+</div>
+</section>
+<section id="for-ranging-examples" class="slide level2">
+<h2>For ranging examples</h2>
+<ul>
+<li><p>Providing just a stop argument:</p>
+<pre ><code class="python">for n in range(5):
+    print(n)</code></pre></li>
+<li><p>Providing a start and stop:</p>
+<pre ><code class="python">for n in range(1,11):
+    print(n)</code></pre></li>
+<li><p>Providing a start, stop, and step:</p>
+<pre ><code class="python">for n in range(10,0,-1):
+    print(n)</code></pre></li>
+</ul>
+</section>
+<section id="iterating-over-sequences" class="slide level2">
+<h2>Iterating over sequences</h2>
+<ul>
+<li><p>We can also use a <code class="python">for</code> loop to iterate
+directly over a sequence of values</p></li>
+<li><p>We can loop through a string or list to examine each individual
+character or element</p></li>
+<li><p>Example of looping through a word to count occurrences of a given
+letter:</p>
+<pre ><code class="python">def count_letters(letter, string):
+    count = 0
+    for character in string:
+        if character == letter:
+            count += 1
+    return count</code></pre></li>
+</ul>
+</section>
+<section id="test-yourself" class="slide level2">
+<h2>Test Yourself</h2>
+<ul>
+<li>It is easy to make mistakes when writing code
+<ul>
+<li>Syntax mistakes</li>
+<li>Typos or operations mistakes</li>
+<li>Overall conceptual mistakes</li>
+</ul></li>
+<li>Given that making mistakes is entirely natural, it is also
+imperative that looking for mistakes become entirely natural</li>
+<li>You known what the desired goal is for basically every problem in
+this class. <strong>Test your code!</strong></li>
+</ul>
+</section>
+<section id="way-of-testing" class="slide level2">
+<h2>Way of Testing</h2>
+<div>
+<ul>
+<li class="fragment">Run your code early and often
+<ul>
+<li class="fragment">If your code is breaking at something early, it is
+not going to fix itself if you continue</li>
+</ul></li>
+<li class="fragment">Test outputs directly
+<ul>
+<li class="fragment">Problems will generally give several example
+outputs of desired functions</li>
+<li class="fragment">For your own functions, you should know what you
+want them to be outputting</li>
+<li class="fragment">Run a function as isolated as you can make it after
+writing it, and <em>ensure</em> that it is performing as expected</li>
+</ul></li>
+<li class="fragment">Write code to test code
+<ul>
+<li class="fragment">Wherever possible, I provide some automated tests
+that can be run</li>
+<li class="fragment">You can (and should) write your own tests as well.
+They need not be complicated!!</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="assertions" class="slide level2">
+<h2>Assertions</h2>
+<ul>
+<li><p>You can use Python’s <code class="python">assert</code> statement
+to write test functions, which take the form:</p>
+<pre ><code class="python">assert condition</code></pre>
+<p>where <code class="python">condition</code> is any operation that
+returns a <code class="python">True</code> or
+<code class="python">False</code></p></li>
+<li><p>Assert statements “expect” a condition to yield a
+<code class="python">True</code>, and if they do, nothing happens</p>
+<ul>
+<li>No news is good news in this case</li>
+</ul></li>
+<li><p>If an assert condition evaluates to
+<code class="python">False</code>, an error is raised</p></li>
+<li><p>Naming your test functions starting with the word
+<code class="python">test_</code> will make them automatically
+discoverable by other tools</p></li>
+</ul>
+</section>
+<section id="testing-example" class="slide level2">
+<h2>Testing Example</h2>
+<ul>
+<li>Suppose we wanted to write some checks of the
+<code class="python">count_letters</code> function from earlier</li>
+</ul>
+<pre ><code class="python">def test_count_letters():
+    """ Runs several tests on the function count_letters """
+    assert count_letters("z", "banana") == 0
+    assert count_letters("a", "strawberry") == 1
+    assert count_letters("A", "apple") == 0
+    assert count_letters("e", "eerie") == 3</code></pre>
+<!--
+## Showcasing Autochecks
+- When you submit code to GitHub, my pre-written tests are run
+    - If **any** check fails, you'll see the red X (and possibly get an email)
+    - Let's look at how to get information about what went wrong
+- VSCode actually can run all the tests locally as well
+    - Let's also walk through how that works (and looks)
+
+
+## Introduction to Wordle
+::::::cols
+::::col
+- Our first project will be Wordle
+- Milestone guide will be posted this weekend
+- Not due until the end of the month
+- You still have another PS due in between
+- Could complete in a week, but we are getting it to you early in case you want to start sooner
+::::
+
+::::col
+![The game of Wordle](../images/wordle.png)
+::::
+::::::
+
+## Your Responsibilities
+- We will provide you with a custom data type that will handle all the graphics and user interaction
+    - Don't worry, you'll have a chance to implement your own GUIs later in the semester!
+- Your responsibilities:
+    - Displaying and reading letters from boxes
+    - Evaluating whether a word is valid
+    - Determining what color each letter of a word should be
+    - Determining when victory or defeat occurs
+
+
+## Your Toolbox
+- Special functions provided by the graphics data type
+    - These will be well documented, and include things like
+        - Getting or setting a letter in a particular box
+        - Getting or changing the color of a given box
+        - Changing which row is used when characters are entered
+- Variables and functions
+- Control statements
+    - Good use of loops and if statements will be very useful
+- Basic string functions
+
+
+## An Approach to Success
+- Each project is accompanied by a highly detailed guide: **read it!**
+    - Explains background ideas so that you can understand the big picture of what you are needing to do
+    - Also included a breakdown of individual _milestones_
+        - A _milestone_ is a discrete checkpoint that you should ensure is working (and that you understand!) before moving on
+- Projects are all about managing complexity. If you start trying to implement milestones out of order, you are asking for disaster
+- Don't let yourself get overwhelmed by scale. Focus on one particular milestone at a time, which should involve focusing only on a small part of your overall code
+
+
+-->
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+      
+    </script>
+    </body>
+</html>

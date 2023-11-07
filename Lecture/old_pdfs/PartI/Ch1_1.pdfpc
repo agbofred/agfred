@@ -1,0 +1,14 @@
+[notes]
+### 15
+
+6 primitives:
+ - Advance tape forward 1 square
+ - Advance tape backward 1 square
+ - Read symbol on square
+ - Write new symbol to square
+ - Switch to doing a new action
+ - Stop
+
+Uncomputable Problems:
+ - A program that, looking at another programs code, can determine whether that program will halt or run forever.
+ - Anything for which there does not exist some algorithm that could lead to some answer in finite time

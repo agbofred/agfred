@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold &amp; Fred Agbo">
+  <meta name="dcterms.date" content="2023-10-27">
+  <title>Reading and Writing</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Reading and Writing</h1>
+  <p class="author">Jed Rembold &amp; Fred Agbo</p>
+  <p class="date">October 27, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Problem Sets 5 is due <em>next</em> week Tuesday at 12 noon</li>
+<li>Grading of project 1 to be published soon.</li>
+<li>Project 3 will be posted early next week. You will be notified when
+uploaded</li>
+<li>CS151 Graphics Contest is due on <strong><em>31st
+October</em></strong></li>
+<li>We will return to Ford Hall 102 from Monday next week</li>
+<li>Polling continues today! Use this link <a
+href="https://www.polleverywhere.com/agbofred203">https://www.polleverywhere.com/agbofred203</a></li>
+</ul>
+<!--
+## Review Question
+::::::{.cols style='align-items:center'}
+::::col
+What would be the output of the last print statement in the code to the right?
+
+:::{.poll}
+#. True
+#. False
+#. Error: Index out of range
+#. Error: Python will not know how to compare the new Demo objects
+:::
+
+::::
+
+::::col
+```{.python style='max-height:900px; font-size:.8em; line-height:1.3em;'}
+class Demo:
+    def __init__(self):
+        self.x = []
+
+    def add(self, v):
+        self.x.append(v)
+
+    def get_x(self):
+        return self.x
+
+A, B = Demo(), Demo()
+A.add(3)
+B.add(3)
+C = B.get_x()
+C.append(A)
+print(A.get_x() == B.get_x())
+```
+
+::::
+::::::
+-->
+</section>
+<section id="review" class="slide level2"
+data-notes="Solution: [2,3,4,5]">
+<h2 data-notes="Solution: [2,3,4,5]">Review!</h2>
+<p>Suppose I construct the below 2D array using list comprehension:</p>
+<p><code class="inlinecode python">A = [[i+j for i in range(3)] for j in range(4)]</code></p>
+<p>What would be the output of:</p>
+<p><code class="inlinecode python">print([A[i][2] for i in range(len(A))])</code></p>
+<p><br></p>
+<div class="poll">
+<ol>
+<li><code class="python">[0,1,2]</code></li>
+<li><code class="python">[2,3,4]</code></li>
+<li><code class="python">[2,3,4,5]</code></li>
+<li><code class="python">[2,2,2,2]</code></li>
+</ol>
+</div>
+</section>
+<section id="tabulating-with-list" class="slide level2">
+<h2>Tabulating with list</h2>
+<ul>
+<li>Arrays can also be useful when you have a set of values and you need
+to count how many values fall into a different ranges
+<ul>
+<li>Process is called <em>tabulation</em></li>
+</ul></li>
+<li>The idea is that for each data file we encounter, we figure out a
+corresponding index in our tabular array and then increment the value of
+that element</li>
+<li>Your book shows this for seeing how many times each letter of the
+alphabet appears in a text sequence</li>
+</ul>
+</section>
+<section id="tabulating-with-list-example" class="slide level2">
+<h2>Tabulating with list example</h2>
+<ul>
+<li>Below program is an example of determining how many students got
+different letters grades on a final</li>
+</ul>
+<pre ><code class="python" style="min-height:850px; width=100%;">import random
+mark = [random.randint(50,100) for i in range(27) ]
+count = [0 for i in range(5)]
+for i in range(len(mark)):
+    if mark[i] >= 90:
+        count[0] +=1
+    elif mark[i] >= 80:
+        count[1] +=1
+    elif mark[i] >= 70:
+        count[2] +=1
+    elif mark[i] >= 60:
+        count[3] +=1
+    else:
+        count[4] +=1
+print(mark)
+print(count)
+</code></pre>
+<ul>
+<li>List generated contains random values, it changes every time it
+executes</li>
+</ul>
+</section>
+<section id="breaking-out-the-pixel-colors" class="slide level2">
+<h2>Breaking out the Pixel Colors</h2>
+<ul>
+<li>You do not need to convert the pixel values yourself! PGL has
+built-in ways to extract the various colors</li>
+</ul>
+<div style="font-size:.8em;">
+<table>
+<colgroup>
+<col style="width: 37%" />
+<col style="width: 62%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="python">GImage.get_red(pixel)</code></td>
+<td>Returns the integer (0-255) corresponding to the red portion of the
+pixel</td>
+</tr>
+<tr class="even">
+<td><code class="python">GImage.get_green(pixel)</code></td>
+<td>Returns the integer (0-255) corresponding to the green portion of
+the pixel</td>
+</tr>
+<tr class="odd">
+<td><code class="python">GImage.get_blue(pixel)</code></td>
+<td>Returns the integer (0-255) corresponding to the blue portion of the
+pixel</td>
+</tr>
+<tr class="even">
+<td><code class="python">GImage.get_alpha(pixel)</code></td>
+<td>Returns the integer (0-255) corresponding to the alpha portion of
+the pixel</td>
+</tr>
+<tr class="odd">
+<td><code class="python">GImage.create_rgb_pixel(r,g,b)</code></td>
+<td>Returns a 32-bit integer corresponding to the desired color</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="image-thresholding" class="slide level2">
+<h2>Image Thresholding</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>As an example of reading and manipulating pixel values, lets look at
+how we could threshold the image to the right</li>
+<li>Thresholding is when you take a grayscale image and convert it to a
+black and white image, where a pixel is set to be white if it is above a
+certain threshold in brightness</li>
+<li>Grayscale, so each RGB component is the same Let’s threshold at a
+value of 30</li>
+</ul>
+</div>
+<div class="col">
+<figure>
+<img data-src="../../Class_Demos/Moon.png" style="width:80.0%"
+alt="Blurry Moon by Jed" />
+<figcaption aria-hidden="true">Blurry Moon by Jed</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="image-thresholding-example" class="slide level2">
+<h2>Image Thresholding Example</h2>
+<pre ><code class="python" style="min-height:980px; width=100%;">
+from pgl import GWindow, GOval, GImage
+
+gw =GWindow(600,400)
+image = GImage("Moon.png", 0,0)
+image.scale(gw.get_width()/image.get_width())
+gw.add(image)
+
+def imagetreshold(e):
+    TRESHOLD = 130
+    pixel = image.get_pixel_array()
+    #print(pixel)
+    for r in range(len(pixel)):
+        for c in range(len(pixel[0])):
+            value = pixel[r][c]
+            red =GImage.get_red(value)
+            if red< TRESHOLD:
+                pixel[r][c]= GImage.create_rgb_pixel(0,0,0)
+            else:
+                pixel[r][c] = GImage.create_rgb_pixel(255,255,255)
+    # You must create a new Gimage
+    new_image = GImage(pixel)
+    gw.add(new_image)
+gw.add_event_listener("click", imagetreshold)
+</code></pre>
+<!--
+## Reading
+- Programs often need to work with collections of data that are too large to reasonably exist typed all out in the code
+    - Easier to read in the values of a list from some external data file
+- A _file_ is the generic name for any named collection of data maintained on some permanent storage media attached to a computer
+- Files can contain information encoded in many different ways
+    - Most common is the _text file_
+    - Contains character data like you'd find in a string
+
+
+## Strings vs Text Files
+- While strings and text files both store characters, there are some important differences:
+    - **The longevity of the data stored**
+        - The value of a string variable lasts only as long as the string exists, is not overridden, or is not thrown out when a function completes
+        - Information in a text file exists until the file is deleted
+    - **How data is read in**
+        - You have access to all the characters in a string variable pretty much immediately
+        - Data from text files is generally read in sequentially, starting from the beginning and proceeding until the end of the file is reached
+-->
+</section>
+<section id="reading-text-files" class="slide level2">
+<h2>Reading Text Files</h2>
+<ul>
+<li><p>The general approach for reading a text file is to first
+<em>open</em> the file and associate that file with a variable, commonly
+called its <em>file handle</em></p></li>
+<li><p>We will also use the <em>with</em> keyword to ensure that Python
+cleans up after itself (closes the file) when we are done with it (Many
+of us could use a <code class="python">with</code> irl)</p>
+<pre ><code class="python">with open(filename) as file_handle:
+  # Code to read the file using the file_handle</code></pre></li>
+<li><p>Python gives you several ways to actually read in the data</p>
+<ul>
+<li><code class="python">read</code> reads the entire file in as a
+string</li>
+<li><code class="python">readline</code> or
+<code class="python">readlines</code> reads a single line or lines from
+the file</li>
+<li><code class="python">read</code> alongside
+<code class="python">splitlines</code> gets you a list of line
+strings</li>
+<li>Can use the file handle as an iterator to loop over</li>
+</ul></li>
+</ul>
+</section>
+<section id="entire-file-string" class="slide level2">
+<h2>Entire file ⟶ String</h2>
+<ul>
+<li><p>The <code class="python">read</code> method reads the entire file
+into a string, with includes newline characters
+(<code class="python">\n</code>) to mark the end of lines</p></li>
+<li><p>Simple, but can be cumbersome to work with the newline
+characters, and, for large files, it can take a large amount of
+memory</p></li>
+<li><p>As an example, the file:<br><br></p>
+<div class="block" name="Seuss.txt"
+style="width:40%; margin-left: auto; margin-right: auto;">
+<p>One fish<br> two fish<br> red fish<br> blue fish</p>
+</div>
+<p>would get read as</p></li>
+</ul>
+<p><code class="python" style="display: block; margin: auto; text-align: center;">"One fish\ntwo fish\nred fish\nblue fish"</code></p>
+</section>
+<section id="line-by-line" class="slide level2">
+<h2>Line by Line</h2>
+<ul>
+<li><p>Of the ways to read the file in a string at a time, using the
+file handler as an iterator and looping is probably best and certainly
+most flexible</p></li>
+<li><p>Leads to code that looks like:</p>
+<pre ><code class="python">with open(filename) as f:
+    for line in f:
+        # Do something with the line</code></pre></li>
+<li><p>Note that <strong>most</strong> strategies preserve the newline
+character, which you very likely do not want, so be ready to strip them
+out before doing more processing</p></li>
+</ul>
+</section>
+<section id="powers-combined" class="slide level2">
+<h2>Powers Combined</h2>
+<ul>
+<li><p>So long as your files are not gigantic, using
+<code class="python">read</code> and then the
+<code class="python">splitlines</code> method can be a good
+option</p></li>
+<li><p>This <strong>does</strong> remove the newline characters, since
+it splits the string at them</p>
+<pre ><code class="python">with open(filename) as f:
+    lines = f.read().splitlines()
+# Then you can do whatever you want with the list of lines</code></pre></li>
+</ul>
+</section>
+<section id="arent-you-exceptional" class="slide level2">
+<h2>Aren’t you Exceptional</h2>
+<ul>
+<li>When opening a file for reading, it is possible the file does not
+exist!
+<ul>
+<li>Python handles this (and many other potential errors that can arise)
+using a mechanism called <em>exception handling</em></li>
+<li>Common in other languages as well</li>
+</ul></li>
+<li>An <em>exception</em> is a object that belongs to an overarching
+hierarchy of exception classes
+<ul>
+<li>Different classes/types for different purposes</li>
+<li>File operations, for example, use the exception class
+<code class="python">IOError</code></li>
+</ul></li>
+<li>If <code class="python">open</code> encounters an error, it reports
+the error by <em>raising an exception</em> with
+<code class="python">IOError</code> as its type.
+<ul>
+<li>Raising an exception generally immediately terminates your program,
+but sometimes that is undesirable</li>
+</ul></li>
+</ul>
+</section>
+<section id="ignore-yoda-there-is-a-try" class="slide level2">
+<h2>Ignore Yoda, there is a <code class="python">try</code></h2>
+<ul>
+<li><p>Python uses the <code class="python">try</code> statement to
+indicate an interest in trying to handle a possible exception</p></li>
+<li><p>In simplest form, the syntax is:</p>
+<pre ><code class="python">try:
+    # Code that may cause an exception
+except type_of_exception:
+    # Code to handle that type of exception</code></pre></li>
+<li><p><code class="python">type_of_exception</code> here is the class
+name of the exception being handled</p>
+<ul>
+<li><code class="python">IOError</code> for the file reading errors we
+are discussing</li>
+</ul></li>
+<li><p>Any exceptions arising from within the
+<code class="python">try</code> block or within functions
+<em>called</em> within the try block would be “caught” and the lower
+block of code run instead of terminating the program</p></li>
+</ul>
+</section>
+<section id="example-requesting-existing-file" class="slide level2">
+<h2>Example: Requesting Existing File</h2>
+<ul>
+<li><p>As an example, the below function will repeatedly ask the user to
+supply a file name that actually exists.</p></li>
+<li><p>It will not just immediately break should they give it an invalid
+filename!</p>
+<pre ><code class="python">def get_existing_file(prompt="Input a filename: "):
+    while True:
+        filename = input(prompt)
+        try:
+            with open(filename):
+                return filename
+        except IOError:
+            print("That filename is invalid!")</code></pre></li>
+<li><p>If the <code class="python">open</code> call succeeds, we
+immediately just return the filename, but if it fails due to a
+<code class="python">IOError</code>, we display a message and then keep
+asking</p></li>
+</ul>
+</section>
+<section id="choosing-wisely" class="slide level2">
+<h2>Choosing Wisely</h2>
+<ul>
+<li>The Python package used to implement
+<code class="python">pgl.py</code> also supports a mechanism to choose
+files interactively, made available through the
+<code class="python">filechooser.py</code> library module.</li>
+<li><code class="python">filechooser.py</code> exports two functions:
+<ul>
+<li><code class="python">choose_input_file</code> for selecting a
+file</li>
+<li><code class="python">choose_output_file</code> for selecting a
+folder and filename to save a file to</li>
+</ul></li>
+<li>Both open up a file dialog that lets you select/choose a file
+<ul>
+<li>Clicking Open or Save returns the full pathname of the file</li>
+<li>Clicking Cancel returns an empty string</li>
+</ul></li>
+<li>Using it thus looks something like:</li>
+</ul>
+<pre ><code class="python">filename = choose_input_file()
+with open(filename) as f:
+    # Code to read file</code></pre>
+</section>
+<section id="writing-text-files" class="slide level2">
+<h2>Writing Text Files</h2>
+<ul>
+<li><p>You can write text files using almost the same syntax as
+reading:</p>
+<pre ><code class="python">with open(filename, mode) as file_handle:
+    # Code to write the file using file_handle</code></pre></li>
+<li><p>Note the <code class="python">mode</code> parameter to
+<code class="python">open</code> here! Mode is a string which is
+either</p>
+<ul>
+<li><code class="python">"w"</code> to <strong>write</strong> a new file
+(or overwrite an existing file)</li>
+<li><code class="python">"a"</code> to <strong>append</strong> new
+contents to the end of an existing file</li>
+</ul></li>
+<li><p>The file handler supports the methods:</p>
+<ul>
+<li><code class="python">.write(some_string)</code> to write a string to
+the file</li>
+<li><code class="python">.writelines(iterable_of_strings)</code> to
+write each iterable element to the file</li>
+</ul></li>
+</ul>
+</section>
+<section id="writing-ascii-sine" class="slide level2">
+<h2>Writing ASCII SINE</h2>
+<ul>
+<li>Suppose I wanted to try my hand at some ASCII art and fill a text
+file with a vertical oscillating sine wave</li>
+<li>A sine wave generally looks like: <span class="math display">\[ A +
+A \sin\left(\frac{2\pi}{T}x\right)\]</span> where <span
+class="math inline">\(A\)</span> is the amplitude of the wave and <span
+class="math inline">\(T\)</span> the period of the wave, or how quickly
+it repeats
+<ul>
+<li>The extra <span class="math inline">\(A +\)</span> out front is to
+push the wave over to the right, since we can’t really place negative
+characters</li>
+</ul></li>
+<li>How can we put this together?</li>
+</ul>
+</section>
+<section id="ascii-sine-code" class="slide level2">
+<h2>ASCII SINE Code</h2>
+<pre ><code class="python" style="font-size:.6em; max-height:900px;">
+from math import sin, pi
+
+def sine_file(filename, A, T, symbol, padding=" "):
+    """ 
+    Creates a new sine wave in the provided file with the provided amplitude (A),
+    and period (T) with the indicated symbol at the end.
+
+    Inputs:
+        filename (string): the name of the file to write the art to
+        A (int): the amplitude of the wave in terms of number of characters
+        T (int): the period of the wave in terms of number of lines
+        symbol (string): the symbol to place to mark the wave
+        padding (string): what character to pad the left side of the wave with
+
+    Outputs:
+        None
+    """
+
+    def compute_symb_placement(A, T, x):
+        """Computes where the symbol should be placed."""
+        value = A * sin(2 * pi / T * x) + A
+        return int(value) # to integer character placement
+
+    def construct_line(placement, symbol, padding):
+        """Constructs the line with the necessary padding and symbol at the end."""
+        return padding * placement + symbol
+
+    with open(filename, 'w') as fh:
+        for x in range(10 * T): # write 10 periods worth of lines
+            v = compute_symb_placement(A, T, x)
+            line = construct_line(v, symbol, padding)
+            fh.write(line + '\n') # need the newline character at the end!
+
+if __name__ == '__main__':
+    sine_file('sine_test.txt', A=30, T=50, symbol='X')</code></pre>
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+      
+    </script>
+    </body>
+</html>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold">
+  <meta name="dcterms.date" content="2020-08-31">
+  <title>Here We Go Again</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/class_python.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/horizon-dark.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Here We Go Again</h1>
+  <p class="author">Jed Rembold</p>
+  <p class="date">August 31, 2020</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Homework was posted on Friday
+<ul>
+<li>Pdf on the main webpage.</li>
+<li>Link in pdf to add repository, then download to edit on your own system!</li>
+<li>Due at midnight this Friday at midnight</li>
+<li>Problems 2 and 3 have some auto-testing to help you check your work</li>
+</ul></li>
+<li>Polling:
+<ul>
+<li><a href="http://rembold-class.ddns.net">rembold-class.ddns.net</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="review-question" class="slide level2">
+<h2>Review Question</h2>
+<p>What is the final printed value in the code below?</p>
+<div class="cols">
+<div class="col">
+<div class="poll">
+<ol>
+<li><code class="python">True</code></li>
+<li><code class="python">False</code></li>
+<li><code class="python">"4Quiz"</code></li>
+<li>This would give an error</li>
+</ol>
+</div>
+</div>
+<div class="col" style="flex-grow:2;">
+<pre ><code class="python">A = 10
+B = 4
+C = "Quiz"
+A *= len(C)
+if A > 40 and C != "C":
+    print(str(B)+C)
+else:
+    print(A < B or not C == "C")
+</code></pre>
+</div>
+</div>
+</section>
+<section id="controlling-functions" class="slide level2">
+<h2>Controlling Functions</h2>
+<ul>
+<li><p>The body of a function can contain statements of any type, including control statements</p></li>
+<li><p>Example:</p>
+<pre ><code class="python">def max(x, y):
+    if x > y:
+        return x
+    else:
+        return y</code></pre></li>
+<li><p><code class="python">return</code> statements can be used anywhere and may appear more than once</p>
+<ul>
+<li>The function terminates as soon as it hits a <code class="python">return</code> statement though!</li>
+</ul></li>
+</ul>
+</section>
+<section id="getting-lost" class="slide level2">
+<h2>Getting Lost</h2>
+<ul>
+<li>In a broad sense, how could we implement the following with logical if statements?</li>
+</ul>
+<figure>
+<img data-src="../images/lost_woods.gif" style="width:60.0%" alt="" /><figcaption>Lost Woods</figcaption>
+</figure>
+</section>
+<section id="best-effort" class="slide level2">
+<h2>Best Effort</h2>
+<pre ><code class="python" style="max-height:800px">if < move right >:
+    < background = lost woods >
+    if < move right >:
+        < background = lost woods >
+        if < move right >:
+            < background = lost woods >
+            ...
+        else:
+            < background = exit >
+    else:
+        < background = exit >
+else:
+    < background = exit >
+</code></pre>
+</section>
+<section id="groundhog-day" class="slide level2">
+<h2>Groundhog Day</h2>
+<p><img data-src="../images/svg_cache/64031aa89816b421a31c77251c5058eb14a6629b.svg" style="width:100.0%" /></p>
+</section>
+<section id="it-can-take-a-while" class="slide level2">
+<h2>It can take a <code class="python">while</code></h2>
+<ul>
+<li><p>The <code class="python">while</code> statement is the simplest of Python’s iterative control statements and has the following form:</p>
+<pre ><code class="python">while < condition >:
+    < statements to be repeated ></code></pre></li>
+<li><p>Upon encountering the <code class="python">while</code> statement, Python evaluates the condition</p></li>
+<li><p>If condition is true, the statements in the body are executed</p></li>
+<li><p>After the last body statement executed, Python again checks the condition. If still true, the body statements run again</p></li>
+</ul>
+<!--:::{.block name="To Infinity!"}-->
+<!--It is very possible to accidentally write infinite loops with `while` loops! If you find this has happened, you can press Ctl + C in the console to break out of it.-->
+<!--:::-->
+</section>
+<section id="an-example-walkthrough" class="slide level2">
+<h2>An Example Walkthrough</h2>
+<pre ><code class="python" data-line-numbers="1-9|1|9|1|2|3|4|5|6|3|4|5|6|3|4|5|6|3|7|9">def digit_sum(n):
+    total = 0
+    while n > 0:
+        value = n % 10
+        total += value
+        n //= 10
+    return total
+
+print(digit_sum(123))</code></pre>
+</section>
+<section id="sentinels" class="slide level2">
+<h2>Sentinels</h2>
+<ul>
+<li>Many programs in programming can be approched similarly by using a particular <em>idiom</em> or <em>pattern</em></li>
+<li>A common one with repetition is to use a variable to keep track of the loop state until something particular happens (the sentinel is triggered) <br><br></li>
+</ul>
+<pre ><code class="python">finished = False
+while not finished:
+    line = input("Enter a number: ")
+    if line == "":
+        finished = True
+    else:
+        print(line)</code></pre>
+</section>
+<section id="lost-woods-example" class="slide level2">
+<h2>Lost Woods Example</h2>
+<pre ><code class="python" style="max-height:800px">dir = 'W'
+onpath = 0
+atEnd = False
+while not atEnd:
+    print('')
+    print('*'*10 + '     ' + '*'*10)
+    print('*'*10 + '     ' + '*'*10)
+    print(' '*10 + ' :) ' + ' '*10)
+    print('*'*10 + '     ' + '*'*10)
+    print('*'*10 + '     ' + '*'*10)
+    dir = input('Go (N)orth, (S)outh, (E)ast, or (W)est? ')
+
+    if dir == 'N' and onpath == 0:
+        onpath = 1
+    elif dir == 'W' and onpath == 1:
+        onpath = 2
+    elif dir == 'S' and onpath == 2:
+        onpath = 3
+    elif dir == 'W' and onpath == 3:
+        atEnd = True
+    else:
+        onpath = 0
+
+print('You escaped!')</code></pre>
+</section>
+<section id="understanding-check" class="slide level2">
+<h2>Understanding Check</h2>
+<div class="cols">
+<div class="col">
+<pre ><code class="python">x = 7
+y = 0
+while x >= 0:
+    y += x
+    x -= 2
+print(y)</code></pre>
+</div>
+<div class="col">
+<p>What will the printed output of the code to the left?</p>
+<div class="poll">
+<ol>
+<li>15</li>
+<li>16</li>
+<li>28</li>
+<li>Infinite Loop</li>
+</ol>
+</div>
+</div>
+</div>
+</section>
+<section id="iterating-over-sequences" class="slide level2">
+<h2>Iterating over sequences</h2>
+<ul>
+<li><p>It comes up often that we iterate over some sequence or range</p>
+<pre ><code class="python">i = 0
+while i < 10:
+    print(i)
+    i += 1</code></pre></li>
+<li><p>Python provides us with a special type of loop exactly for these types of operations!</p></li>
+<li><p>Called a <strong>for</strong> loop</p>
+<ul>
+<li>Can think of it as saying: “<em>For</em> each thing in this sequence, run this code”</li>
+</ul></li>
+</ul>
+</section>
+<section id="for-loop-anatomy" class="slide level2">
+<h2>For Loop Anatomy</h2>
+<ul>
+<li><p><code class="python">for</code> loops have a simple syntax:</p>
+<pre ><code class="python">for < variable > in < sequence >:
+    < loop code ></code></pre></li>
+<li><p><code class="python">< loop code ></code> is no different from what we were already doing in the body of <code class="python">while</code> loops</p></li>
+<li><p><code class="python">< variable ></code> is a variable name that will be assigned every value in the sequence over the course of the loop</p></li>
+<li><p><code class="python">< sequence ></code> is any expression that produces a variable that supports iteration</p></li>
+</ul>
+</section>
+<section id="the-range-iterable" class="slide level2">
+<h2>The <code class="python">range()</code> iterable</h2>
+<ul>
+<li>Need an easy way to produce or describe a range of numeric values</li>
+<li>The built-in <code class="python">range()</code> function handles this and produces the needed iterable object</li>
+<li>Takes 1, 2, or 3 arguments:
+<ul>
+<li>Start (default 0): where to start the sequence at</li>
+<li>Stop (mandatory): the sequence ends just <em>below</em> this value (does not include it!)</li>
+<li>Step (default 1): what value the sequence counts by <br><br></li>
+</ul></li>
+</ul>
+<div class="block" name="Warning!">
+<p>Be careful, the <code class="python">range</code> function will stop one step <em>before</em> the final stop value.</p>
+</div>
+</section>
+<section id="for-ranging-examples" class="slide level2">
+<h2>For ranging examples</h2>
+<ul>
+<li><p>Providing just a stop argument:</p>
+<pre ><code class="python">for n in range(5):
+    print(n)</code></pre></li>
+<li><p>Providing a start and stop:</p>
+<pre ><code class="python">for n in range(1,11):
+    print(n)</code></pre></li>
+<li><p>Providing a start, stop, and step:</p>
+<pre ><code class="python">for n in range(10,0,-1):
+    print(n)</code></pre></li>
+</ul>
+</section>
+<section id="iterating-over-sequences-1" class="slide level2">
+<h2>Iterating over sequences</h2>
+<ul>
+<li><p>We can also use a <code class="python">for</code> loop to iterate directly over a sequence of values</p></li>
+<li><p>Python supports many different types of sequences, but thus far we only know about one: strings!</p>
+<ul>
+<li>Recall strings are just a sequence of individual characters</li>
+</ul></li>
+<li><p>We can loop through a string to examine each individual character</p></li>
+<li><p>Example looping through to count occurances of a given letter:</p>
+<pre ><code class="python">def count_letters(letter, string):
+    count = 0
+    for character in string:
+        if character == letter:
+            count += 1
+    return count</code></pre></li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } }
+		],
+      });
+    </script>
+    </body>
+</html>

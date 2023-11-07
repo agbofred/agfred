@@ -1,0 +1,256 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics, amssymb}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{A Method to the Madness}
+\author{Jed Rembold}
+\date{March 20, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item I'm going to get HW8 posted this weekend in case you want to get a jump start on it over break
+				\item 3 fairly short problems
+				\item We are going to make it due that Friday we get back from break
+			\end{itemize}
+		\item Plan is for the test the Friday after break as well
+		\item Credit/Non Credit option has also been extend to that Friday
+		\item There is a lab today, so I'll be hanging out in the Zoom meeting afterwards if questions come up that you want to ask!
+			\begin{itemize}
+				\item You can always share your screen in there to let me see what you are seeing as well!
+			\end{itemize}
+			
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Review Question}
+	We are wanting to move into learning about how to define our own types in Python. Doing so though means understanding what a Python type entails. What two main ideas should be included in any definition of a new type?
+	\medskip
+	\begin{poll}
+		\item An internal representation and an interface to manipulate type objects
+		\item The ability to store non-scalar objects and an interface to manipulate those objects
+		\item The ability to store non-scalar objects and to be garbage collected by the interpreter
+		\item An internal representation and the ability to be garbage collected
+	\end{poll}
+	\exsol{An internal representation and an interface to manipulate type objects}
+	
+\end{frame}
+
+\begin{frame}[fragile]{Defining our Type}
+	\begin{itemize}
+		\item Use the \pyi{class} keyword to define a new type
+			\begin{pythoncode}
+				class Coordinate:
+					# all attributes go here
+			\end{pythoncode}
+		\item Python convention is to start class names with a capital letter
+		\item All internal parts of the class definition should be indented
+		\item Can occasionally have a term in parentheses after the type name. We'll talk about that later when we discuss inheritance.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Attribute who?}
+	\begin{itemize}
+		\item Attributes are data and procedures/interactions that ``belong'' to a particular class
+		\item \alert{Data Attributes}
+			\begin{itemize}
+				\item Data as other objects that make up the class
+				\item Commonly the pieces you need to construct your desired class
+				\item \textcolor{Blue}{Example:} A coordinate is made up of two numbers
+			\end{itemize}
+		\item \alert{Methods} (Procedures/Interfaces)
+			\begin{itemize}
+				\item Methods are functions that only work with the class
+				\item How you get to interact with the class objects
+				\item \textcolor{Blue}{Example:} You could define a distance function between two coordinate points. Such a function would have no meaning outside of working with coordinates.
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class Construction: Representation}
+	\vspace{1cm}
+	\begin{itemize}
+		\item Step 1: Defining how we construct on new object of this type
+			\begin{itemize}
+				\item What makes up the object? How is it stored? What values do we pass in and what values are constant?
+				\item Define a special method called \alert{\pyi{__init__}} to initialize some data attributes
+			\end{itemize}
+			\begin{pythoncode}
+				class Coordinate:
+					def __init__(self, x, y):
+						self.x = x
+						self.y = y
+			\end{pythoncode}
+			\begin{tikzpicture}[overlay, remember picture]
+				\draw<2>[rounded corners, ultra thick, Blue] (1.7,1.5) rectangle +(2.2cm,18pt);
+				\draw<3>[rounded corners, ultra thick, Blue] (4.1,1.5) rectangle +(1.2cm,18pt);
+				\draw<4>[rounded corners, ultra thick, Blue] (5.6,1.5) rectangle +(1.3cm,18pt);
+				\draw<5>[rounded corners, ultra thick, Blue] (2.6,1.5) rectangle +(1.7em,-2.5em);
+			\end{tikzpicture}
+			\only<2>{
+				\begin{block}{\pyi{__init__}}
+					Special method to create an instance. Starts and stops with a double underscore.
+				\end{block}
+			}
+			\only<3>{
+				\begin{block}{\pyi{self}}
+					parameter with refers to an instance of the class
+				\end{block}
+			}
+			\only<4>{
+				\begin{block}{\pyi{x,y}}
+					Parameters which get passed to the Coordinate object upon initialization
+				\end{block}
+			}
+			\only<5>{
+				\begin{block}{\pyi{.x, .y}}
+					Each coordinate object gets two data attributes
+				\end{block}
+			}
+			\vspace{4cm}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class Construction: Initialization}
+	\begin{itemize}
+		\item Like functions, the class definition \emph{only} defines the class
+		\item Still need to \alert{use} it in your code somewhere by initializing an object of your new type!
+			\begin{pythoncode}
+				c1 = Coordinate(2,4)
+				c2 = Coordinate(1,0)
+
+				print(c1.x)
+				print(c2.y)
+			\end{pythoncode}
+		\item We use the dot notation to access attributes of any instance
+		\item You \textcolor{Red}{do not need to provide an argument for \pyi{self}}. Python does this automatically.
+	\end{itemize}
+	
+\end{frame}
+
+
+\begin{frame}[fragile]{Understanding Check}
+	\begin{columns}
+		\column{0.45\textwidth}
+		What is printed out on the final line of the code to the right?
+		\begin{poll}
+		\item \pyi[output]{Honda red 2006}
+		\item \pyi[output]{Honda blue 2006}
+		\item \pyi[output]{Toyota blue 2008}
+		\item \pyi[output]{Honda red 2008}
+		\end{poll}
+		\exsol{\pyi[output]{Honda blue 2006}}
+		
+		\column{0.55\textwidth}
+		{\small
+			\begin{pythoncode}[tabsize=2]
+				class Car:
+					def __init__(self, color, year):
+						self.color = color
+						self.year = year
+						self.make = 'Toyota'
+
+				A = Car('blue', 2008)
+				B = Car('red', 2006)
+				A.make = 'Honda'
+				A.year = B.year
+				print(A.make, A.color, A.year)
+			\end{pythoncode}
+		}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{What's your Method?}
+	\begin{itemize}
+		\item[\done] We can create data attributes now to represent our type
+		\item[$\square$] Still need a way to interface and manipulate our objects
+		\item Need to include methods or procedural attributes to our classes
+			\begin{itemize}
+				\item Basically a function that only works with this class
+				\item Python always passes the object as the first argument!
+					\begin{itemize}
+						\item Convention to is always use \pyi{self} to refer to the instanced object within the class definition
+					\end{itemize}
+			\end{itemize}
+		\item Still access or call methods using dot notation	
+		\item Other than \pyi{self} and dot notation, methods act just like functions
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Class Construction: Adding Methods}
+	\begin{pythoncode}
+		def method(self, other_inputs):
+			return self.data_attribute + other_inputs
+	\end{pythoncode}
+	\begin{tikzpicture}[overlay, remember picture,
+		circ/.style={rounded corners, ultra thick, Blue, draw, minimum height=1.5em, anchor=west},
+		]
+		\node<2>[circ, minimum width=4em] (c) at (.95,1.35) {};
+		\node<3>[circ, minimum width=3em] (c) at (2.75,1.35) {};
+		\node<4>[circ, minimum width=8em] (c) at (4.3,1.35) {};
+		\node<5>[circ, minimum width=28em] (c) at (0.6,0.8) {};
+
+		\only<2>\draw[Blue] (c) --+ (60:1) node[anchor=south] {name of method};
+		\only<3>\draw[Blue] (c) --+ (60:1) node[anchor=south] {use to refer to any instance};
+		\only<4>\draw[Blue] (c) --+ (60:1) node[anchor=south] {any other parameters the method might need};
+		\only<5>\draw[Blue] (c) --+ (-60:1) node[anchor=north] {normal function parts};
+	\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[fragile]{Accessing and Using Methods}
+	\begin{itemize}
+		\item After definition, you have two main ways to access and use the method
+	\end{itemize}
+		\begin{itemize}
+			\item \alert{Dot Notation (Conventional):}
+			\begin{pythoncode}
+				c = Coordinate(3,4)
+				O = Coordinate(0,0)
+				print(c.distance(O))
+			\end{pythoncode}
+			\item \alert{Function Notation:}
+				\begin{pythoncode}
+					c = Coordinate(3,4)
+					O = Coordinate(0,0)
+					print(Coordinate.distance(c,O))
+				\end{pythoncode}
+		\end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

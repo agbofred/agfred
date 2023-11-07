@@ -1,0 +1,11 @@
+[duration]
+60
+[start_time]
+10:20
+[font_size]
+24
+[notes]
+### 2
+Solution: \pyi {D[1][2]}
+### 9
+Solution: \pyi {['Fox', 'Hippo', 'Iguana']}

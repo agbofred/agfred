@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold &amp; Fred Agbo">
+  <meta name="dcterms.date" content="2023-10-04">
+  <title>Functional Arguments</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Functional Arguments</h1>
+  <p class="author">Jed Rembold &amp; Fred Agbo</p>
+  <p class="date">October 4, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Feedback on PS3 is completed.</li>
+<li>Midterm exam 1 is Friday at <strong>9:10 am - 10:10 am</strong> in
+this hall</li>
+<li>Come with a computer for the exam</li>
+<li>We shall test-run the exam on Canvas in the last 10 minutes of
+today’s class</li>
+<li>Practice exam questions 2 will be released on Canvas after the
+class</li>
+<li>Ch 6 of the text will begin week</li>
+<li>I am going over <strong>Functions</strong> today to clarify last
+review question &amp; explanations
+<ul>
+<li>also to emphasize program tracing</li>
+</ul></li>
+</ul>
+<!--
+## Wordle Tidbits
+- Two useful ideas for Wordle:
+    - You can check if an individual element is in a particular sequence of elements using the `in` keyword
+      
+      ```python
+      "1" in "12345"
+      ```
+      - Always returns a boolean (True/False)
+    - You can change the case of all letters in a string using `upper()` or `lower()` methods
+      
+      ```python
+      lowered = "ABCDEF".lower()
+      uppered = "abcDEF".upper()
+      ```
+      - The method returns a **new** string, so make sure you assign it to something
+
+## Mid-term test
+- Test will take place during the class time **9:10 - 10:10 0n Friday**.
+- Those with accommodations should already contact the testing center and cc me.
+- Practice questions are posted on this week's module
+- Basic things to keep in mind:
+    - The test contain detailed information to guide on what to expect. ***Read it carefully***
+    - The exam is partially open, and thus you are free to utilize:
+        - The text
+        - Your notes
+        - Class slides
+        - Any past work you have done as part of sections, problem sets, or projects, provided it has been uploaded, and you access it through GitHub.
+
+## Mid-term test        
+- You are allowed to use a computer for ease of typing and accessing the above resources, 
+- You are **prohibited** from accessing and using any editor or terminal to run your code. 
+    - Visual Studio Code or any similar editor should **never** be open on your computer during this exam. 
+- Additionally, you are **prohibited** from accessing outside internet resources beyond the webpages described above.
+-->
+</section>
+<section id="positional-vs-keyward-arguments" class="slide level2">
+<h2>Positional VS Keyward arguments</h2>
+<ul>
+<li>A function defined with positional arguments assigns each argument
+to its corresponding parameter when it’s called</li>
+</ul>
+<pre ><code class="python">>>> def func( first, second, third ):
+        print( first, second, third )
+>>> func(1,2,3)
+1 2 3
+>>> func(2,6,4)
+2 6 4</code></pre>
+<ul>
+<li>First argument to first parameter, second to second parameter,
+etc</li>
+</ul>
+</section>
+<section id="keyword-arguments" class="slide level2">
+<h2>Keyword arguments</h2>
+<ul>
+<li><p>Arguments may also be specified by a keyword, in which the caller
+precedes the argument with a parameter name and equals sign</p></li>
+<li><p>Always stores the argument value in the specified
+parameter</p></li>
+</ul>
+<pre ><code class="python">>>> def func( first, second, third ):
+        print( first, second, third )
+>>> func(third=4, first=2, second=6)
+2 6 4</code></pre>
+<ul>
+<li><strong>Keyword arguments can appear in any order</strong></li>
+<li>We can mix positional and keyword arguments when calling a function,
+but…</li>
+<li>All keyword arguments must come after any positional arguments!</li>
+</ul>
+</section>
+<section id="default-parameters" class="slide level2">
+<h2>Default parameters</h2>
+<ul>
+<li>When defining a function, arguments could be assigned default
+value</li>
+</ul>
+<pre ><code class="python">
+def num_dif(w=30, h=55):
+    ans = w-h
+    return ans
+num_dif(h=3, w=33) # keyword parameters mapped to override the default argument
+</code></pre>
+<ul>
+<li>This function define <strong>w = 30</strong> and <strong>h =
+55</strong> as their default values</li>
+<li>This example calls the function with keyword parameter but different
+values</li>
+<li>Although the parameter arrangement changed, the keyword fashion
+assigns values based on their parameter names</li>
+</ul>
+</section>
+<section id="default-arguments" class="slide level2">
+<h2>Default Arguments</h2>
+<ul>
+<li>Here is an example we saw in last class</li>
+</ul>
+<pre ><code class="python">def printArea(width = 1, height = 2):
+    area = width * height
+    print("width:", width, "\theight:", height, "\tarea:", area)
+
+printArea() # Default arguments width = 1 and height = 2
+printArea(4, 2.5) # Positional arguments width = 4 and height = 2.5
+printArea(height = 5, width = 3) # Keyword arguments width 
+printArea(width = 1.2) # Default height = 2
+printArea(height = 6.2) # Default widht = 1</code></pre>
+</section>
+<section id="review-question" class="slide level2"
+data-notes="Answer is 27">
+<h2 data-notes="Answer is 27">Review Question!</h2>
+<div class="cols">
+<div class="col">
+<p>What would be the printed value of z at the end of the code to the
+right?</p>
+<div class="poll">
+<ol>
+<li>19</li>
+<li>25</li>
+<li>27</li>
+<li>None of the above</li>
+</ol>
+</div>
+</div>
+<div class="col">
+<pre ><code class="python">def f(x,y=0):
+    z = (x + 3) ** 2
+    return y + z
+
+x = 1
+z = x + f(y=x,x=2)
+print(z)
+</code></pre>
+</div>
+</div>
+</section>
+<section id="walk-through-vegas" class="slide level2">
+<h2>Walk through vegas</h2>
+<ul>
+<li>Consider the code to below. When the final value of
+<code class="python">x</code> and <code class="python">z</code> are
+printed, what will their value be?</li>
+</ul>
+<pre ><code class="python">def Vegas(x):
+    y = 2
+    for i in range(5):
+        x += y
+    return x
+
+x = 3
+z = Vegas(x)
+print('z =', z)
+print('x =', x)</code></pre>
+</section>
+<section id="mystery-word" class="slide level2">
+<h2>Mystery word</h2>
+<ul>
+<li>Let us walk through this program and unravel what will be printed
+when the program complete execution.</li>
+</ul>
+<pre ><code class="python">def mystery (x):
+    def enigma (s, t):
+        t -= 2
+    return s [::6] + s[t]
+y = len(x)
+z = x[1 - y]
+z += enigma (x, y)
+z += enigma (x, y - 2)
+print(z)
+
+if __name__ == '__main__ ':
+    print( mystery ("abcdefgh"))
+
+
+</code></pre>
+</section>
+<section id="graphic-function-with-default-color" class="slide level2">
+<h2>Graphic function with default color</h2>
+<ul>
+<li>You can return any type of variable from a function, including
+GObject graphical objects</li>
+<li>Can be useful to write simple functions that bundle together common
+tasks
+<ul>
+<li>For instance, to create a filled circle centered at some
+location:</li>
+</ul></li>
+</ul>
+<pre ><code class="python">def make_filled_circ(x_cent, y_cent, radius, color='black'):
+    circle = GOval(x_cent-radius, y_cent-radius, 2*radius, 2*radius)
+    circle.set_color(color)
+    circle.set_filled(True)
+    return circle
+</code></pre>
+<!--
+
+## Summary of a Function Call 
+
+:::{.incremental style='font-size:.8em'}
+#. Evaluate the arguments in the context of the caller
+#. Reserve space for the function in a new stack frame
+#. Copy each positional argument to the corresponding parameter variable
+#. Copy each keyword argument to the parameter with that name
+#. For parameters with default values, if not already assigned, assign those values
+#. Evaluate statements in the function body, using current stack frame to look up values of local variables
+#. On encountering a `return`, compute the return value and substitute that value in place of the function call
+#. Remove the stack frame
+#. Return to the caller, continuing from just after the function call
+:::
+
+
+## Name Resolution and Scope
+- When Python encounters a variable name in a program, it looks for where the variable was defined in an expanding search:
+    1. **Local** - The local context is all the variables defined within the current function. This includes variables appearing as a parameter!
+    2. **Enclosing** - The enclosing context consists of the names defined in a function enclosing the current one.
+    3. **Global** - The global context consists of names defined outside of any function or imported into the current module.
+    4. **Built-in** - The last place Python looks is in the names of any built-in functions, like `abs`, `str`, `print`, etc.
+- The part of a program in which a name is defined in called its _scope_
+
+## Scoping Example
+```{.python data-line-numbers="" style='max-height:900px'}
+def func1(x,y):
+    return z + func2(x,y)
+
+def func2(x,y):
+    def func3(x):
+        return (y + x) ** 2
+
+    z = x - func3(y)
+    return z - y
+
+z = 1
+print(func1(2,z))
+```
+-->
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+      
+    </script>
+    </body>
+</html>

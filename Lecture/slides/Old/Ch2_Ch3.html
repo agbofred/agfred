@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold">
+  <meta name="dcterms.date" content="2020-09-02">
+  <title>Algorithms and Graphics!</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/class_python.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/horizon-dark.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Algorithms and Graphics!</h1>
+  <p class="author">Jed Rembold</p>
+  <p class="date">September 2, 2020</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Homework due Friday evening at midnight
+<ul>
+<li>Pdf on the main webpage.</li>
+<li>Link in pdf to add repository, then download to edit on your own system!</li>
+<li>Remember to edit the README to switch PENDING to DONE when you are done!</li>
+<li>Problems 2 and 3 have some auto-testing to help you check your work</li>
+</ul></li>
+<li>CS Tea tommorrow at 11:30
+<ul>
+<li>Dept introduction tomorrow with info about programs, clubs, internships, and more</li>
+</ul></li>
+<li>Polling:
+<ul>
+<li><a href="http://rembold-class.ddns.net">rembold-class.ddns.net</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="review-question" class="slide level2">
+<h2>Review Question</h2>
+<p>Which of the below blocks of code would print something different than the others?</p>
+<div class="cols">
+<div class="col">
+<div class="block" name="A">
+<pre ><code class="python">for n in range(10):
+    if n % 2 == 0:
+        print(n)</code></pre>
+</div>
+<div class="block" name="B">
+<pre ><code class="python">for i in range(0,10,2):
+    if i > 0:
+        print(i)</code></pre>
+</div>
+</div>
+<div class="col">
+<div class="block" name="C">
+<pre ><code class="python">for j in range(0,20,4):
+    L = j // 2
+    print(L)
+</code></pre>
+</div>
+<div class="block" name="D">
+<pre ><code class="python">for k in range(0,10):
+    if not (k % 2) > 0:
+        print(k)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="nesting-loops" class="slide level2">
+<h2>Nesting Loops</h2>
+<ul>
+<li>Most anything can go in the repeating block of a loop, <em>including other loops</em></li>
+<li>The inner most loop must finish <strong>all</strong> of its iterations before the outer loop finishes a <strong>single</strong> iteration</li>
+<li>Useful when you need to iterate over multiple different values
+<ul>
+<li>Example: generating multiplication tables</li>
+</ul>
+<pre ><code class="python">for a in range(1,5):
+    for b in range(1,5):
+        print(a*b)</code></pre></li>
+</ul>
+</section>
+<section id="algorithms" class="slide level2">
+<h2>Algorithms</h2>
+<ul>
+<li>A fundamental concept in computer science</li>
+<li>An <em>algorithm</em> is a solution strategy that satisfies the following criteria:
+<ul>
+<li>It is <em>clear and unambiguous</em>, in the sense that it is easily understood</li>
+<li>It is <em>effective</em>, in the sense that it is possible to carry out the steps</li>
+<li>It is <em>finite</em>, in the sense that the strategy always reaches an end point</li>
+</ul></li>
+<li>The word algorithm comes from the name of the 9th-century Persian mathematician Muhammad ibn Mūsā al-Khwārizmī</li>
+<li>Al-Kwārizmī’s most significant work was a treatise on mathematical methods entitled <em>Kitab al jabr w’al-muqabala</em>, which gave rise to the English word <em>algebra</em></li>
+<li>Many instances of algorithmic procedures that are extremely old, dating back to early civilizations in the Middle East, India, and China</li>
+</ul>
+</section>
+<section id="efficiency" class="slide level2">
+<h2>Efficiency</h2>
+<ul>
+<li>There can be many different algorithms for solving the same problem</li>
+<li>Many will vary widely in their efficiency, or how quickly and easily they will get you a solution</li>
+<li>May also vary in their complexity, or it how difficult they are to implement</li>
+<li>Commonly you will want to look for trade-offs between the two</li>
+</ul>
+<p><br><br></p>
+<div class="block" name="Example">
+<p>Let’s look at the classical case of trying to find the greatest common divisor between two integers. That is, we want to find the largest number that evenly divides two numbers.</p>
+</div>
+</section>
+<section id="brute-force" class="slide level2">
+<h2>Brute Force</h2>
+<ul>
+<li>One strategy is to just count backwards from the smaller value until you find a value that evenly divides both numbers</li>
+<li>The code could look something like:</li>
+</ul>
+<pre ><code class="python">def gcd(x, y):
+    g = min(x,y):
+    while x % g != 0 or y % g != 0:
+        g -= 1
+    return g</code></pre>
+<ul>
+<li>The algorithm will eventually terminate, since <code class="python">g</code> would eventually hit 1 and 1 evenly divides everything</li>
+<li>Might take a while!
+<ul>
+<li>Take a million steps to figure out that the gcd between 1000000 and 1000005 is 5!</li>
+</ul></li>
+</ul>
+</section>
+<section id="euclids-algorithm" class="slide level2">
+<h2>Euclid’s Algorithm</h2>
+<ul>
+<li>Euclid had the great insight that the gcd of x and y must also be the gcd of y and the remainder of x divided by y</li>
+<li>Gives rise to an alternative algorithm:</li>
+</ul>
+<pre ><code class="python">def gcd(x, y):
+    r = x % y
+    while r != 0:
+        x = y
+        y = r
+        r = x % y
+    return y</code></pre>
+<ul>
+<li>This only takes <strong>TWO</strong> steps to find the gcd between 1000000 and 1000005!!</li>
+</ul>
+</section>
+<section id="illustrating-euclids-algorithm" class="slide level2">
+<h2>Illustrating Euclid’s Algorithm</h2>
+</section>
+<section id="the-worth-of-a-picture" class="slide level2">
+<h2>The Worth of a Picture</h2>
+<ul>
+<li>There comes a time when reading and entering text on a terminal doesn’t cut it
+<ul>
+<li>Maybe you need more complicated input</li>
+<li>Maybe you need a more complicated interface that pure text can manage</li>
+<li>Maybe you have output that can not be shown as text</li>
+</ul></li>
+<li>Standard Python really only deals with the terminal interface</li>
+<li>Lots of outside libraries give Python more visual input/output
+<ul>
+<li>Turtle</li>
+<li>Matplotlib</li>
+<li>Tkinter <span class="fragment">← PGL</span></li>
+<li>PyGame</li>
+<li>Arcade</li>
+</ul></li>
+</ul>
+</section>
+<section id="the-portable-graphics-library" class="slide level2">
+<h2>The Portable Graphics Library</h2>
+<ul>
+<li>Built atop Tkinter</li>
+<li>The library (<code class="python">pgl.py</code>) is available on the website
+<ul>
+<li>Put it in the same folder as your code, and then you can import it</li>
+</ul></li>
+<li>Operates on the idea of a collage or cork-board</li>
+</ul>
+<p><?xml version="1.0" encoding="UTF-8"?>
+<svg width="181.22mm" height="99.559mm" version="1.1" viewBox="0 0 181.22 99.559" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(-8.9528 -14.081)">
+  <rect x="10.235" y="15.363" width="178.66" height="96.994" ry="3.352" fill="#c8beb7" stroke="#784421" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.565"/>
+  <rect class="fragment" x="53.589" y="37.213" width="101.09" height="50.546" ry="3.352" fill="#0cf"/>
+  <ellipse class="fragment" cx="121.16" cy="74.931" rx="43.368" ry="22.284" fill="#2aff80"/>
+ </g>
+</svg>
+</p>
+<ul>
+<li>Note that newer objects can obscure older objects. This layering arrangement is called the <em>stacking order</em>.</li>
+</ul>
+</section>
+<section id="the-pieces" class="slide level2">
+<h2>The Pieces</h2>
+<ul>
+<li>At its simplest then, we have two main parts:
+<ul>
+<li>The window (or felt-board/cork-board)
+<ul>
+<li>Created with the <code class="python">GWindow</code> function</li>
+<li>Takes two arguments: a width and a height in pixels</li>
+</ul></li>
+<li>The contents
+<ul>
+<li>A wide assortment of shapes that can be added to the scene</li>
+<li>Control over where they are placed, how large they are, what color they are, etc</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="blue-rectangle" class="slide level2">
+<h2>Blue Rectangle!</h2>
+<pre ><code class="python" data-line-numbers="1|3,4|7|8|9|10|11">from pgl import GWindow, GRect
+
+GW_WIDTH = 500
+GW_HEIGHT = 200
+
+def blue_rectangle():
+    gw = GWindow(GW_WIDTH, GW_HEIGHT)
+    rect = GRect(150, 50 ,200, 100)
+    rect.set_color("Blue")
+    rect.set_filled(True)
+    gw.add(rect)</code></pre>
+<!--![Variable Tracker](../images/blue_rectangle.svg)-->
+</section>
+<section id="the-coordinate-system" class="slide level2">
+<h2>The Coordinate System</h2>
+<p><?xml version="1.0" encoding="UTF-8"?>
+<svg width="390.46mm" height="146.14mm" version="1.1" viewBox="0 0 390.46 146.14" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <marker id="marker1717" overflow="visible" orient="auto">
+   <path transform="scale(.8)" d="m0 5.65v-11.3" fill="#008080" fill-rule="evenodd" stroke="#008080" stroke-width="1pt"/>
+  </marker>
+  <marker id="StopL" overflow="visible" orient="auto">
+   <path transform="scale(.8)" d="m0 5.65v-11.3" fill="#008080" fill-rule="evenodd" stroke="#008080" stroke-width="1pt"/>
+  </marker>
+ </defs>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(-14.342 -8.9911)">
+  <image x="64.843" y="18.88" width="339.96" height="136.25" stroke-width=".39225" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfgAAADKCAYAAABJ7VJtAAAABHNCSVQICAgIfAhkiAAAA3hJREFU eJzt11FxQkEURMH7UoghgsAKkYAWDEXOxgTUwkm3gvk7Ncf5clszM7+P+wAAn+37+jMzM1+bdwAA LyDwABAk8AAQJPAAECTwABAk8AAQJPAAECTwABAk8AAQJPAAECTwABAk8AAQJPAAECTwABAk8AAQ JPAAECTwABAk8AAQJPAAECTwABAk8AAQJPAAECTwABAk8AAQJPAAECTwABAk8AAQJPAAECTwABAk 8AAQJPAAECTwABAk8AAQJPAAECTwABAk8AAQJPAAECTwABAk8AAQJPAAECTwABAk8AAQJPAAECTw ABAk8AAQJPAAECTwABAk8AAQJPAAEHTaPYC249i9AN7bWrsXUOXBA0CQwANAkMADQJDAA0CQwANA kMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQ wANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDA A0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMAD QJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANA kMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQ wANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDA A0CQwANAkMADQJDAA0CQwANAkMADQJDAA0CQwANAkMADQJDAA0DQafcA2tbavQDgf/LgASBI4AEg SOABIEjgASBI4AEgSOABIEjgASBI4AEgSOABIEjgASBI4AEgSOABIEjgASBI4AEgSOABIEjgASBI 4AEgSOABIEjgASBI4AEgSOABIEjgASBI4AEgSOABIEjgASBI4AEgSOABIEjgASBI4AEgSOABIEjg ASBI4AEgSOABIEjgASBI4AEgSOABIEjgASBI4AEgSOABIEjgASBI4AEgSOABIEjgASBI4AEgSOAB IEjgASBI4AEgSOABIOg4X25r9wgA4Lk8eAAI+gMgAAx7yl/0WgAAAABJRU5ErkJggg== "/>
+  <g>
+   <rect x="64.843" y="8.9911" width="339.96" height="9.8886" ry=".86466" fill="#285577"/>
+   <text x="206.63153" y="15.925928" fill="#ffffff" font-family="sans-serif" font-size="7.5986px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="206.63153" y="15.925928" fill="#ffffff" stroke-width=".26458">blue_rectangle</tspan></text>
+   <circle cx="65.636" cy="18.866" r="3.3161" fill="#f60"/>
+   <text x="12.586732" y="25.491901" fill="#ff6600" font-family="sans-serif" font-size="20.426px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="12.586732" y="25.491901" fill="#ff6600" stroke-width=".26458">(0,0)</tspan></text>
+  </g>
+  <g fill="#008080">
+   <circle cx="167.29" cy="52.578" r="3.3161"/>
+   <text x="76.350014" y="59.203312" font-family="sans-serif" font-size="20.426px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="76.350014" y="59.203312" fill="#008080" stroke-width=".26458">(150,50)</tspan></text>
+   <path d="m167.68 126.82h134.9" marker-end="url(#StopL)" marker-start="url(#StopL)" stroke="#008080" stroke-width="1.119"/>
+   <path d="m311.2 121.13v-68.122" marker-end="url(#marker1717)" marker-start="url(#marker1717)" stroke="#008080" stroke-width="1.119"/>
+   <text x="199.44638" y="145.48874" font-family="sans-serif" font-size="20.426px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="199.44638" y="145.48874" fill="#008080" stroke-width=".26458">200 px</tspan></text>
+   <text x="313.77524" y="92.521362" font-family="sans-serif" font-size="20.426px" letter-spacing="0px" stroke-width=".26458" word-spacing="0px" style="line-height:1.25" xml:space="preserve"><tspan x="313.77524" y="92.521362" fill="#008080" stroke-width=".26458">100 px</tspan></text>
+  </g>
+ </g>
+</svg>
+</p>
+<ul>
+<li>Positions and distances on the screen are measured in terms of pixels</li>
+<li>The location of the origin and orientation of the y-axis are <strong>different from math</strong>!
+<ul>
+<li>Origin is in the upper left instead of lower left</li>
+<li>Y-values increase as you move downwards</li>
+</ul></li>
+</ul>
+</section>
+<section id="other-simple-objects" class="slide level2">
+<h2>Other Simple Objects</h2>
+<p>Functions to create simple geometric objects: <br></p>
+<ul>
+<li>Rectangles!
+<ul>
+<li><code class="python">GRect( x, y, width, height )</code></li>
+<li>Creates a rectangle whose upper left corner is at (x,y) of the specified size</li>
+</ul></li>
+<li>Circles/Ovals!
+<ul>
+<li><code class="python">GOval( x, y, width, height )</code></li>
+<li>Creates an oval that fits inside the rectangle with the same dimensions</li>
+</ul></li>
+<li>Lines!
+<ul>
+<li><code class="python">GLine( x1, y1, x2, y2 )</code></li>
+<li>Creates a line extending from (x1,y1) to (x2,y2)</li>
+</ul></li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } }
+		],
+      });
+    </script>
+    </body>
+</html>

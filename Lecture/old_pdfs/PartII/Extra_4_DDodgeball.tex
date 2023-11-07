@@ -1,0 +1,175 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics, multicol}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes, fit}
+
+%Preamble
+\title{Digital Dodgeball}
+\author{Jed Rembold}
+\date{April 24, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Grading
+			\begin{itemize}
+				\item Plugging away. Hoping to have the midterm projects finished by the end of the weekend
+				\item I'll post and updated grade report as soon as I finish those.
+			\end{itemize}
+		\item No class next week! Just working on your projects!
+		\item I'll post links each class day where you can find me to ask questions if you need help or advice
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Group Project Info}
+		\begin{itemize}
+			\item Emails with group assignments should have gone out. Start thinking through and talking what you want to create as a group!
+			\item Still working on getting the shared repositories made. Will be trying to get that done during ``lab'' today
+			\item Let me know if you are looking for ideas or want to bounce some ideas off me!
+			\item If you are trying to judge if there is enough content in your project, a rough rule of thumb would be to ask yourself if there is between 1-2 homework assignments worth of work for each group member
+			\item Try to aim to have your idea for your project mapped out by the end of of the weekend (and maybe let me know what it is)
+		\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Polling Question}
+	Where are groups generally at with respect to planning?
+	\begin{poll}
+		\item We have met and talked about some ideas, but not settled on something
+		\item We have generally come to a concensus about what we want to do
+		\item We haven't gotten a chance to get together and discuss yet
+		\item We have group projects?
+	\end{poll}
+\end{frame}
+
+\begin{frame}{Getting started with Digital Dodgeball}
+	\begin{itemize}
+		\item Can get materials at: \link{https://github.com/jrembold/WUPhys-CodeComp/archive/release.zip}{https://github.com/jrembold/WUPhys-CodeComp/archive/release.zip}
+			\vspace{5mm}
+
+		\item Documentation at: \link{https://jrembold.github.io/WUPhys-CodeComp/documentation/}{https://jrembold.github.io/WUPhys-CodeComp/documentation/}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{General Description}
+	\begin{itemize}
+		\item A simultaneous turn-based game of dodgeball
+		\item You write a \alert{script} to control your player. You have no direct control.
+		\item Only 5 possible moves to make each round, and you can only do 1
+		\item You will receive a new batch of information each round about what your player can ``see'' to base your next rounds move off of
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The Pieces}
+	\begin{itemize}
+		\item The Server
+			\begin{itemize}
+				\item What actually runs the game
+				\item All code here is written already, you just need to run it to play a game
+			\end{itemize}
+		\item The Visualizer
+			\begin{itemize}
+				\item Visualizes the game so you can see what happened (or what went wrong)
+				\item Has both Matplotlib and Tkinter interfaces
+				\item Shown by default upon conclusion of any server game
+			\end{itemize}
+		\item The player script(s)
+			\begin{itemize}
+				\item The part you actually write!
+				\item Has some boilerplate code that has to be there, but the rest is up to you!
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Running a Server}
+	\begin{itemize}
+		\item Can launch from either a normal terminal window or from within a Python terminal
+		\item Has several options you can/need to provide, the most important of which is the \pyi{-i} flag, after which follows a list of the player scripts you want in the game.
+			\begin{pythoncode}
+				python server.py -i RandomMan.py SimpleMan.py
+			\end{pythoncode}
+			or
+			\begin{pythoncode}
+				run server.py -i RandomMan.py SimpleMan.py
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Writing your Player Script}
+	\begin{itemize}
+		\item Template provided with the necessary basics
+		\item Always need to send one command to the server each round:
+			\begin{itemize}
+				\item \pyi{'forward'}: Go forward one space
+				\item \pyi{'rotCW'}: Rotate 90 degrees clockwise
+				\item \pyi{'rotCCW'}: Rotate 90 degrees counter-clockwise
+				\item \pyi{'ball'}: Throws a dodgeball in the direction the player is facing
+				\item \pyi{'ping'}: Take a turn to get more info on surroundings
+			\end{itemize}
+		\item Use \pyi{bot.sendMessage( )} to send the message to the server
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Gathering Info}
+	\begin{itemize}
+		\item Should use \pyi{bot.getMapState()} each iteration to get latest intel
+		\item Map information stored as attributes of \pyi{bot}
+			\begin{itemize}
+				\item \pyi{.active}: Has your bot been disqualified?
+				\item \pyi{.playercount}: How many players are still in the game?
+				\item \pyi{.ballcount}: How many dodgeballs does your player currently hold?
+				\item \pyi{.vision}: Looking forwards, a list of what your player ``sees''
+				\item \pyi{.lastping}: Dictionary of all info from most recent ping
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{What do you see?}
+	\begin{itemize}
+		\item Numbers correspond to different objects in vision:
+			\begin{itemize}
+				\item 0 - Nothing here. Empty space.
+				\item 1 - Wall here. Vision ends at a wall, so you shouldn't see this.
+				\item 2 - Active (moving) dodgeball. Decimal indicates direction
+				\item 3 - Inactive (fallen) dodgeball.
+				\item 50+ - Id for player. Decimal indicates facing direction.
+			\end{itemize}
+		\item Decimals indicate facing/traveling direction:
+			\begin{itemize}
+				\item 0.0 - Facing North
+				\item 0.1 - Facing East
+				\item 0.2 - Facing South
+				\item 0.3 - Facing West
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{General Tips}
+	\begin{itemize}
+		\item If you remain in one space for 120 turns (even if you are rotating each turn) you will be disqualified.
+		\item The map starts to close in slowly and then increasingly rapidly as the game progresses
+		\item Touching someone in front of you will also disqualify them
+		\item Players can disqualify each other simultaneously
+	\end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+
+\end{document}
+

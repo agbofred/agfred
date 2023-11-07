@@ -1,0 +1,1449 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold">
+  <meta name="dcterms.date" content="2023-02-27">
+  <title>Compounding Breakout</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Compounding Breakout</h1>
+  <p class="author">Jed Rembold</p>
+  <p class="date">February 27, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>PS3 feedback coming later today</li>
+<li>I’m shooting for PS4 feedback by Wednesday</li>
+<li>Midterm on Friday!
+<ul>
+<li>First practice exam already out</li>
+<li>Second practice exam to be posted later today</li>
+<li>Learning objective checklist posted. Look it over as you study!</li>
+<li><strong>I’m not going to put timer events or complex shapes on the
+midterm since you have not completed an assignment with those
+ideas</strong>
+<ul>
+<li>Mouse events are fair game though</li>
+</ul></li>
+</ul></li>
+<li>Polling: <a
+href="http://rembold-class.ddns.net">rembold-class.ddns.net</a></li>
+</ul>
+</section>
+<section id="review-question" class="slide level2">
+<h2>Review Question</h2>
+<div class="cols">
+<div class="col">
+<p>Which of the below blocks of code will create the image to the right?
+The window measures 500 x 200 pixels and the value of
+<code class="python">d</code> is 150.</p>
+</div>
+<div class="col">
+<figure>
+<img data-src="../images/GArc_RevQ.png" style="width:65.0%" alt=" " />
+<figcaption aria-hidden="true"> </figcaption>
+</figure>
+</div>
+</div>
+<div class="cols">
+<div class="col">
+<div class="block" name="A">
+<pre ><code class="python" style="font-size:.8em; margin-left:1em;">x, y = 250 - d / 2, 100 - d / 2
+a1 = GArc(x, y, d, d, 90, -180)
+gw.add(a1)</code></pre>
+</div>
+<div class="block" name="C">
+<pre ><code class="python" style="font-size:.8em; margin-left:1em;">x, y = 250 - d, 100 - d
+a1 = GArc(x, y, d, d, -180, 90)
+gw.add(a1)</code></pre>
+</div>
+</div>
+<div class="col">
+<div class="block" name="B">
+<pre ><code class="python" style="font-size:.8em; margin-left:1em;">x, y = 250 - d / 2, 100 - d / 2
+a1 = GArc(x, y, d, d, 90, 180)
+gw.add(a1)</code></pre>
+</div>
+<div class="block" name="D">
+<pre ><code class="python" style="font-size:.8em; margin-left:1em;">x, y = 250 - d / 2, 100 - d / 2
+a1 = GArc(x, y, d, 180, -90)
+gw.add(a1)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="triangle-by-vertex" class="slide level2">
+<h2>Triangle By Vertex</h2>
+<pre ><code class="python" style="max-height:800px;">def triangle_by_vertex():
+    def create_triangle(b, h):
+        tri = GPolygon()
+        tri.add_vertex(-b / 2, h / 2)
+        tri.add_vertex(b / 2, h / 2)
+        tri.add_vertex(0, -h / 2)
+        return tri
+
+    gw = GWindow(500, 500)
+    triangle = create_triangle(200, 200)
+    triangle.set_filled(True)
+    triangle.set_color("red")
+    gw.add(triangle, 250, 250)</code></pre>
+</section>
+<section id="triangle-by-polar-edge" class="slide level2">
+<h2>Triangle by Polar Edge</h2>
+<pre ><code class="python" style="max-height:800px;">def triangle_by_polar_edge():
+    def create_eq_triangle(side):
+        tri = GPolygon()
+        tri.add_vertex(0, 0)
+        for i in range(0, 360, 120):
+            tri.add_polar_edge(side, i)
+        return tri
+
+    gw = GWindow(500, 500)
+    triangle = create_eq_triangle(100)
+    triangle.set_filled(True)
+    triangle.set_color("green")
+    gw.add(triangle, 250, 250)</code></pre>
+</section>
+<section id="compound-objects" class="slide level2">
+<h2>Compound Objects</h2>
+<ul>
+<li>The <code class="python">GCompound</code> class makes it possible to
+combine several graphical objects so that the entire structure behaves
+as a single object</li>
+<li>Can be thought of as a combination of
+<code class="python">GWindow</code> and
+<code class="python">GObject</code>
+<ul>
+<li>You can add objects to it, but then you can also add it (and
+everything in it) to a window as one single object
+<ul>
+<li>This can be necessary to animate complex objects!</li>
+</ul></li>
+</ul></li>
+<li>Like a <code class="python">GPolygon</code>, uses its own coordinate
+system relative to a reference point
+<ul>
+<li>When adding objects to the <code class="python">GCompound</code>,
+you place them relative to the reference point</li>
+<li>When adding the <code class="python">GCompound</code> to a canvas,
+you set the location of the reference point</li>
+</ul></li>
+</ul>
+</section>
+<section id="and-my-axe" class="slide level2">
+<h2>And my Axe!</h2>
+<pre ><code class="python" style="max-height:800px;">def my_axe():
+    def create_axe():
+        axe = GCompound()
+        shaft = GRect(-15, 0, 30, 300)
+        shaft.set_filled(True)
+        shaft.set_color("brown")
+        axe.add(shaft)
+
+        blade = GPolygon()
+        blade.add_vertex(0, 0)
+        blade.add_vertex(200, -50)
+        blade.add_vertex(200, 50)
+        blade.set_filled(True)
+        blade.set_color("gray")
+        axe.add(blade, -80, 50)
+        return axe
+
+    gw = GWindow(500, 500)
+    axe = create_axe()
+    gw.add(axe, 250, 100)</code></pre>
+</section>
+<section id="project-2-breakout" class="slide level2">
+<h2>Project 2: Breakout!</h2>
+<div class="cols" style="align-items:center">
+<div class="col">
+<ul>
+<li>Project 2 is recreating the classic arcade game Breakout!</li>
+<li>Guide will be posted tomorrow, not due until March 10</li>
+<li>Focus on the midterm initially, but then consider getting a start
+this weekend</li>
+</ul>
+</div>
+<div class="col">
+<iframe width="100%" height="400vh" src="https://www.youtube.com/embed/UhAEjDKEHgk" title="Data Driven Gamer: Breakout (Atari, 1976 arcade, 60fps)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+<iframe width="100%" height="400vh" src="https://www.youtube.com/embed/QrlIqaN4ltM" title="DX Ball 2 gameplay (PC Game, 1999)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</div>
+</div>
+</section>
+<section id="breakout-history" class="slide level2">
+<h2>Breakout History</h2>
+<ul>
+<li class="fragment">The popular Breakout arcade game was released by
+Atari in 1976</li>
+<li class="fragment">Atari founder Nolan Bushnell wanted a new game that
+would build on the success of the earlier game Pong. He assigned Steve
+Jobs to develop the game, promising a bonus if the game required a small
+number of chips.</li>
+<li class="fragment">As Wikipedia tells the story, “Jobs had little
+specialized knowledge of circuit board design but knew [his friend
+Steve] Wozniak was capable of producing designs with a small number of
+chips. He convinced Wozniak to work with him, promising to split the fee
+evenly between them.”</li>
+<li class="fragment">Wozniak completed the game design in four days, but
+Jobs never told him about the bonus offer. Jobs was paid <span
+class="math inline">\(\$5,000\)</span>, but Wozniak received only <span
+class="math inline">\(\$350\)</span>.</li>
+<li class="fragment">Jobs and Wozniak co-founded Apple Computer the
+following year, which has grown to be the largest corporation in the
+world by market capitalization.</li>
+</ul>
+</section>
+<section id="breakout-basics" class="slide level2">
+<h2>Breakout Basics</h2>
+<div class="cols" style="align-items: center">
+<div class="col" style="font-size:.9em">
+<ul>
+<li>Breakout is a game in which the player attempts to break all the
+colored bricks by causing a bouncing ball to collide with them</li>
+<li>The player controls a paddle at the bottom of the screen which the
+ball will bounce off
+<ul>
+<li>The paddle can only move left and right</li>
+</ul></li>
+<li>If the ball makes it past the paddle to the bottom of the screen,
+the player loses a life
+<ul>
+<li>Lose 3 lives and it is game over!</li>
+</ul></li>
+</ul>
+</div>
+<div class="col">
+<figure>
+<video data-src="../video/project1_demo.webm" style="width:50.0%"
+controls=""><a href="../video/project1_demo.webm">Breakout!</a></video>
+<figcaption aria-hidden="true">Breakout!</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="breakout-milestones" class="slide level2">
+<h2>Breakout Milestones</h2>
+<ul>
+<li>Breakout is broken up over 5 milestones</li>
+<li>You have already seen or written pieces of similar code to many of
+the milestones!
+<ul>
+<li>Milestone 1: PS4 brick pyramid</li>
+<li>Milestone 3: Section bouncy ball problem (this week)</li>
+</ul></li>
+</ul>
+</section>
+<section id="milestone-1" class="slide level2">
+<h2>Milestone 1</h2>
+<iframe width="60%" height="800px" src="https://willamette.edu/~esroberts/cs151/Assignments/Project2/Breakout1/index.html">
+</iframe>
+</section>
+<section id="milestone-2" class="slide level2">
+<h2>Milestone 2</h2>
+<iframe width="60%" height="800px" src="https://willamette.edu/~esroberts/cs151/Assignments/Project2/Breakout2/index.html">
+</iframe>
+</section>
+<section id="milestone-3" class="slide level2">
+<h2>Milestone 3</h2>
+<iframe width="60%" height="800px" src="https://willamette.edu/~esroberts/cs151/Assignments/Project2/Breakout3/index.html">
+</iframe>
+</section>
+<section id="milestone-4" class="slide level2">
+<h2>Milestone 4</h2>
+<iframe width="60%" height="800px" src="https://willamette.edu/~esroberts/cs151/Assignments/Project2/Breakout4/index.html">
+</iframe>
+</section>
+<section id="milestone-5" class="slide level2">
+<h2>Milestone 5</h2>
+<iframe width="60%" height="800px" src="https://willamette.edu/~esroberts/cs151/Assignments/Project2/Breakout5/index.html">
+</iframe>
+</section>
+<section id="representations" class="slide level2">
+<h2>Representations</h2>
+<ul>
+<li>For the remained of today, we want to focus on how a computer can
+internally store more complex and abstract information</li>
+<li>Initially will look at numbers</li>
+<li>Then we’ll segue into strings</li>
+</ul>
+</section>
+<section id="bit-power" class="slide level2">
+<h2>Bit Power</h2>
+<ul>
+<li>The fundamental unit of memory inside a computer is called a
+<em>bit</em>
+<ul>
+<li>Coined from a contraction of the words binary and digit</li>
+</ul></li>
+<li>An individual bit exists in one of two states, usually denoted as
+<strong>0</strong> or <strong>1</strong>.</li>
+<li>More complex data can be represented by combining larger numbers of
+bits:
+<ul>
+<li>Two bits can represent 4 (<span class="math inline">\(2\times
+2\)</span>) values</li>
+<li>Three bits can represent 8 (<span
+class="math inline">\(2\times2\times2\)</span>) values</li>
+<li>Four bits can represent 16 (<span
+class="math inline">\(2\times2\times2\times2\)</span> or <span
+class="math inline">\(2^4\)</span>) values, etc</li>
+</ul></li>
+<li>My laptop here has 16GB of system memory, and can therefore keep
+track of approximately <span
+class="math inline">\(2^{16,000,000,000}\)</span> states!</li>
+</ul>
+</section>
+<section id="an-old-code-but-it-checks-out" class="slide level2">
+<h2>An old code, but it checks out</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>Binary notation is an old idea
+<ul>
+<li>Described by German mathematician Leibniz back in 1703</li>
+</ul></li>
+<li>Leibniz describes his use of binary notation in an easy to follow
+style</li>
+<li>Leibniz’s paper notes that the Chinese had discovered binary
+arithmetic 2000 years earlier, as illustrated by the patterns of lines
+in the <em>I Ching</em>!</li>
+</ul>
+</div>
+<div class="col">
+<figure>
+<img data-src="../images/Leibniz.jpg" style="width:70.0%"
+alt="Gottfried Wilhelm von Leibniz" />
+<figcaption aria-hidden="true">Gottfried Wilhelm von
+Leibniz</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="back-to-grade-school" class="slide level2">
+<h2>Back to Grade school</h2>
+<div class="center">
+<p><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="1920"
+   height="1080"
+   viewBox="0 0 508 285.75"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.0.2 (e86c870879, 2021-01-15)"
+   sodipodi:docname="Counting_Base10.svg">
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#ae81ff;stroke-opacity:1;fill:#ae81ff;fill-opacity:1"
+         id="path1397" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#2c2c2c"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.7"
+     inkscape:cx="946.46078"
+     inkscape:cy="194.91675"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="2528"
+     inkscape:window-height="1381"
+     inkscape:window-x="1096"
+     inkscape:window-y="43"
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="Coins"
+       transform="matrix(1.4210118,0,0,1.4223432,-33.61606,-5.5400398)"
+       style="stroke-width:0.703395">
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="path833"
+         cx="54.545166"
+         cy="43.241051"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle837"
+         cx="77.564255"
+         cy="52.075703"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle839"
+         cx="41.907047"
+         cy="64.572273"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle841"
+         cx="99.603134"
+         cy="41.224148"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle843"
+         cx="119.41412"
+         cy="61.587849"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle845"
+         cx="99.506523"
+         cy="77.776451"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle847"
+         cx="37.55912"
+         cy="90.916138"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle849"
+         cx="62.762871"
+         cy="81.726379"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle851"
+         cx="58.368755"
+         cy="114.79195"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle853"
+         cx="86.520744"
+         cy="95.28093"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle855"
+         cx="117.76722"
+         cy="96.700592"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle857"
+         cx="93.828987"
+         cy="117.88945"
+         r="8.3861389" />
+    </g>
+    <g
+       id="Num"
+       class="fragment"
+       transform="matrix(1.4210118,0,0,1.4223432,-33.61606,-5.5400398)"
+       style="stroke-width:0.703395">
+      <path
+         d="m 243.60974,120.87176 v 3.24609 h -18.83681 v -3.24609 h 8.0323 V 95.803399 l -7.48733,4.549271 -1.72967,-2.843295 9.71458,-6.018302 h 3.48303 v 29.380687 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.2035px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f8f8f2;fill-opacity:1;stroke:none;stroke-width:0.186107"
+         id="path905" />
+      <path
+         d="m 274.89162,90.969803 q 3.00915,0 5.2364,1.184705 2.22724,1.184705 3.41195,3.246092 1.1847,2.061387 1.1847,4.66774 0,3.00915 -1.39795,5.85244 -1.39795,2.84329 -4.50188,6.25524 -3.08023,3.41195 -8.71943,8.55357 h 15.37748 l -0.49758,3.38826 h -19.40547 v -3.24609 q 6.4211,-6.16047 9.50134,-9.59611 3.08023,-3.43565 4.26493,-5.87614 1.18471,-2.46419 1.18471,-5.18901 0,-2.772208 -1.56381,-4.336018 -1.54012,-1.587505 -4.26494,-1.587505 -2.34572,0 -3.90953,0.805599 -1.54011,0.781906 -3.12762,2.677434 l -2.74851,-2.132469 q 1.96661,-2.393105 4.33602,-3.530422 2.3931,-1.137316 5.63919,-1.137316 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.2035px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f8f8f2;fill-opacity:1;stroke:none;stroke-width:0.186107"
+         id="path907" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.466px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f8f8f2;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="174.15283"
+         y="123.56979"
+         id="text934"><tspan
+           sodipodi:role="line"
+           id="tspan932"
+           x="174.15283"
+           y="123.56979"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.466px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f8f8f2;stroke-width:0.186106">0</tspan></text>
+    </g>
+    <g
+       id="Places"
+       class="fragment"
+       transform="matrix(1.4210118,0,0,1.4223432,-33.61606,-5.5400398)"
+       style="stroke-width:0.703395">
+      <path
+         style="fill:#a6e22e;stroke:#a6e22e;stroke-width:0.749115;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.24735, 2.24735;stroke-dashoffset:0;stroke-opacity:1"
+         d="M 253.74501,128.54742 V 36.496791"
+         id="path887"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:#a6e22e;stroke:#a6e22e;stroke-width:0.749115;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.24735, 2.24735;stroke-dashoffset:0;stroke-opacity:1"
+         d="M 211.92157,128.54742 V 36.496791"
+         id="path889"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:#a6e22e;stroke:#a6e22e;stroke-width:0.749115;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.24735, 2.24735;stroke-dashoffset:0;stroke-opacity:1"
+         d="M 294.84129,128.54742 V 36.496791"
+         id="path891"
+         sodipodi:nodetypes="cc" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.5528px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#66d9ef;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="268.53009"
+         y="74.666428"
+         id="text895"><tspan
+           sodipodi:role="line"
+           id="tspan893"
+           x="268.53009"
+           y="74.666428"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.5528px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#66d9ef;stroke-width:0.186106">1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.5528px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#66d9ef;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="219.66667"
+         y="74.412216"
+         id="text912"><tspan
+           sodipodi:role="line"
+           id="tspan910"
+           x="219.66667"
+           y="74.412216"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.5528px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#66d9ef;stroke-width:0.186106">10</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.5528px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#66d9ef;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="168.91162"
+         y="74.412216"
+         id="text938"><tspan
+           sodipodi:role="line"
+           id="tspan936"
+           x="168.91162"
+           y="74.412216"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:21.5528px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#66d9ef;stroke-width:0.186106">100</tspan></text>
+    </g>
+    <g
+       id="Powers"
+       class="fragment"
+       transform="matrix(1.4210118,0,0,1.4223432,-33.61606,-5.5400398)"
+       style="stroke-width:0.703395">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:14.0973px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="265.04315"
+         y="50.109928"
+         id="text916"><tspan
+           sodipodi:role="line"
+           id="tspan914"
+           x="265.04315"
+           y="50.109928"
+           style="stroke-width:0.186106">10<tspan
+   style="font-size:9.16321px;baseline-shift:super;fill:#ae81ff;stroke-width:0.186106"
+   id="tspan922">0</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:14.0973px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="223.42386"
+         y="50.109928"
+         id="text928"><tspan
+           sodipodi:role="line"
+           id="tspan926"
+           x="223.42386"
+           y="50.109928"
+           style="stroke-width:0.186106">10<tspan
+   style="font-size:9.16321px;baseline-shift:super;fill:#ae81ff;stroke-width:0.186106"
+   id="tspan930">1</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:14.0973px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="178.75829"
+         y="50.109928"
+         id="text946"><tspan
+           sodipodi:role="line"
+           id="tspan944"
+           x="178.75829"
+           y="50.109928"
+           style="stroke-width:0.186106">10<tspan
+   style="font-size:9.16321px;baseline-shift:super;fill:#ae81ff;stroke-width:0.186106"
+   id="tspan948">2</tspan></tspan></text>
+    </g>
+    <g
+       id="Explanation"
+       class="fragment"
+       transform="matrix(1.0641516,0,0,1.0643202,-23.30661,2.3362848)"
+       style="stroke-width:0.939641">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5731px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.248613"
+         x="411.61658"
+         y="56.910843"
+         id="text1366"><tspan
+           sodipodi:role="line"
+           id="tspan1364"
+           x="411.61658"
+           y="56.910843"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5731px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ae81ff;stroke-width:0.248613">10 digits: 0 - 9</tspan></text>
+      <path
+         style="fill:#ae81ff;stroke:#ae81ff;stroke-width:0.906754;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
+         d="M 408.16498,53.593534 H 390.74923"
+         id="path1368" />
+    </g>
+    <g
+       aria-label="= 0 x 102 + 1 x 101 + 2 x 100"
+       transform="matrix(1.0637377,0,0,1.0647343,-23.30661,2.3362848)"
+       id="Total"
+       style="font-style:normal;font-weight:normal;font-size:14.1379px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.248613"
+       class="fragment">
+      <path
+         d="m 227.42501,24.714742 q -1.07691,0 -1.62227,1.063104 -0.53846,1.0562 -0.53846,3.182408 0,2.119304 0.53846,3.182408 0.54536,1.056201 1.62227,1.056201 1.08381,0 1.62227,-1.056201 0.54536,-1.063104 0.54536,-3.182408 0,-2.126208 -0.54536,-3.182408 -0.53846,-1.063104 -1.62227,-1.063104 z m 0,-1.104524 q 1.73272,0 2.64395,1.373752 0.91814,1.366847 0.91814,3.976284 0,2.602533 -0.91814,3.976284 -0.91123,1.366848 -2.64395,1.366848 -1.73272,0 -2.65086,-1.366848 -0.91123,-1.373751 -0.91123,-3.976284 0,-2.609437 0.91123,-3.976284 0.91814,-1.373752 2.65086,-1.373752 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1329" />
+      <path
+         d="m 239.51008,27.02237 -1.62042,2.180564 1.70444,2.300596 h -0.86822 l -1.30434,-1.760456 -1.30434,1.760456 h -0.86823 l 1.74046,-2.344607 -1.59241,-2.136553 h 0.86822 l 1.1883,1.596414 1.18831,-1.596414 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1331" />
+      <path
+         d="m 243.37305,32.929635 h 2.27808 v -7.862826 l -2.47828,0.497035 v -1.270202 l 2.46447,-0.497035 h 1.39446 v 9.133028 h 2.27808 v 1.173556 h -5.93681 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1333" />
+      <path
+         d="m 255.10861,24.714742 q -1.07691,0 -1.62227,1.063104 -0.53845,1.0562 -0.53845,3.182408 0,2.119304 0.53845,3.182408 0.54536,1.056201 1.62227,1.056201 1.08381,0 1.62227,-1.056201 0.54536,-1.063104 0.54536,-3.182408 0,-2.126208 -0.54536,-3.182408 -0.53846,-1.063104 -1.62227,-1.063104 z m 0,-1.104524 q 1.73272,0 2.64395,1.373752 0.91814,1.366847 0.91814,3.976284 0,2.602533 -0.91814,3.976284 -0.91123,1.366848 -2.64395,1.366848 -1.73272,0 -2.65086,-1.366848 -0.91123,-1.373751 -0.91123,-3.976284 0,-2.609437 0.91123,-3.976284 0.91814,-1.373752 2.65086,-1.373752 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1335" />
+      <path
+         d="m 261.37298,27.685221 h 3.16342 v 0.76281 h -4.25379 v -0.76281 q 0.51602,-0.533967 1.40447,-1.431391 0.89293,-0.901911 1.12178,-1.162164 0.43525,-0.489096 0.60576,-0.82563 0.175,-0.341021 0.175,-0.66858 0,-0.533968 -0.37692,-0.870501 -0.37243,-0.336534 -0.97371,-0.336534 -0.42627,0 -0.90191,0.148075 -0.47115,0.148074 -1.0096,0.448711 v -0.915372 q 0.54743,-0.219869 1.02306,-0.332047 0.47564,-0.112178 0.8705,-0.112178 1.04102,0 1.66024,0.520506 0.61922,0.520506 0.61922,1.391007 0,0.412815 -0.15705,0.785246 -0.15256,0.367944 -0.56089,0.870501 -0.11218,0.130126 -0.71345,0.753836 -0.60127,0.619223 -1.69613,1.736515 z"
+         style="font-size:9.18962px;baseline-shift:super;fill:#f92672;stroke-width:0.248613"
+         id="path1337" />
+      <path
+         d="m 273.58379,26.438135 v 2.80509 h 2.80508 v 0.856132 h -2.80508 v 2.80509 h -0.84606 v -2.80509 h -2.80509 v -0.856132 h 2.80509 v -2.80509 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1339" />
+      <path
+         d="m 284.01679,32.929635 h 2.27808 v -7.862826 l -2.47828,0.497035 v -1.270202 l 2.46447,-0.497035 h 1.39446 v 9.133028 h 2.27808 v 1.173556 h -5.93681 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1341" />
+      <path
+         d="m 296.29823,26.837974 -1.69896,2.286255 1.78705,2.412105 h -0.91031 l -1.36755,-1.845784 -1.36755,1.845784 h -0.91032 l 1.82481,-2.458249 -1.66959,-2.240111 h 0.91031 l 1.2459,1.673791 1.2459,-1.673791 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1343" />
+      <path
+         d="m 299.8334,32.929635 h 2.27808 v -7.862826 l -2.47827,0.497035 v -1.270202 l 2.46446,-0.497035 h 1.39446 v 9.133028 h 2.27808 v 1.173556 h -5.93681 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1345" />
+      <path
+         d="m 311.56896,24.714742 q -1.07691,0 -1.62226,1.063104 -0.53846,1.0562 -0.53846,3.182408 0,2.119304 0.53846,3.182408 0.54535,1.056201 1.62226,1.056201 1.08382,0 1.62227,-1.056201 0.54536,-1.063104 0.54536,-3.182408 0,-2.126208 -0.54536,-3.182408 -0.53845,-1.063104 -1.62227,-1.063104 z m 0,-1.104524 q 1.73273,0 2.64396,1.373752 0.91813,1.366847 0.91813,3.976284 0,2.602533 -0.91813,3.976284 -0.91123,1.366848 -2.64396,1.366848 -1.73272,0 -2.65085,-1.366848 -0.91123,-1.373751 -0.91123,-3.976284 0,-2.609437 0.91123,-3.976284 0.91813,-1.373752 2.65085,-1.373752 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1347" />
+      <path
+         d="m 317.20962,27.685221 h 1.48075 v -5.110829 l -1.61088,0.323073 v -0.82563 l 1.6019,-0.323072 h 0.9064 v 5.936458 h 1.48075 v 0.76281 h -3.85892 z"
+         style="font-size:9.18962px;baseline-shift:super;fill:#f92672;stroke-width:0.248613"
+         id="path1349" />
+      <path
+         d="m 329.61232,26.505483 v 2.746659 h 2.74666 v 0.838298 h -2.74666 v 2.746659 h -0.82843 V 30.09044 h -2.74666 v -0.838298 h 2.74666 v -2.746659 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1351" />
+      <path
+         d="m 342.55834,32.929635 h 4.8668 v 1.173556 h -6.5443 v -1.173556 q 0.79388,-0.821489 2.16073,-2.202143 1.37375,-1.387558 1.72582,-1.787948 0.66961,-0.752456 0.93194,-1.270202 0.26922,-0.524648 0.26922,-1.028587 0,-0.82149 -0.57987,-1.339235 -0.57297,-0.517745 -1.49801,-0.517745 -0.65581,0 -1.38756,0.227808 -0.72484,0.227808 -1.55323,0.690327 v -1.408268 q 0.8422,-0.33826 1.57394,-0.510842 0.73175,-0.172582 1.33924,-0.172582 1.60156,0 2.55421,0.80078 0.95265,0.800779 0.95265,2.140014 0,0.635101 -0.24162,1.208073 -0.23471,0.566068 -0.8629,1.339234 -0.17259,0.200195 -1.09762,1.15975 -0.92504,0.952652 -2.60944,2.671566 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1353" />
+      <path
+         d="m 355.16946,26.930301 -1.78594,2.4033 1.87854,2.535591 h -0.9569 l -1.43757,-1.940278 -1.43757,1.940278 h -0.95692 l 1.91823,-2.584098 -1.75506,-2.354793 h 0.9569 l 1.30969,1.759481 1.30969,-1.759481 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1355" />
+      <path
+         d="m 358.13674,32.929635 h 2.27808 v -7.862826 l -2.47827,0.497035 v -1.270202 l 2.46446,-0.497035 h 1.39446 v 9.133028 h 2.27808 v 1.173556 h -5.93681 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1357" />
+      <path
+         d="m 369.8723,24.714742 q -1.07691,0 -1.62226,1.063104 -0.53846,1.0562 -0.53846,3.182408 0,2.119304 0.53846,3.182408 0.54535,1.056201 1.62226,1.056201 1.08382,0 1.62227,-1.056201 0.54536,-1.063104 0.54536,-3.182408 0,-2.126208 -0.54536,-3.182408 -0.53845,-1.063104 -1.62227,-1.063104 z m 0,-1.104524 q 1.73273,0 2.64396,1.373752 0.91813,1.366847 0.91813,3.976284 0,2.602533 -0.91813,3.976284 -0.91123,1.366848 -2.64396,1.366848 -1.73272,0 -2.65085,-1.366848 -0.91123,-1.373751 -0.91123,-3.976284 0,-2.609437 0.91123,-3.976284 0.91813,-1.373752 2.65085,-1.373752 z"
+         style="fill:#f92672;stroke-width:0.248613"
+         id="path1359" />
+      <path
+         d="m 377.29435,22.345549 q -0.69999,0 -1.05447,0.691017 -0.34999,0.686529 -0.34999,2.068562 0,1.377545 0.34999,2.068562 0.35448,0.686529 1.05447,0.686529 0.70448,0 1.05448,-0.686529 0.35448,-0.691017 0.35448,-2.068562 0,-1.382033 -0.35448,-2.068562 -0.35,-0.691017 -1.05448,-0.691017 z m 0,-0.717939 q 1.12627,0 1.71857,0.892937 0.59679,0.88845 0.59679,2.584581 0,1.691644 -0.59679,2.58458 -0.5923,0.88845 -1.71857,0.88845 -1.12626,0 -1.72305,-0.88845 -0.5923,-0.892936 -0.5923,-2.58458 0,-1.696131 0.5923,-2.584581 0.59679,-0.892937 1.72305,-0.892937 z"
+         style="font-size:9.18962px;baseline-shift:super;fill:#f92672;stroke-width:0.248613"
+         id="path1361" />
+    </g>
+  </g>
+</svg>
+</p>
+</div>
+</section>
+<section id="now-in-binary" class="slide level2">
+<h2>Now in Binary</h2>
+<div class="center">
+<p><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1920"
+   height="1080"
+   viewBox="0 0 508 285.75"
+   version="1.1"
+   id="svg8"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   sodipodi:docname="Counting_Base2.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible;"
+       id="Arrow2Mend"
+       refX="0.0"
+       refY="0.0"
+       orient="auto"
+       inkscape:stockid="Arrow2Mend"
+       inkscape:isstock="true">
+      <path
+         transform="scale(0.6) rotate(180) translate(0,0)"
+         d="M 8.7185878,4.0337352 L -2.2072895,0.016013256 L 8.7185884,-4.0017078 C 6.9730900,-1.6296469 6.9831476,1.6157441 8.7185878,4.0337352 z "
+         style="fill-rule:evenodd;stroke-width:0.625;stroke-linejoin:round;stroke:#ae81ff;stroke-opacity:1;fill:#ae81ff;fill-opacity:1"
+         id="path1397" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#2c2c2c"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="1.4"
+     inkscape:cx="891.78571"
+     inkscape:cy="491.07143"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     inkscape:document-rotation="0"
+     showgrid="false"
+     units="px"
+     inkscape:window-width="2560"
+     inkscape:window-height="1413"
+     inkscape:window-x="1080"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:snap-global="false"
+     inkscape:showpageshadow="2"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#2c2c2c" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="Coins"
+       transform="matrix(1.4210118,0,0,1.4223432,-33.61606,-5.5400398)"
+       style="stroke-width:0.703395">
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="path833"
+         cx="54.545166"
+         cy="43.241051"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle837"
+         cx="77.564255"
+         cy="52.075703"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle839"
+         cx="41.907047"
+         cy="64.572273"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle841"
+         cx="99.603134"
+         cy="41.224148"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle843"
+         cx="119.41412"
+         cy="61.587849"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle845"
+         cx="99.506523"
+         cy="77.776451"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle847"
+         cx="37.55912"
+         cy="90.916138"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle849"
+         cx="62.762871"
+         cy="81.726379"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle851"
+         cx="58.368755"
+         cy="114.79195"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle853"
+         cx="86.520744"
+         cy="95.28093"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle855"
+         cx="117.76722"
+         cy="96.700592"
+         r="8.3861389" />
+      <circle
+         style="fill:#f92672;stroke:#f8f8f2;stroke-width:0.781647;stroke-linecap:round;stroke-linejoin:round"
+         id="circle857"
+         cx="93.828987"
+         cy="117.88945"
+         r="8.3861389" />
+    </g>
+    <g
+       id="Lines"
+       transform="matrix(1.4210118,0,0,1.4223432,-33.61606,-5.5400398)"
+       style="stroke-width:0.703395">
+      <path
+         style="fill:#a6e22e;stroke:#a6e22e;stroke-width:0.749115;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.24735, 2.24735;stroke-dashoffset:0;stroke-opacity:1"
+         d="M 254.67363,128.54742 V 36.496791"
+         id="path887"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:#a6e22e;stroke:#a6e22e;stroke-width:0.749115;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.24735, 2.24735;stroke-dashoffset:0;stroke-opacity:1"
+         d="M 214.50598,128.54742 V 36.496791"
+         id="path889"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:#a6e22e;stroke:#a6e22e;stroke-width:0.749115;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.24735, 2.24735;stroke-dashoffset:0;stroke-opacity:1"
+         d="M 294.84129,128.54742 V 36.496791"
+         id="path891"
+         sodipodi:nodetypes="cc" />
+      <path
+         style="fill:#a6e22e;stroke:#a6e22e;stroke-width:0.749115;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:2.24735, 2.24735;stroke-dashoffset:0;stroke-opacity:1"
+         d="M 174.33832,128.54742 V 36.496791"
+         id="path2414"
+         sodipodi:nodetypes="cc" />
+    </g>
+    <g
+       id="Powers"
+       class="fragment"
+       transform="matrix(1.4210118,0,0,1.4223432,-33.61606,-5.5400398)"
+       style="stroke-width:0.703395">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:14.0973px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="268.80103"
+         y="50.109928"
+         id="text916"><tspan
+           sodipodi:role="line"
+           id="tspan914"
+           x="268.80103"
+           y="50.109928"
+           style="baseline-shift:baseline;stroke-width:0.186106">2<tspan
+   style="font-size:65%;baseline-shift:super"
+   id="tspan2378">0</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:14.0973px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="223.42386"
+         y="50.109928"
+         id="text928"><tspan
+           sodipodi:role="line"
+           id="tspan926"
+           x="0"
+           y="0"
+           style="stroke-width:0.186106"><tspan
+             style="font-size:9.16321px;baseline-shift:super;fill:#ae81ff;stroke-width:0.186106"
+             id="tspan930" /></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:14.0973px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="188.19806"
+         y="50.109928"
+         id="text946"><tspan
+           sodipodi:role="line"
+           id="tspan944"
+           x="188.19806"
+           y="50.109928"
+           style="stroke-width:0.186106">2<tspan
+   style="font-size:65%;baseline-shift:super"
+   id="tspan2396">2</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:14.0973px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="228.69734"
+         y="50.109928"
+         id="text2392"><tspan
+           sodipodi:role="line"
+           id="tspan2390"
+           x="228.69734"
+           y="50.109928"
+           style="baseline-shift:baseline;stroke-width:0.186106">2<tspan
+   style="font-size:65%;baseline-shift:super"
+   id="tspan2394">1</tspan></tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:14.0973px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;baseline-shift:baseline;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="151.90758"
+         y="50.109928"
+         id="text2408"><tspan
+           sodipodi:role="line"
+           id="tspan2406"
+           x="151.90758"
+           y="50.109928"
+           style="stroke-width:0.186106">2<tspan
+   style="font-size:65%;baseline-shift:super"
+   id="tspan2412">3</tspan></tspan></text>
+    </g>
+    <g
+       id="Explanation"
+       class="fragment"
+       transform="matrix(1.0641516,0,0,1.0643202,-23.30661,2.3362848)"
+       style="stroke-width:0.939641">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5731px;line-height:1.25;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#ae81ff;fill-opacity:1;stroke:none;stroke-width:0.248613"
+         x="411.61658"
+         y="56.910843"
+         id="text1366"><tspan
+           sodipodi:role="line"
+           id="tspan1364"
+           x="411.61658"
+           y="56.910843"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:12.5731px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ae81ff;stroke-width:0.248613">2 digits: 0 &amp; 1</tspan></text>
+      <path
+         style="fill:#ae81ff;stroke:#ae81ff;stroke-width:0.906754;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;marker-end:url(#Arrow2Mend)"
+         d="M 408.16498,53.593534 H 390.74923"
+         id="path1368" />
+    </g>
+    <g
+       id="Places"
+       class="fragment">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5221px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#66d9ef;fill-opacity:1;stroke:none;stroke-width:0.264584;"
+         x="349.94"
+         y="102.41804"
+         id="text2418"><tspan
+           sodipodi:role="line"
+           id="tspan2416"
+           x="349.94"
+           y="102.41804"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5221px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264584;fill:#66d9ef;">1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5221px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#66d9ef;fill-opacity:1;stroke:none;stroke-width:0.264584;"
+         x="294.30887"
+         y="102.41804"
+         id="text2422"><tspan
+           sodipodi:role="line"
+           id="tspan2420"
+           x="294.30887"
+           y="102.41804"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5221px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264584;fill:#66d9ef;">2</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5221px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#66d9ef;fill-opacity:1;stroke:none;stroke-width:0.264584;"
+         x="236.65941"
+         y="102.41804"
+         id="text2426"><tspan
+           sodipodi:role="line"
+           id="tspan2424"
+           x="236.65941"
+           y="102.41804"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5221px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264584;fill:#66d9ef;">4</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5221px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#66d9ef;fill-opacity:1;stroke:none;stroke-width:0.264584;"
+         x="179.20757"
+         y="102.09341"
+         id="text2430"><tspan
+           sodipodi:role="line"
+           id="tspan2428"
+           x="179.20757"
+           y="102.09341"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:27.5221px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;stroke-width:0.264584;fill:#66d9ef;">8</tspan></text>
+    </g>
+    <g
+       id="Total"
+       class="fragment">
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="171.75519"
+         y="201.90543"
+         id="text2454"><tspan
+           sodipodi:role="line"
+           id="tspan2452"
+           x="171.75519"
+           y="201.90543"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f92672;stroke-width:0.264583">1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="196.43686"
+         y="202.32037"
+         id="text2458"><tspan
+           sodipodi:role="line"
+           id="tspan2456"
+           x="196.43686"
+           y="202.32037"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f92672;stroke-width:0.264583">8</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="185.84933"
+         y="199.00192"
+         id="text2462"><tspan
+           sodipodi:role="line"
+           id="tspan2460"
+           x="185.84933"
+           y="199.00192"
+           style="fill:#f92672;stroke-width:0.264583">x</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="227.31665"
+         y="201.90543"
+         id="text2466"><tspan
+           sodipodi:role="line"
+           id="tspan2464"
+           x="227.31665"
+           y="201.90543"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f92672;stroke-width:0.264583">1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="251.99832"
+         y="202.32037"
+         id="text2470"><tspan
+           sodipodi:role="line"
+           id="tspan2468"
+           x="251.99832"
+           y="202.32037"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f92672;stroke-width:0.264583">4</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="241.4108"
+         y="199.00192"
+         id="text2474"><tspan
+           sodipodi:role="line"
+           id="tspan2472"
+           x="241.4108"
+           y="199.00192"
+           style="fill:#f92672;stroke-width:0.264583">x</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="284.87585"
+         y="201.90543"
+         id="text2478"><tspan
+           sodipodi:role="line"
+           id="tspan2476"
+           x="284.87585"
+           y="201.90543"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f92672;stroke-width:0.264583">0</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="309.55753"
+         y="202.32037"
+         id="text2482"><tspan
+           sodipodi:role="line"
+           id="tspan2480"
+           x="309.55753"
+           y="202.32037"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f92672;stroke-width:0.264583">2</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="298.97"
+         y="199.00192"
+         id="text2486"><tspan
+           sodipodi:role="line"
+           id="tspan2484"
+           x="298.97"
+           y="199.00192"
+           style="fill:#f92672;stroke-width:0.264583">x</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="342.96381"
+         y="201.90543"
+         id="text2490"><tspan
+           sodipodi:role="line"
+           id="tspan2488"
+           x="342.96381"
+           y="201.90543"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f92672;stroke-width:0.264583">0</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="367.64548"
+         y="202.32037"
+         id="text2494"><tspan
+           sodipodi:role="line"
+           id="tspan2492"
+           x="367.64548"
+           y="202.32037"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:15.9809px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f92672;stroke-width:0.264583">1</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="357.05795"
+         y="199.00192"
+         id="text2498"><tspan
+           sodipodi:role="line"
+           id="tspan2496"
+           x="357.05795"
+           y="199.00192"
+           style="fill:#f92672;stroke-width:0.264583">x</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="211.08604"
+         y="199.62709"
+         id="text2502"><tspan
+           sodipodi:role="line"
+           id="tspan2500"
+           x="211.08604"
+           y="199.62709"
+           style="fill:#f92672;stroke-width:0.264583">+</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="268.745"
+         y="199.62709"
+         id="text2506"><tspan
+           sodipodi:role="line"
+           id="tspan2504"
+           x="268.745"
+           y="199.62709"
+           style="fill:#f92672;stroke-width:0.264583">+</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-weight:normal;font-size:10.5833px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#f92672;fill-opacity:1;stroke:none;stroke-width:0.264583"
+         x="326.14975"
+         y="199.62709"
+         id="text2510"><tspan
+           sodipodi:role="line"
+           id="tspan2508"
+           x="326.14975"
+           y="199.62709"
+           style="fill:#f92672;stroke-width:0.264583">+</tspan></text>
+    </g>
+    <g
+       id="Num"
+       class="fragment"
+       transform="matrix(1.4210118,0,0,1.4223432,-33.61606,-5.5400398)"
+       style="stroke-width:0.703395">
+      <path
+         d="m 205.73938,120.87176 v 3.24609 h -18.83681 v -3.24609 h 8.0323 V 95.803399 l -7.48733,4.549271 -1.72967,-2.843295 9.71458,-6.018302 h 3.48303 v 29.380687 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.2035px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f8f8f2;fill-opacity:1;stroke:none;stroke-width:0.186107"
+         id="path905" />
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.466px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f8f8f2;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="221.11581"
+         y="123.56979"
+         id="text934"><tspan
+           sodipodi:role="line"
+           id="tspan932"
+           x="221.11581"
+           y="123.56979"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.466px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f8f8f2;stroke-width:0.186106">0</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.466px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f8f8f2;fill-opacity:1;stroke:none;stroke-width:0.186106"
+         x="261.55167"
+         y="123.56979"
+         id="text2434"><tspan
+           sodipodi:role="line"
+           id="tspan2432"
+           x="261.55167"
+           y="123.56979"
+           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.466px;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#f8f8f2;stroke-width:0.186106">0</tspan></text>
+      <path
+         d="m 166.72785,120.87176 v 3.24609 h -18.83681 v -3.24609 h 8.0323 V 95.803399 l -7.48733,4.549271 -1.72967,-2.843295 9.71458,-6.018302 h 3.48303 v 29.380687 z"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:46.2035px;line-height:1.25;font-family:'FiraCode Nerd Font Mono';-inkscape-font-specification:'FiraCode Nerd Font Mono, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;letter-spacing:0px;word-spacing:0px;fill:#f8f8f2;fill-opacity:1;stroke:none;stroke-width:0.186107"
+         id="path2436" />
+    </g>
+  </g>
+</svg>
+</p>
+</div>
+</section>
+<section id="representing-integers" class="slide level2">
+<h2>Representing Integers</h2>
+<ul>
+<li>The number of symbols available to count with determines the
+<em>base</em> of a number system
+<ul>
+<li>Decimal is base 10, as we have 10 symbols (0-9) to count with
+<ul>
+<li>Each new number counts for 10 times as much as the previous</li>
+</ul></li>
+<li>Binary is base 2, as we only have 2 symbols (0 and 1) to count with
+<ul>
+<li>Each new number counts for twice as much as the previous</li>
+</ul></li>
+</ul></li>
+<li>Can always determine what number a representation corresponds to by
+adding up the individual contributions</li>
+</ul>
+<br>
+<p><img
+data-src="../images/svg_cache/040073a4bc4dc3a823e8c7d7a368c4d97c67005b.svg"
+style="width:50.0%" /></p>
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+    </script>
+    </body>
+</html>

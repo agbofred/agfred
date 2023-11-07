@@ -1,0 +1,321 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Lists: X-Men of Python}
+\author{Jed Rembold}
+\date{March 6, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 6 due tonight!
+			\end{itemize}
+		\item No lab today, I'll just be around to help with homework for a bit if people have questions
+		\item I'll be around until probably 6 or 7 tonight, but at Physics Tea at 3
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+		The code below is run. How would you then access the \pyi{'ninja'} element in tuple \pyi{D}?
+		\begin{poll}
+		\item \pyi{D[1][0]}
+		\item \pyi{D[0][1]}
+		\item \pyi{D[0][2]}
+		\item \pyi{D[1][2]}
+		\end{poll}
+		\exsol{\pyi{D[1][2]}}
+		
+		\begin{pythoncode}
+			A = ('pirate', 'ninja')
+			B = ('samurai',) + A
+			C = (B, ('ship', 'rope', 'horse'))
+			D = C[::-1]
+		\end{pythoncode}
+\end{frame}
+
+%\begin{frame}{Out of Control Slicing}
+	%\begin{itemize}
+		%\item Try to slice a tuple (or string!) where one side of the slice would be out of range of the tuple
+			%\begin{itemize}
+				%\item \pyi{(1,2,3)[1:100]}
+			%\end{itemize}
+		%\item Instead of giving an error, Python will return what it thinks you wanted
+			%\begin{itemize}
+				%\item Everything starting at 1 and up till the end of the list
+				%\item \pyi{(1,2,3)[1:100] == (1,2,3)[1:3]}
+			%\end{itemize}
+		%\item Works the same for negative indices as well!
+		%\item A slice will not give you an out-of-bounds error, it just returns what it can
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Multiple Assignment}
+	%\begin{itemize}
+		%\item We've already seen we can assign multiple variables at once
+			%\begin{itemize}
+				%\item \pyi{x, y = 2, 5}
+			%\end{itemize}
+		%\item We can use this same syntax to ``unpack'' tuples into separate variables
+			%\begin{itemize}
+				%\item \pyi{row, col = (2,5)}
+				%\item \pyi{x, y, z = ('fish', 'steak', 'potatoes')}
+				%\item \pyi{(a,b,c) = (1,2,3)}
+			%\end{itemize}
+		%\item You need the same number of variables as elements of your tuple for this to work
+			%\begin{itemize}
+				%\item Assign dummy variables if you need (a common one is \pyi{_})
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+
+%\begin{frame}[fragile]{Count 'em off}
+	%\begin{itemize}
+		%\item We know how to use a \pyi{for} loop to loop over either indices or values
+			%\begin{itemize}
+				%\item If indices, we can always get the value
+				%\item If values though, we'd have to track the indices ourselves
+			%\end{itemize}
+		%\item The values notation tends to make a lot of sense for many, so they prefer it
+		%\item Still have many situations where it is important to know an index of a value
+			%\begin{itemize}
+				%\item Can use \pyi{enumerate}!
+					%\begin{pythoncode}
+						%t = ('a', 'b', 'c')
+						%for i,v in enumerate(t):
+							%print('Index:',i,'Value:', v)
+					%\end{pythoncode}
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{\pyi{list} out the similarities\ldots}
+	%\begin{itemize}
+		%\item<+-> A \pyi{list} is another type of non-scalar object in Python
+			%\begin{itemize}
+				%\item Delimited with square brackets: \pyi{A = [1,2,3]}
+			%\end{itemize}
+		%\item<+-> Very similar to a tuple, in that they are an ordered sequence
+			%\begin{itemize}
+				%\item Still concatenate with addition
+				%\item Still can index, and slice
+				%\item Still can loop over with \pyi{for} loops
+			%\end{itemize}
+		%\item<+-> The primary difference?
+			%\begin{itemize}
+				%\item Lists are \alert{mutable}!
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+\begin{frame}[fragile]{Mutability: Part I}
+	\begin{itemize}
+		\item<1-> Touched on mutability before in that strings and tuples are immutable
+			\begin{itemize}
+				\item We can \alert{not} do the below:
+					\begin{pythoncode}
+						A = 'hello'
+						A[0] = 'H'
+
+						B = ('This', 'is', 'Sparta')
+						B[2] = 'Patrick'
+					\end{pythoncode}
+			\end{itemize}
+		\item<2-> Presumably, this is allowed with lists (and it is)
+		\item<2-> Mutability has some other ramifications though that we want to touch on
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+	\begin{center}
+		\begin{tikzpicture}[
+			code/.style={rounded corners, minimum width=12cm, minimum height=2cm},
+			memcode/.style={draw, Teal, font=\small, fill=DGray, },
+			]
+			\node[code, draw, ultra thick, FG, fill=DGray, label={168:Code}] (cblock) at (0,0) {};
+			\node[rounded corners, minimum width=7cm, minimum height=5cm, draw, ultra thick, Teal, fill=Teal!50!black, fill opacity=0.5, anchor = north east] (mem) at ($(cblock.south east)-(0,0.5)$) {};
+			\node[Teal, rotate=-90, right = 0mm of mem.east, anchor=south] {Memory};
+
+			\node<2>[code] at (cblock) {\pyi{cool = ['blue', 'violet]}};
+			\node<2-5>[memcode](ccode) at ($(mem) + (0,2)$) {\pyi{['blue', 'violet']}};
+			\node<2->[memcode, text = FG] (clab) at ($(ccode) + (-7cm,0)$) {\texttt{cool}};
+			\draw<2->[very thick, Orange, -stealth] (clab) -- (ccode);
+
+			\node<3>[code] at (cblock) {\pyi{warm = ['red', 'orange']}};
+			\node<3->[memcode](wcode) at ($(mem) + (0,0)$) {\pyi{['red', 'orange']}};
+			\node<3->[memcode, text = FG] (wlab) at ($(wcode) + (-7cm,0)$) {\texttt{warm}};
+			\draw<3->[very thick, Orange, -stealth] (wlab) -- (wcode);
+
+			\node<4>[code] at (cblock) {\pyi{colors = [cool, warm]}};
+			\node<4->[memcode](colcode) at ($(mem) + (0,1)$) {\pyi{[        ,       ]}};
+			\node<4->[memcode, text = FG] (collab) at ($(colcode) + (-5cm,0)$) {\texttt{colors}};
+			\path<4->[very thick, Orange, -stealth] (collab) edge (colcode)
+				($(colcode.center)-(0.25,0)$) edge (ccode)
+				($(colcode.center)+(0.25,0)$) edge (wcode);
+
+			\node<5>[code] at (cblock) {\pyi{COLORS = [['blue','violet'],['red','orange']]}};
+			\node<5->[memcode, font=\footnotesize] (COLcode) at ($(mem) + (-2,-1.5)$){\pyi{[  ,  ]}};
+			\node<5->[memcode, font=\footnotesize] (cCOLcode) at ($(COLcode) + (10:3)$){\pyi{['blue','violet']}};
+			\node<5->[memcode, font=\footnotesize] (wCOLcode) at ($(COLcode) + (-10:3)$){\pyi{['red','orange']}};
+			\node<5->[memcode, text=FG] (COLlab) at ($(COLcode)+(-4cm,0)$) {\texttt{COLORS}};
+			\path<5->[very thick, Orange, -stealth] (COLlab) edge (COLcode)
+				($(COLcode.center)-(0.25,0)$) edge[to path={|- (\tikztotarget)}] (cCOLcode)
+				($(COLcode.center)+(0.25,0)$) edge[to path={|- (\tikztotarget)}](wCOLcode);
+
+
+			\node<6>[code] at (cblock) {\pyi{cool[0] = 'indigo'}};
+			\node<6->[memcode](ccode) at ($(mem) + (0,2)$) {\pyi{['indigo', 'violet']}};
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+%\begin{frame}{PythonTutor}
+	%\begin{center}
+		%\url{http://www.pythontutor.com}
+	%\end{center}
+	%\begin{itemize}
+		%\item A slick resource I came across recently
+			%\begin{itemize}
+				%\item Walks through code step by step
+				%\item Does both the memory sort of visualization
+				%\item and the whiteboard/scope sort of visualization
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+
+\begin{frame}[fragile]{Append, Extend, Comprehend}
+	\begin{itemize}
+		\item Can add a new item to a list with \pyi{append} method
+			\begin{pythoncode}
+				A = ['tuna']
+				A.append('Cod')
+				A.append('Halibut')
+				A.append('Salmon')
+				print(A)
+			\end{pythoncode}
+		\item Can add many new items to list with \pyi{extend} method
+			\begin{pythoncode}
+				A = ['tuna']
+				A.extend(['Cod', 'Halibut', 'Salmon'])
+				print(A)
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{More useful list methods}
+	\begin{itemize}
+		\item Can remove things from lists easily by value
+			\begin{itemize}
+				\item \pyi{L.remove(e)}
+				\item Removes the \emph{first} occurance of \pyi{e} from the list \pyi{L}
+			\end{itemize}
+		\item Can find values in the list
+			\begin{itemize}
+				\item \pyi{L.index(e)}
+				\item Returns the index of the \emph{first} occurance of \pyi{e} in the list \pyi{L}
+			\end{itemize}
+		\item Can sort the list
+			\begin{itemize}
+				\item \pyi{L.sort()}
+				\item Sorts the list in ascending order
+			\end{itemize}
+			
+	\end{itemize}
+	
+\end{frame}
+
+
+\begin{frame}[fragile]{Sneaky Mutability}
+	\begin{itemize}
+		\item Mutability is usually great for its flexibility
+		\item I've found two real instances when I have to be careful
+			\begin{itemize}
+				\item Initializing a list to look like another list, wanting to make changes to one and then compare
+					\begin{itemize}
+						\item \href{http://www.pythontutor.com/visualize.html#code=A%20%3D%20%5B'Aardvark',%20'Butterfly',%20'Centipede'%5D%0AB%20%3D%20A%0A%0AB.append%28'Deer'%29%0AB.remove%28'Butterfly'%29%0A%0Aprint%28A%29%0Aprint%28B%29&cumulative=false&curInstr=6&heapPrimitives=false&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false}{Example}
+					\end{itemize}
+					
+				\item Looping over a mutating list
+					\begin{itemize}
+						\item \href{http://www.pythontutor.com/visualize.html#code=A%20%3D%20%5B1,2,3,4,5,6,7,8,9%5D%0A%0Afor%20i,num%20in%20enumerate%28A%29%3A%0A%20%20%20%20print%28'At%20index%3A',%20i%29%0A%20%20%20%20if%203%20%3C%20num%20%3C%206%3A%0A%20%20%20%20%20%20%20%20A.remove%28num%29%0A%20%20%20%0Aprint%28A%29&cumulative=false&curInstr=0&heapPrimitives=false&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false}{Example}
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Cloning}
+	\begin{itemize}
+		\item What can we do then in these instances to not let mutability mess us up?
+		\item \alert{Clone} the list instead of just assigning a new variable to it!
+			\begin{itemize}
+				\item Creates a \emph{new object} in memory
+				\item Several different ways you can make a clone:
+					\begin{itemize}
+						\item Slicing
+						\item Using \pyi{list}
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Check}
+	\begin{columns}
+		\column{0.7\textwidth}
+		Given the code to the right, what would be the final printed value of A?
+		\begin{poll}
+		\item \pyi{['Fox', 'Giraffe', 'Hippo', 'Iguana']}
+		\item \pyi{['Fox', 'Hippo', 'Iguana']}
+		\item \pyi{['Iguana', 'Fox']}
+		\item \pyi{['Fox', 'Iguana']}
+		\end{poll}
+		\exsol{\pyi{['Fox', 'Hippo', 'Iguana']}}
+		
+		\column{0.4\textwidth}
+		\begin{pythoncode}
+			A = [
+				'Fox',
+				'Giraffe', 
+				'Hippo'
+				]
+			A.append('Iguana')
+			A[:].reverse()
+			B = A
+			for anim in B:
+				if anim[1] == 'i':
+					B.remove(anim)
+			print(A)
+		\end{pythoncode}
+	\end{columns}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

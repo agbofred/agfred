@@ -1,0 +1,312 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics, multicol}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes, fit}
+
+%Preamble
+\title{Not for the individual, but for the class...}
+\author{Jed Rembold}
+\date{April 8, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 9 is out!
+				\item Homework 8 is due on Friday as well!
+			\end{itemize}
+		\item Virtual CS Tea tomorrow!
+			\begin{itemize}
+				\item Connection info posted on Campuswire
+				\item Just socializing and catching up this week
+			\end{itemize}
+		\item CS/Data Science professor candidate talks upcoming
+			\begin{itemize}
+				\item Teaching talk today 3-4
+				\item Research talk tomorrow 4:10-5:30
+				\item Zoom info on Campuswire
+			\end{itemize}
+			
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\begin{columns}
+		\column{0.5\textwidth}
+		What would be the output of \pyi{print(D.x)} for the very contrived bit of code to the right?
+		\begin{poll}
+		\item 15
+		\item 13
+		\item 10
+		\item \pyi{None}
+		\end{poll}
+		\exsol{15}
+		
+		\column{0.5\textwidth}
+		\scriptsize
+		\vspace{-8mm}
+		\begin{pythoncode}
+			class ObjA:
+				def __init__(self):
+					self.x = 5
+
+			class ObjB(ObjA):
+				def __init__(self):
+					ObjA.__init__(self)
+					self.x = 8
+
+			class ObjC(ObjB):
+				def __init__(self):
+					ObjA.__init__(self)
+					self.y = self.x + 2
+
+			class ObjD(ObjC):
+				def __init__(self):
+					ObjC.__init__(self)
+					ObjB.__init__(self)
+					self.x += self.y
+
+			D = ObjD()
+		\end{pythoncode}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Multiple Inheritance}
+	\begin{itemize}
+		\item A class is not limited to inheriting from only a single parent!
+		\item Can provide multiple parents!
+			\begin{itemize}
+				\item Ordering matters!
+			\end{itemize}
+		\item Example: a class that forms the intersection of two other types
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Pieces of Inheritance}
+	\begin{columns}
+		\column{0.5\textwidth}
+	\begin{center}
+		\begin{tikzpicture}[
+			class/.style={draw, very thick, rounded corners, minimum size=2cm},
+			att/.style={font=\scriptsize, text width=2cm, align=center},
+			methods/.style={inner sep=0pt, outer sep=0pt, minimum width=1.5cm, minimum height=3mm},
+			]
+
+			\coordinate (A) at (0,0);
+			\node[att, Blue, above = 2mm of A.center](At) {attributes};
+			\node[methods, fill=Blue, below = 2mm of A.center](Ab) {};
+			\node[class,Blue, fit=(At)(Ab)](Ac) {};
+
+			\coordinate[right = 4cm of A] (B);
+			\node[att, Green, above = 5mm of B.center](Bt) {attributes};
+			\node[att, Blue, above = 2mm of B.center] {attributes};
+			\node[methods, fill=Green, below = 2mm of B.center] {};
+			\node[methods, fill=Blue, below = 6mm of B.center](Bb) {};
+			\node[class,Green, fit={(Bt)(Bb)}](Bc) {};
+
+			\coordinate[below = 3.5cm of A] (C);
+			\node[att, Red, above = 2mm of C.center](Ct) {attributes};
+			\node[methods, fill=Red, below = 2mm of C.center](Cb) {};
+			\node[class,Red, fit=(Ct)(Cb)](Cc) {};
+
+			\coordinate[right = 4cm of C] (D);
+			\node[att, Orange, above = 11mm of D.center](Dt) {attributes};
+			\node[att, Red, above = 8mm of D.center] {attributes};
+			\node[att, Green, above = 5mm of D.center] {attributes};
+			\node[att, Blue, above = 2mm of D.center] {attributes};
+			\node[methods, fill=Orange, below = 2mm of D.center] {};
+			\node[methods, fill=Red, below = 6mm of D.center] {};
+			\node[methods, fill=Green, below = 10mm of D.center] {};
+			\node[methods, fill=Blue, below = 14mm of D.center](Db) {};
+			\node[class,Orange, fit={(Dt)(Db)}](Dc) {};
+
+			\path[ultra thick, -stealth, Purple]
+				(Dc) edge (Cc) edge (Bc)
+				(Bc) edge (Ac);
+
+			\only<2->{
+				\node[methods, fill=Green, below = 6mm of D.center] {};
+				\node[methods, fill=Blue, below = 10mm of D.center] {};
+				\node[methods, fill=Red, below = 14mm of D.center] {};
+			}
+			\only<3>{
+				\node[att, Green, above = 8mm of D.center] {attributes};
+				\node[att, Blue, above = 5mm of D.center] {attributes};
+				\node[att, Red, above = 2mm of D.center] {attributes};
+			}
+			\only<4>{
+				\node[att, Green, above = 11mm of D.center] {attributes};
+				\node[att, Blue, above = 8mm of D.center] {attributes};
+				\node[att, Orange, above = 5mm of D.center] {attributes};
+				\node[att, Red, above = 2mm of D.center] {attributes};
+			}
+
+		\end{tikzpicture}
+	\end{center}
+		
+		\column{0.5\textwidth}
+		\begin{onlyenv}<1>
+			\begin{pythoncode}
+				class Orange(Red, Green):
+					def __init__(self):
+						Green.__init__.self()
+						Red.__init__.self()
+						self.attributes
+			\end{pythoncode}
+		\end{onlyenv}
+		\begin{onlyenv}<2>
+			\begin{pythoncode}
+				class Orange(Green, Red):
+					def __init__(self):
+						Green.__init__.self()
+						Red.__init__.self()
+						self.attributes
+			\end{pythoncode}
+		\end{onlyenv}
+		\begin{onlyenv}<3>
+			\begin{pythoncode}
+				class Orange(Green, Red):
+					def __init__(self):
+						Red.__init__.self()
+						Green.__init__.self()
+						self.attributes
+			\end{pythoncode}
+		\end{onlyenv}
+		\begin{onlyenv}<4>
+			\begin{pythoncode}
+				class Orange(Green, Red):
+					def __init__(self):
+						Red.__init__.self()
+						self.attributes
+						Green.__init__.self()
+			\end{pythoncode}
+		\end{onlyenv}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Thought Experiment}
+	\begin{columns}
+		\column{0.5\textwidth}
+		Suppose you wanted to program the background logic for playing a game of checkers. What different classes might you want to implement? What about any sub/super classes?
+		
+		\vspace{5mm}
+		List them and their relationships (if any) out. We'll talk about them in a moment.
+		
+		\column{0.5\textwidth}
+		\begin{center}
+			\begin{tikzpicture}[
+				block/.style={minimum size=1cm, draw, white},
+				scale=0.75,
+				transform shape,
+				]
+				\foreach \x in {1,3,...,8}{
+					\foreach \y in {1,3,...,8}{
+						\node[block, fill=Red] at (\x,\y) {};
+						\node[block, fill=BG] at (\x, \y+1) {};
+						\node[block, fill=Red] at (\x+1,\y+1) {};
+						\node[block, fill=BG] at (\x+1, \y) {};
+					}
+				}
+			\end{tikzpicture}
+		\end{center}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Variable Types}
+	\begin{itemize}
+		\item So far we have been looking at \alert{instance variables}.
+			\begin{itemize}
+				\item A data attribute that is associated to a particular instance or object
+			\end{itemize}
+		\item Much of the time, this is what we want when dealing with OOP ideas
+		\item Sometimes though it is useful to create an attribute that is tied directly to the class itself, and not to a specific object.
+			\begin{itemize}
+				\item Called a \alert{class variable}.
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Creating a class variable}
+	\begin{itemize}
+		\item No usage of \pyi{self}, this variable applies to all!
+		\item Define just like you would a normal variable in a function
+		\item Usually defined at the top before the methods
+	\end{itemize}
+	
+	\begin{pythoncode}
+		class MyBestClass:
+			a_class_variable = 'hello!'
+
+			def __init__(self):
+				self.a_instance_variable = 'Hi!'
+	\end{pythoncode}
+\end{frame}
+
+\begin{frame}[fragile]{Accessing a class variable}
+	\vspace{5mm}
+	\begin{itemize}
+		\item Can access directly by referencing the class:
+			\begin{itemize}
+				\item \pyi{print(MyBestClass.a_class_variable)}
+				\item Requires no instance to actually exist
+			\end{itemize}
+		\item Can access from an instance just like any other instance attribute
+			\begin{pythoncode}
+				A = MyBestClass()
+				print(A.a_class_variable)
+			\end{pythoncode}
+		\item If changing or setting a class variable, \alert{must} use the \pyi{ClassName.Class_Variable} notation!
+			\begin{itemize}
+				\item Using \pyi{self} or the object will create an instance variable instead!
+			\end{itemize}
+	\end{itemize}
+	\pause
+	\begin{columns}
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			MyBestClass.class_var = 4
+		\end{pythoncode}
+		\begin{tikzpicture}[overlay, remember picture]
+			\draw[ultra thick, Green, rounded corners] (-.2,0.3) rectangle + (7,1);
+		\end{tikzpicture}
+		
+		\column{0.4\textwidth}
+		\begin{pythoncode}
+			A.class_var = 4
+		\end{pythoncode}
+		\begin{tikzpicture}[overlay, remember picture]
+			\draw[ultra thick, Red] (-.2,0.3) -- + (4.5,1) (-.2,1.3) -- +(4.5,-1);
+		\end{tikzpicture}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{When to Use}
+	\begin{itemize}
+		\item Do all members or objects of your class share a common trait?
+			\begin{itemize}
+				\item Think about if it would make sense for one member of that class to have that trait altered.
+				\item If no, might be a good candidate for a class variable
+			\end{itemize}
+		\item Are there specific constants or known values that all instances of your class will rely on?
+		\item Do you need some sort of global counter to keep track of the amount of instances you have created?
+	\end{itemize}
+	
+\end{frame}
+
+
+
+
+\end{document}
+

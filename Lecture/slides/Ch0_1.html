@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold">
+  <meta name="dcterms.date" content="2023-01-18">
+  <title>Introducing Karel</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Introducing Karel</h1>
+  <p class="author">Instructor: Fred Agbo <br><br>  <strong>Slides by: Jed Rembold</strong>  </p>
+  <p class="date">August 28, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Welcome to CS-151: Intro to Programming with Python!</li>
+<li>Things to do:
+<ul>
+<li>Access the course webpage on Canvas at <a
+href="https://willamette.instructure.com/courses/3703" target="_blank">here!</a> 
+<li> Lecture slides can also be accessed from my personal website at <a href="https://agbofred.github.io/pythonintro.html" target="_blank">here</a> </li>
+<ul>
+</ul></li>
+<li>Read over the full syllabus</li>
+<li>Join the class Discord server for ease of communication and
+announcements</li>
+<li>Fill out the section availability form <a href="https://forms.gle/75s2M4XhQt23iFdY8">here</a></li>
+<li>Bring phone or computer for polling questions in the future</li>
+<li>Come to one of the laptop setup sessions (beginning on Wednesday) or
+follow online guides</li>
+</ul></li>
+<li>Homework
+<ul>
+<li>Problem Set 1 will be posted before the end of this week </li>
+</ul></li>
+</ul>
+</section>
+<section id="my-vitals" class="slide level2">
+<h2>My Vitals</h2>
+<div class="cols">
+<div class="col">
+<dl>
+<dt>Name</dt>
+<dd>
+Fred Agbo
+</dd>
+<dt>Office</dt>
+<dd>
+Ford 209
+</dd>
+<dt>Office Hours</dt>
+<dd>
+M, W 11:00-12:00pm
+</dd>
+<dd>
+F 1:00-2:00pm
+</dd>
+<dd>
+Online via Zoom by appointment
+</dd>
+<dt>Email:</dt>
+<dd>
+fjagbo at willamette.edu
+</dd>
+<dt>Office Phone:</dt>
+<dd>
+503-370-6862
+</dd>
+</dl>
+</div>
+<div class="col">
+<p><img data-src="../../images/fredprofile.jpg" style="width:50.0%" /></p>
+</div>
+</div>
+</section>
+<section id="motivations" class="slide level2">
+<h2>Motivations</h2>
+<div>
+<ul>
+<li class="fragment">The field of computing today is scarcely
+recognizable compared to the field 50 years ago.</li>
+<li class="fragment">Many feel the pace of the field is only
+accelerating as we move forwards.</li>
+<li class="fragment">Studying computing now lets you take part in
+driving forward not only the field of computing, but of all the modern
+fields that utilize computing.
+<ul>
+<li class="fragment">Almost all fields!</li>
+</ul></li>
+</ul>
+</div>
+<aside class="notes">
+<p>Discuss my own motivations as well!</p>
+</aside>
+</section>
+<section id="how-to-succeed" class="slide level2">
+<h2>How to Succeed</h2>
+<ul>
+<li>People enter this course with a variety of initial experiences
+<ul>
+<li>This course is built for an individual entering with
+<strong>zero</strong> coding experience</li>
+</ul></li>
+<li>Path to Success
+<ul>
+<li>There is a significant time committment for this course
+<ul>
+<li>The only way to get good at coding is to <strong>do</strong>
+coding</li>
+<li>Coding can often times involve a lot of frustrating troubleshooting
+or failed attempts</li>
+<li>Expect, on average, the full use of WU’s 2-3 hours outside class for
+every hour in class</li>
+</ul></li>
+<li>If you are stuck for more than 30 minutes, <em>ask myself or your
+section leader for help</em>
+<ul>
+<li>While it is important to give yourself time to troubleshoot, when
+you are learning, past a certain point just leads to frustration</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="squad-goals" class="slide level2">
+<h2>Squad Goals</h2>
+<div class="block" name="Primary Objective">
+<p>To gain the skills, knowledge, and confidence necessary to write,
+test, and debug Python programs requiring several hundred lines of
+code.</p>
+</div>
+<p>Doing so will require that students be able to:</p>
+<ul>
+<li>implement simple algorithms using Python control structures,</li>
+<li>apply decomposition and step-wise refinement techniques,</li>
+<li>design data structures to model information,</li>
+<li>execute all phases of the programming process, including design,
+implementation, testing and debugging,</li>
+</ul>
+</section>
+<section id="grading" class="slide level2">
+<h2>Grading</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>Standard 90/80/70 etc grade cut-offs
+<ul>
+<li>Top 2% get +’s, bottom 2% get -’s</li>
+</ul></li>
+</ul>
+</div>
+<div class="col">
+<table>
+<tbody>
+<tr class="odd">
+<td>Participation</td>
+<td style="text-align: right;">5%</td>
+</tr>
+<tr class="even">
+<td>Problem Sets</td>
+<td style="text-align: right;">20%</td>
+</tr>
+<tr class="odd">
+<td>Projects</td>
+<td style="text-align: right;">30%</td>
+</tr>
+<tr class="even">
+<td>Midterm</td>
+<td style="text-align: right;">20%</td>
+</tr>
+<tr class="odd">
+<td>Final Exam</td>
+<td style="text-align: right;">25%</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="participation" class="slide level2">
+<h2>Participation</h2>
+<ul>
+<li>Scored through participation in class polls and or asking questions about
+a specific slide on Discord server.</li>
+<li>Generally 1-2 polls per day</li>
+<li>Answering any poll gets you full points for the day (even if you are
+wrong!)</li>
+<li>Answering correctly gets you bits of extra credit</li>
+<li>Polling website at <a
+href="https://www.polleverywhere.com/agbofred203" target="_blank">https://www.polleverywhere.com/agbofred203</a></li>
+<li>Will start officially on Friday</li>
+<li> Show up in your session (section leaders will keep record of participation)</li>
+</ul>
+</section>
+<section id="homework" class="slide level2">
+<h2>Homework</h2>
+<ul>
+<li>Falls into two categories:
+<ul>
+<li><em>Problem Sets:</em> smaller, more focused assignments
+<ul>
+<li>Graded on standard, numeric scales</li>
+</ul></li>
+<li><em>Projects:</em> larger, more integrative assignments
+<ul>
+<li>Graded on a more qualitative scale (next slide)</li>
+</ul></li>
+</ul></li>
+<li>All will be due on Monday at 11:59pm</li>
+<li>Submissions of <em>both</em> will be handled through Github
+Classroom
+<ul>
+<li>Learning how to do this in class</li>
+</ul></li>
+<li>3 cumulative late days over the entire semester without penalty then
+penalties enacted for each subsequent day late</li>
+<li>Extensions for any reason need to be requested and approved by
+myself</li>
+<li>There are two midterm test scheduled for the course. Check the course schedule to keep track of the dates</li>
+</ul>
+</section>
+<section id="project-sneak-peeks" class="slide level2">
+<h2>Project Sneak Peeks!</h2>
+<div class="r-stack">
+<p><video data-src="../video/project0_demo.webm"
+class="fragment current-visible" loop="True" autoplay="True"
+height="800" controls=""><a
+href="../video/project0_demo.webm">Wordle!</a></video><br />
+</p>
+<p><video data-src="../video/project1_demo.webm"
+class="fragment current-visible" loop="True" autoplay="True"
+height="800" controls=""><a href="../video/project1_demo.webm">Breakout
+game</a></video><br />
+</p>
+<p><video data-src="../video/project3_demo.webm"
+class="fragment current-visible" loop="True" autoplay="True"
+height="800" controls=""><a href="../video/project3_demo.webm">Imageshop
+program</a></video><br />
+</p>
+<p><video data-src="../video/project4_demo.webm"
+class="fragment current-visible" loop="True" autoplay="True"
+height="800" controls=""><a href="../video/project4_demo.webm">Enigma
+machine</a></video><br />
+</p>
+<p><video data-src="../video/project5_demo.webm"
+class="fragment current-visible" loop="True" autoplay="True"
+height="900" controls=""><a href="../video/project5_demo.webm">Adventure
+game</a></video><br />
+</p>
+</div>
+</section>
+<section id="project-scoring" class="slide level2">
+<h2>Project Scoring</h2>
+<table>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"> </td>
+<td>A submission so good it “makes me weep”</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td>Exceeds requirements</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"> </td>
+<td>Satisfies all assignment requirements</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td>Meets most requirements, but some issues</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"> </td>
+<td>Some more serious problems evident</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"></td>
+<td>Even worse…</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"> </td>
+<td>Why even bother turning this in?</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="sections" class="slide level2">
+<h2>Sections</h2>
+<ul>
+<li>Everyone will be placed into small sections of 8-10 students, with
+one section leader</li>
+<li>All section leaders are students who recently took and excelled in
+this course</li>
+<li>Will meet as a group with your section leader once a week for an
+hour to go over and work on problems
+<ul>
+<li>These meetings will be on Wednesdays or Thursdays</li>
+<li>Poll out <strong>today</strong> where you can enter in your
+availability on these days so that we can get people placed into
+sections</li>
+</ul></li>
+<li>Section leaders will also serve as a secondary source you can ask
+for help or guidance from throughout the week
+<ul>
+<li>This tutoring is part of their job! Don’t hesitate to ask them for
+some extra assistance!</li>
+</ul></li>
+<li>Planning to start section meetings <em>next</em> week</li>
+</ul>
+</section>
+<section id="tests" class="slide level2">
+<h2>Tests</h2>
+<ul>
+<li>Tests are necessary to assure retention of material and ensure that
+some are not getting too much help on the assignments.</li>
+<li>There are three this semester:
+<ul>
+<li>Midterm <em>1</em> on October 6</li>
+<li>Midterm <em>2</em> on November 10</li>
+<li>Final on December 11</li>
+</ul></li>
+<li>Tests will be taken in class and will not allow the use of a
+computer
+<ul>
+<li>This policy has actually been seen to <em>improve</em> student
+scores, as it prevents you from wasting tons of time obsessing about a
+small mistake!</li>
+</ul></li>
+<li>Tests <em>will</em> be open note</li>
+<li>Example tests and study materials will be given out a week in
+advance.</li>
+</ul>
+</section>
+<section id="communication" class="slide level2">
+<h2>Communication</h2>
+<ul>
+<li>I am still new to Canvas and may be unfamiliar with how to make communcation easier </li>
+<li>I have had much better luck recently channeling class communication
+(announcements, questions, answers, etc) through a class Discord server
+<ul>
+<li>Invite link is posted on the main Canvas class landing page</li>
+<li>Totally free to sign up and use</li>
+<li>If you already use Discord, you <em>can</em> create another account
+to switch between, or you can use your existing account</li>
+</ul></li>
+<li>Will be the main online location for announcements and questions and
+answers.</li>
+<li>Has support for code-blocks when talking about code by surrounding
+code in triple backticks:
+<code class="text">```this is formatted nicely as code```</code></li>
+</ul>
+</section>
+<section id="academic-honesty" class="slide level2">
+<h2>Academic Honesty</h2>
+<ol type="1">
+<li>You must not look at solutions or program code that is not your
+own.</li>
+<li>You must not share your solution code with other students.
+<ul>
+<li>But you are welcome (and encouraged!) to work alongside others
+enroute to finding a solution.</li>
+</ul></li>
+<li>You must indicate on your submitted assignment any assistance you
+received or who you worked alongside.</li>
+<li>You must indicate on your submitted assignment any assistance you
+received from Large language Models such as ChatGPT</li>
+</ol>
+</section>
+<section id="diving-in" class="slide level2">
+<h2>Diving In</h2>
+<div class="columns">
+<div class="column">
+<ul>
+<li>This course is an introduction on <em>computer science</em>, and
+covers more than just programming!</li>
+<li>Python is used to teach the programming portion of the course, but
+the focus is less on Python itself and more on general computer science
+principles.</li>
+<li>If you come across situations where you need to know a bit more
+about specific Python details, there are plenty of resources online, or
+just ask me!</li>
+</ul>
+</div><div class="column">
+<!--<p class="stretch"><img src="../images/book_cover.png"></p>-->
+<p><img data-src="../images/book_cover.png" style="width:70.0%" /></p>
+</div>
+</div>
+</section>
+<section id="effective-communication" class="slide level2">
+<h2>Effective Communication</h2>
+<div>
+<ul>
+<li class="fragment">To communicate effectively with someone or
+something, you really need two layers of communication:
+<ul>
+<li class="fragment">A shared language or method of conveying
+information
+<ul>
+<li class="fragment">The English alphabet, for example</li>
+<li class="fragment">In our case, Python</li>
+</ul></li>
+<li class="fragment">A joint agreement about what constitutes
+<strong>meaning</strong>
+<ul>
+<li class="fragment">Need ways to limit confusion or misunderstanding
+<ul>
+<li class="fragment">Following conventions</li>
+</ul></li>
+<li class="fragment">Being able to explain things clearly and
+unambiguously</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="giving-clear-instructions" class="slide level2">
+<h2>Giving Clear Instructions</h2>
+<ul>
+<li>We will initially make the language <em>extremely</em> simple so
+that we can focus on the second layer</li>
+<li>Karel the Robot exists in a very simple 2D world</li>
+<li>Has a very limited set of actions:
+<ul>
+<li>Can move forward one space</li>
+<li>Can rotate counter-clockwise (turn left) 90 degrees</li>
+<li>Can pick up a beeper</li>
+<li>Can drop off a beeper</li>
+</ul></li>
+<li>We will be spending the first several class days just interested in
+how we can take these simple instructions and get Karel to solve a wide
+variety of problems
+<ul>
+<li>This content is not in your book, but more in-depth descriptions can
+be found <a
+href="https://willamette.edu/~esroberts/pykarel/reader/01-IntroducingKarel.html">here</a></li>
+</ul></li>
+</ul>
+</section>
+<section id="the-world" class="slide level2">
+<h2>The World</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>Karel’s world is defined on a grid
+<ul>
+<li><em>avenues</em> run north-south</li>
+<li><em>streets</em> run east-west</li>
+<li>The <em>intersection</em> between a street and avenue is called a
+corner</li>
+</ul></li>
+<li>Compass directions are as you’d have them on a map, with North
+pointing upwards</li>
+<li>Walls are impassable</li>
+<li>Beepers are diamonds</li>
+<li>Karel is a house-shaped polygon</li>
+</ul>
+</div>
+<div class="col">
+<p><img
+data-src="../images/svg_cache/09798d6dcd5d446eb614a9423c8092c705b331ac.svg"
+style="width:100.0%" /></p>
+</div>
+</div>
+</section>
+<section id="commands" class="slide level2">
+<h2>Commands</h2>
+<ul>
+<li><p>As we mentioned before, Karel is a simple robot, and can really
+only do 4 potential actions</p>
+<table>
+<colgroup>
+<col style="width: 35%" />
+<col style="width: 64%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Command</th>
+<th style="text-align: left;">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code class="python">move()</code></td>
+<td style="text-align: left;">Moves Karel forward one corner in whatever
+direction they are facing</td>
+</tr>
+<tr class="even">
+<td
+style="text-align: left;"><code class="python">turn_left()</code></td>
+<td style="text-align: left;">Rotates Karel 90 deg
+counter-clockwise</td>
+</tr>
+<tr class="odd">
+<td
+style="text-align: left;"><code class="python">pick_beeper()</code></td>
+<td style="text-align: left;">Picks up a beeper on the ground</td>
+</tr>
+<tr class="even">
+<td
+style="text-align: left;"><code class="python">put_beeper()</code></td>
+<td style="text-align: left;">Places a beeper on the ground</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Our commands are just sequences of these actions</p></li>
+</ul>
+</section>
+<section id="example" class="slide level2">
+<h2>Example</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>Suppose we had the situation to the right and wanted to navigate to
+the beeper, pick it up, and then drop it at the corner of 1st avenue and
+1st street.</li>
+<li>Take a moment to write out your instructions.
+<ul>
+<li>Remember you can only move, rotate left, and pick up or drop the
+beeper</li>
+</ul></li>
+<li>Note that there are multiple ways to do this! Which is better?</li>
+</ul>
+</div>
+<div class="col">
+<p><img
+data-src="../images/svg_cache/2f23aa67af9dd68dfb3635c94e79e7f1f75413b0.svg"
+style="width:100.0%" /></p>
+</div>
+</div>
+</section>
+<section id="one-solution" class="slide level2">
+<h2>One Solution</h2>
+<pre ><code class="python" style="max-height:800px">def main():
+    move()
+    turn_left()
+    turn_left()
+    turn_left()
+    move()
+    turn_left()
+    move()
+    turn_left()
+    turn_left()
+    turn_left()
+    move()
+    pick_beeper()
+    turn_left()
+    turn_left()
+    turn_left()
+    move()
+    move()
+    put_beeper()</code></pre>
+<!--
+## GitHub Classroom Demonstration
+- There will be instructions on my webpage as well, but I wanted to take a little time to demonstrate how you would usually use GitHub Classroom
+-->
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: true,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 7,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+    </script>
+    </body>
+</html>

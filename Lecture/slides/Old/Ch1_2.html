@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold">
+  <meta name="dcterms.date" content="2020-08-26">
+  <title>Writing Functional Code</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/class_python.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/horizon-dark.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Writing Functional Code</h1>
+  <p class="author">Jed Rembold</p>
+  <p class="date">August 26, 2020</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Homework 1 will be posted by Friday
+<ul>
+<li>Click the link to add the repo to your personal Github, and then download to your system</li>
+<li>Due at midnight next Friday</li>
+<li>Make sure to change the appropriate spot in the README file to DONE when you are finished so I know it is ready to grade!
+<ul>
+<li>Otherwise it will count against your late days!</li>
+</ul></li>
+</ul></li>
+<li>Polling during lecture starts today!
+<ul>
+<li><a href="http://rembold-class.ddns.net">rembold-class.ddns.net</a></li>
+</ul></li>
+<li>CS Tea
+<ul>
+<li>Thursdays in Ford 2nd floor, 11:30 - 12:30</li>
+<li>Historically pizza available, but probably not this semester</li>
+</ul></li>
+</ul>
+</section>
+<section id="order-of-operations" class="slide level2">
+<h2>Order of Operations</h2>
+<ul>
+<li>Basic order of operations applies just like in math!</li>
+<li>Operations in parentheses done first</li>
+<li>Without parentheses, order of operations proceeds as:
+<ul>
+<li><code class="python">**</code> (exponents)</li>
+<li><code class="python">-n</code> (negative numbers)</li>
+<li><code class="python">*</code>, <code class="python">/</code>, <code class="python">//</code>, <code class="python">%</code>, executed from left to right</li>
+<li><code class="python">+</code> and <code class="python">-</code>, executed from left to right</li>
+</ul></li>
+</ul>
+</section>
+<section id="review-question" class="slide level2">
+<h2>Review Question</h2>
+<p>What is the value of the below expression?</p>
+<pre ><code class="python">1 * 2 * 3 + (4 + 5) % 6 + (7 * 8) // 9</code></pre>
+<div class="poll">
+<ol>
+<li>15</li>
+<li>18.22</li>
+<li>42</li>
+<li>83</li>
+</ol>
+</div>
+</section>
+<section id="tis-variable" class="slide level2" data-auto-animate="">
+<h2 data-auto-animate="">Tis Variable</h2>
+<ul>
+<li>The simplest terms that appear in expressions are constant literals and variables</li>
+<li>A <em>variable</em> is a placeholder for a value that can be updated as the program progresses</li>
+<li>Most easily envisioned as a named box capable of storing a value
+<p><img data-src="../images/svg_cache/3fd2a1fbd07ff81ba7ad47ca321614d7beba17ca.svg" data-id="box&#39;" alt="&#39;Will this work?" style="width:20.0%" /></p></li>
+<li>Each variable has the following attributes:
+<ul>
+<li>A <em>name</em>: which enables you to tell variables apart</li>
+<li>A <em>value</em>: which represents the current contents of the variable</li>
+</ul></li>
+<li>A variable’s name is fixed, but the value can change whenever you <em>assign</em> a new value to the variable</li>
+</ul>
+</section>
+<section id="making-assignments" class="slide level2">
+<h2>Making Assignments</h2>
+<ul>
+<li>You create a variable by assigning it a value using an <em>assignment statement</em>:</li>
+</ul>
+<pre ><code class="python">variable = expression</code></pre>
+<ul>
+<li>First computes the value of the righthand side and then assigns to the left
+<ul>
+<li>The same variable can appear on both sides of the equals!</li>
+</ul>
+<pre ><code class="python">total = total + value</code></pre></li>
+<li>When you assign a new value to a variable, the old value is lost</li>
+</ul>
+<pre ><code class="idle">>>> A = 10
+>>> print(A)
+10
+>>> A = A + 5
+>>> print(A)
+15</code></pre>
+</section>
+<section id="the-power-of-names" class="slide level2">
+<h2>The Power of Names</h2>
+<div>
+<ul>
+<li class="fragment">Names for variable, function, and classes are called <em>identifiers</em></li>
+<li class="fragment">Composed of letters, numbers and underscores, but <strong>can not start with a number</strong></li>
+<li class="fragment">A variety of different conventions to mark word boundaries:
+<ul>
+<li class="fragment"><em>Snake case</em> uses underscores: <code class="python">this_is_amazing</code></li>
+<li class="fragment"><em>Camel case</em> uses uppercase: <code class="python">thisIsAmazing</code></li>
+</ul></li>
+<li class="fragment">We will aim to follow the following conventions:
+<ul>
+<li class="fragment">Variable and function names will use snake case</li>
+<li class="fragment">Constant variables will use all uppercase and underscores: <code class="python">MAX_WIDTH</code></li>
+<li class="fragment">Class names will use camel case and begin with a capital lettera</li>
+</ul></li>
+<li class="fragment">Capitalization matters! <code class="python">radius</code> and <code class="python">Radius</code> are different variables!</li>
+<li class="fragment"><strong>Pick meaningful variable names!</strong></li>
+</ul>
+</div>
+</section>
+<section id="shorthand-and-multiple" class="slide level2">
+<h2>Shorthand and Multiple</h2>
+<ul>
+<li>It is very common to want to adjust an existing variable</li>
+</ul>
+<pre ><code class="python">balance = balance + deposit</code></pre>
+<ul>
+<li>Python gives you a shorter expression to describe this relationship:</li>
+</ul>
+<pre ><code class="python">balance += deposit</code></pre>
+<ul>
+<li>You can do this with any operation (op) following the general form:</li>
+</ul>
+<pre ><code class="python">variable op= expression</code></pre>
+<ul>
+<li><p>You can name multiple variables at once by separating with commas</p>
+<pre ><code class="python">A, B, C = 1, 2, 3</code></pre>
+<ul>
+<li>All the expressions on the right are computed before being assigned to the left variables</li>
+</ul></li>
+</ul>
+</section>
+<section id="understanding-check" class="slide level2">
+<h2>Understanding Check!</h2>
+<div class="cols">
+<div class="col">
+<p>Given the short sequence of commands below, what would be the final value printed to the screen?</p>
+</div>
+<div class="col">
+<div class="poll">
+<ol>
+<li>24</li>
+<li>28</li>
+<li>32</li>
+<li>36</li>
+</ol>
+</div>
+</div>
+</div>
+<pre ><code class="idle">>>> RATIO = 2
+>>> side = 4
+>>> perimeter = 2 * side + 2 * RATIO * side
+>>> side += 2
+>>> print(perimeter)
+??</code></pre>
+</section>
+<section id="what-is-your-function" class="slide level2">
+<h2>What is your Function?</h2>
+<ul>
+<li>A <em>function</em> is a sequence of statements that have been collected together and given a name.
+<ul>
+<li>Typically takes some input or information in the form of <em>arguments</em>, and then returns a result or output</li>
+</ul></li>
+<li>Operates similar to the idea of functions in mathematics, hence the name <br><br></li>
+</ul>
+<div class="cols">
+<div class="col">
+<div class="block" name="Math Function">
+<p>Take a general function: <span class="math display">\[f(x) = x^2 -5 \]</span> We input values of <span class="math inline">\(x\)</span> and get out some new value. <span class="math display">\[f(0) = -5,\quad f(2) = -1\]</span></p>
+</div>
+</div>
+<div class="col">
+<div class="block" name="Python Function">
+<pre ><code class="python">def f(x):
+    return x ** 2 - 5</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="built-ins" class="slide level2">
+<h2>Built-ins</h2>
+<ul>
+<li>All modern languages include a collection of pre-defined functions for convenience</li>
+<li>In Python, common build-in functions that operate on numbers include:</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="python">abs(x)</code></td>
+<td>The absolute value of x</td>
+</tr>
+<tr class="even">
+<td><code class="python">max(x,y,...)</code></td>
+<td>The largest of all the arguments</td>
+</tr>
+<tr class="odd">
+<td><code class="python">min(x,y,...)</code></td>
+<td>The smallest of all the arguments</td>
+</tr>
+<tr class="even">
+<td><code class="python">round(x)</code></td>
+<td>The value of x rounded to the nearest integer</td>
+</tr>
+<tr class="odd">
+<td><code class="python">int(x)</code></td>
+<td>The value of x truncated to an integer</td>
+</tr>
+<tr class="even">
+<td><code class="python">float(x)</code></td>
+<td>The value of x as a decimal</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="visiting-the-libraryies" class="slide level2">
+<h2>Visiting the library(ies)</h2>
+<ul>
+<li>A huge strength of Python is that it offers a very large number of code collections called <em>libraries</em>
+<ul>
+<li>Can save you the effort from writing that code yourself!</li>
+</ul></li>
+<li>Requires you to <em>import</em> that library, which can take several different forms
+<ul>
+<li><p>Most common is to use <code class="python">import</code> to grab everything in a library</p>
+<pre ><code class="python">import math</code></pre>
+<ul>
+<li>You must then access any function in that library using its <em>fully qualified name</em>, which includes the library name (<code class="python">var = math.sqrt(4)</code>)</li>
+</ul></li>
+<li><p>Can also use <code class="python">from ... import</code> to grab specific functions from the library</p>
+<pre ><code class="python">from math import sqrt</code></pre>
+<ul>
+<li>You do not need to use the library name then when you call it (<code class="python">var = sqrt(4)</code>)</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="useful-math-definitions" class="slide level2">
+<h2>Useful <code class="python">math</code> definitions</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Code</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="python">math.pi</code></td>
+<td>The mathematical constant <span class="math inline">\(\pi\)</span></td>
+</tr>
+<tr class="even">
+<td><code class="python">math.e</code></td>
+<td>The mathematical constant <span class="math inline">\(e\)</span></td>
+</tr>
+<tr class="odd">
+<td><code class="python">math.sqrt(x)</code></td>
+<td>The square root of x</td>
+</tr>
+<tr class="even">
+<td><code class="python">math.log(x)</code></td>
+<td>The natural logarithm of x</td>
+</tr>
+<tr class="odd">
+<td><code class="python">math.log10(x)</code></td>
+<td>The base 10 logarithm of x</td>
+</tr>
+<tr class="even">
+<td><code class="python">math.sin(x)</code></td>
+<td>The sine of x in radians</td>
+</tr>
+<tr class="odd">
+<td><code class="python">math.cos(x)</code></td>
+<td>The cosine of x in radians</td>
+</tr>
+<tr class="even">
+<td><code class="python">math.asin(x)</code></td>
+<td>The arcsin of x</td>
+</tr>
+<tr class="odd">
+<td><code class="python">math.degrees(x)</code></td>
+<td>Converts from radians to degrees</td>
+</tr>
+<tr class="even">
+<td><code class="python">math.radians(x)</code></td>
+<td>Converts from degrees to radians</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="writing-your-own-functions" class="slide level2">
+<h2>Writing your own functions</h2>
+<ul>
+<li><p>The general form of a function definition looks like:</p>
+<pre ><code class="no-highlight">def name(parameter list):
+    statements in function body</code></pre>
+<ul>
+<li><code class="python">name</code> is your chosen name for the function</li>
+<li><code class="no-highlight">parameter list</code> is the list of variable names that will hold each argument value</li>
+</ul></li>
+<li><p>You can return or output a value from the function by including a return statement</p>
+<pre ><code class="python">return expression</code></pre>
+<ul>
+<li><code class="python">expression</code> is the value you want to return or output</li>
+<li>If no <code class="python">return</code> statement is including, Python will by default return <code class="python">None</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="simple-function-examples" class="slide level2">
+<h2>Simple function examples</h2>
+<ul>
+<li><p>Convert Fahrenheit temperatures to their Celsius equivalent</p>
+<pre ><code class="python">def f_to_c(f):
+    return 5 / 9 * (f - 32)</code></pre>
+<ul>
+<li><p>Using the function:</p>
+<pre ><code class="python">print(f_to_c(45))</code></pre></li>
+</ul></li>
+<li><p>Computes the volume of a cylinder of height <code class="python">h</code> and radius <code class="python">r</code></p>
+<pre ><code class="python">def cylinder_volume(r, h):
+    return math.pi * r**2 * h</code></pre>
+<ul>
+<li><p>Using the function:</p>
+<pre ><code class="python">print(cylinder_volume(2,10))</code></pre></li>
+</ul></li>
+</ul>
+</section>
+<section id="running-a-program" class="slide level2">
+<h2>Running a Program</h2>
+<ul>
+<li><p>You can run Python programs directly from the command line</p>
+<ul>
+<li>Many development environments do this for you when you click “Run”</li>
+</ul></li>
+<li><p>Python programs specify what part of the code is supposed to be run when this happens using a few special lines at the end of the program</p>
+<pre ><code class="python">if __name__ == '__main__':
+    function_to_run()</code></pre>
+<ul>
+<li><code class="python">function_to_run</code> is the name of whatever function you want to run when the program is run</li>
+</ul></li>
+<li><p>Patterns of this sort are commonly called <em>boilerplate</em></p>
+<ul>
+<li>Less important to fully understand all the pieces of it now</li>
+<li>Is important to understand what it is doing and how to implement it correctly</li>
+</ul></li>
+</ul>
+</section>
+<section id="an-adding-program" class="slide level2">
+<h2>An adding program</h2>
+<pre ><code class="python" style="max-height: 100%"># File: AddTwoIntegers.py
+
+"""
+This program adds two integers entered by the user.
+"""
+
+def add_two_integers():
+    print("This program adds two integers.")
+    n1 = int(input("Enter n1? "))
+    n2 = int(input("Enter n2? "))
+    total = n1 + n2
+    print("The sum is", total)
+
+# Startup boilerplate
+if __name__ == '__main__':
+    add_two_integers()</code></pre>
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } }
+		],
+      });
+    </script>
+    </body>
+</html>

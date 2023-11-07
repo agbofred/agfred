@@ -1,0 +1,211 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics, multicol}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes, fit}
+
+%Preamble
+\title{All about the plot}
+\author{Jed Rembold}
+\date{April 10, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 8 and 9 due tonight!
+				\item Only 1 more homework!
+			\end{itemize}
+		\item Starting in on visualization today (Ch 11)
+		\item Will be getting information to you next week concerning projects
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\begin{columns}
+		\column{0.5\textwidth}
+		\small
+		\begin{pythoncode}
+			class MyClass:
+				varA = 3
+				varB = True
+
+				def __init__(self):
+					self.v = self.varA
+					if self.varB:
+						self.varA += 1
+
+			A = MyClass()
+			B = MyClass()
+			MyClass.varB = False
+			C = MyClass()
+			print(MyClass.varA)
+		\end{pythoncode}
+		\column{0.5\textwidth}
+		Suppose the code to the left was written and executed. What would be the output of the printed statement?
+		\begin{poll}
+		\item 3
+		\item 5
+		\item 6
+		\item None of the above
+		\end{poll}
+		\exsol{3}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Visualization}
+	\begin{itemize}
+		\item Interfaces mostly text so far:
+			\begin{itemize}
+				\item Written to screen
+				\item Written to a file
+				\item Input from screen or from file
+			\end{itemize}
+		\item Want to extend how we can communicate results or interface with our programs
+			\begin{itemize}
+				\item Data representation and plotting
+				\item More complex graphical output/input
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Reminder: Using Modules}
+	\begin{itemize}
+		\item We already know how to import and write our own modules
+		\item Many topics going forward will focus heavily on extending Python through the use of a common or core module
+			\begin{itemize}
+				\item Modules are usually written in classes!
+				\item Create new objects with special attributes and properties
+				\item Interact with those objects through specific methods
+				\item \alert{Read the documentation} for a module or a method to learn what is available and how it should be used
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Matplotlib}
+	\begin{itemize}
+		\item \emph{The} fundamental plotting and data visualization package for Python
+			\begin{itemize}
+				\item Old! Released 16 years ago!
+			\end{itemize}
+		\item Has two main ways to interface with the objects:
+			\begin{itemize}
+				\item A state-based interface based on MATLAB
+				\item \alert<2>{An object-oriented interface}
+			\end{itemize}
+		\item Even using the OO interface, the state-based library has some useful bits, so that is still what we will import:
+			\begin{pythoncode}
+				import matplotlib.pyplot as plt
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{The Objects}
+	\begin{itemize}
+		\item Two primary objects you'll use in Matplotlib:
+			\begin{itemize}
+				\item A figure
+					\begin{itemize}
+						\item The overall image that is created
+					\end{itemize}
+					\begin{pythoncode}
+						fig = plt.figure()
+					\end{pythoncode}
+				\item An axis
+					\begin{itemize}
+						\item A coordinate system into which data can be displayed
+						\item Is inserted into a figure
+						\item You can have multiple axes in a single figure if desired
+					\end{itemize}
+					\begin{pythoncode}
+						ax = fig.add_axes()
+						# or, more commonly
+						ax = fig.add_subplot(111)
+					\end{pythoncode}
+			\end{itemize}
+		%\item Can always consult documentation with \pyi{help(func)} or \pyi{func?}, but the online documentation is more convenient sometimes:
+			%\begin{itemize}
+				%\item \link{https://matplotlib.org/3.1.1/api/axes_api.html}{Axes Object Documentation}
+			%\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Actually Plotting}
+	\begin{itemize}
+		\item You can add a plot to a desired axes instance
+			\begin{itemize}
+				\item Use the \pyi{.plot()} method
+			\end{itemize}
+		\item Plots are 2D
+			\begin{itemize}
+				\item Need a sequence of y coordinates
+				\item Give a sequence of x coordinates or indices will be default
+				\item x coordinates are given first if they exist
+			\end{itemize}
+		\item Style of the plot can be controlled with special format string as second/third parameter.
+		\item Additional properties of a plot can be controlled with extra keyword parameters.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Plot Customization}
+	\begin{itemize}
+		\item Can determine how a plot generally looks with a format string:
+			\begin{itemize}
+				\item Takes the form of
+					\begin{pythoncode}
+						'[marker][line][color]'
+					\end{pythoncode}
+					\begin{itemize}
+						\item Common markers:   \pyi{. o ^ * s D}
+						\item Common lines:   \pyi{- -- :}
+						\item Common colors:   \pyi{b g r c k}
+					\end{itemize}
+					
+			\end{itemize}
+		\item Can also add keyword arguments:
+			\begin{itemize}
+				\item Change color: \pyi{color = 'green'}
+				\item Charge marker size: \pyi{markersize = 20}
+				\item Charge opacity: \pyi{alpha = 0.4}
+				\item Add label for legend: \pyi{label = 'Best plot'}
+			\end{itemize}
+			
+			
+	\end{itemize}
+	
+\end{frame}
+
+
+\begin{frame}{Extra Figure and Axes Features}
+	\begin{itemize}
+		\item Clear communication is important with visualization
+		\item Should always include meaningful and descriptive axes labels and figure titles.%
+			\begin{itemize}
+				\item Axes labels controlled with \pyi{.set_xlabel()} and \pyi{.set_ylabel()}
+				\item Axes title controlled with \pyi{.set_title}
+				\item Figure title controlled with \pyi{.suptitle}
+			\end{itemize}
+		\item Adjust tick spacing or labels:
+			\begin{itemize}
+				\item Where ticks appear: \pyi{.set_xticks()} or \pyi{.set_yticks()}
+				\item What labels they have: \pyi{.set_xticklabels()} or \pyi{.set_yticklabels()}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+
+\end{document}
+

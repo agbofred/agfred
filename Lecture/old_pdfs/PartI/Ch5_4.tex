@@ -1,0 +1,342 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Look it up}
+\author{Jed Rembold}
+\date{March 11, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 7 
+					\begin{itemize}
+						\item Due on Friday
+						\item Make sure to at least be getting started on Problem 2
+					\end{itemize}
+			\end{itemize}
+		\item Midterm 1 week from Friday
+			\begin{itemize}
+				\item I'm going to try to get some study materials made up this weekend
+				\item I will also post last semester's test
+				\item No homework due next week so study up!
+			\end{itemize}
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Review Question}
+	What is the 2nd element (index 1) of the below list?
+	\begin{center}
+		\pyi{[(i-1)*j for i,j in enumerate('cow')]}
+	\end{center}
+	\begin{poll}
+	\item \pyi{''}
+	\item \pyi{'w'}
+	\item \pyi{'o'}
+	\item This would give an error
+	\end{poll}
+	\exsol{\pyi{''}}
+\end{frame}
+
+
+%\begin{frame}[fragile]{List Comprehensions Better Explained}
+	%\begin{itemize}
+		%\item Combines \pyi{for} loops and \pyi{list}s
+		%\item If you don't want both, a list comprehension is probably not what you want
+	%\end{itemize}
+	%\vspace{-5mm}
+	%\begin{center}
+		%\begin{tikzpicture}[
+			%block/.style={very thick, rounded corners, draw, minimum width=6cm, minimum height=5mm},
+			%]
+			%\node[text width=6cm, anchor=south](fl) at (0,0) {%
+					%\begin{pythoncode}
+						%L = []
+						%for i in range(10):
+							%if i % 2 == 0:
+								%L.append(i**2)
+					%\end{pythoncode}};
+				%\node (lc) at (0,-2) {\pyi{[i**2\ \ for i in range(10) if i \% 2 ==0]}};
+
+				%\onslide<2>{
+					%\node[block, Blue] (c1) at (0,1.65) {};
+					%\node[block, Blue, minimum width=10em] (lc1) at (-.8,-2) {};
+					%\draw[thick, -stealth, Blue] (c1.east) -| ++(1,-2) -| (lc1.north);
+				%}
+				%\onslide<3>{
+					%\node[block, Green] (c1) at (0,1.15) {};
+					%\node[block, Green, minimum width=6em] (lc1) at (2.7,-2) {};
+					%\draw[thick, -stealth, Green] (c1.east) -| ++(1,-2) -| (lc1.north);
+				%}
+				%\onslide<4>{
+					%\node[block, SynPurple] (c1) at (0,0.65) {};
+					%\node[block, SynPurple, minimum width=3em] (lc1) at (-3.4,-2) {};
+					%\draw[thick, -stealth, SynPurple] (c1.east) -| ++(1,-2) -| (lc1.north);
+				%}
+		%\end{tikzpicture}
+	%\end{center}
+%\end{frame}
+
+
+%\begin{frame}{Functional Objects}
+	%\begin{itemize}
+		%\item Functions are \alert{first-class objects}!
+			%\begin{itemize}
+				%\item Can treat them just like any other type of object (\pyi{int}, \pyi{list}, etc)
+			%\end{itemize}
+		%\item Can appear in
+			%\begin{itemize}
+				%\item expressions
+				%\item arguments to other functions
+				%\item elements of lists
+				%\item etc
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{Follow the \pyi{map}}
+	%\vspace{5mm}
+	%\begin{itemize}
+		%\item The builtin \pyi{map} function is like a more general purpose \pyi{apply_func_2_list}
+		%\item Simplest just takes a single argument function and a list:
+			%\begin{pythoncode}
+				%def g(x):
+					%return 4*x + 2
+
+				%xs = [1,2,3,4,5,6]
+				%for result in map(g,xs):
+					%print(result)
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{Complex Mappings}
+	%\begin{itemize}
+		%\item Can take multiple argument functions if given multiple lists
+			%\begin{pythoncode}
+				%def h(x,y):
+					%return 4*x + 2*y
+
+				%xs = [1,2,3,4,5,6]
+				%ys = xs[::-1]
+				%hs = [res for res in map(h,xs,ys)]
+				%print(hs)
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+\begin{frame}[fragile]{$\lambda$ functions}
+	\begin{itemize}
+		\item Often need a quick, one use function
+		\item Annoying to have to define an entire function for that
+		\item Can write \alert{anonymous functions} using \pyi{lambda} expressions
+			\begin{itemize}
+				\item Anatomy: \pyi{lambda <variables>: <expression>}
+				\item Example:
+					\begin{pythoncode}
+						xs = [1,2,3,4,5]
+						ys = [r for r in map(lambda x: x**2, xs)]
+					\end{pythoncode}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Understanding Check}
+	One of the below expressions returns something different from the others. Which is the odd one out?
+	\begin{poll}
+	\item \pyi{[x+3 \ for x in range(10)]}
+	\item \pyi{[x for x in map(lambda y: y + 3, range(10))]}
+	\item \pyi{[lambda x: x+3 \ \ for x in range(10)]}
+	\item \pyi{[y-3 \ for y in map(lambda x: x + 6, range(10))]}
+	\end{poll}
+	\exsol{\pyi{[lambda x: x+3 \ \ for x in range(10)]}}
+\end{frame}
+
+\begin{frame}[fragile]{Define it}
+	\begin{itemize}
+		\item A \alert{dictionary} is an \emph{unordered} set of objects
+		\item Since unordered, we can't index them with a number
+		\item Instead index them with \alert{keys}
+		\item Any Python dictionary is a set of key/value pairings
+		\item Delimited with \pyi{\{\}} to denote an unordered set
+		\item Pairings use a \pyi{:} between key and value
+			\begin{pythoncode}
+				A = {'Jim':45, 'Bob':True, 34:'Betsy'}
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{A Key Concept}
+	\begin{itemize}
+		\item We still index dictionaries with square brackets
+		\item Pass the desired \alert{key} inside
+			\begin{pythoncode}
+				print(A['Jim'])
+				print(A[34])
+			\end{pythoncode}
+		\item Keys need to be unique!!
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Dictionary Operations}
+	\begin{itemize}
+		\item Append:
+			\begin{itemize}
+				\item Just add a new entry
+				\item \pyi{D['new key'] = 20}
+			\end{itemize}
+		\item Combine dictionaries:
+			\begin{itemize}
+				\item This extends a dictionary in place!
+				\item \pyi{\{'A':1, 'B':2\}.update(\{'C':3, 'D':4\})}
+			\end{itemize}
+		\item Remove pairs:
+			\begin{itemize}
+				\item Removes a particular key/value pair
+				\item \pyi{del D['key to remove']}
+			\end{itemize}
+		\item Loop over dictionary:
+			\begin{itemize}
+				\item Loops over the \alert{keys}
+				\item \pyi{for key in \{'A':1, 'B':2, 'C':3\}:}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Views}
+	\begin{itemize}
+		\item Can also access keys or values from a dictionary with special methods:
+			\begin{itemize}
+				\item Keys: \pyi{D.keys()}
+				\item Values: \pyi{D.values()}
+			\end{itemize}
+		\item Both return a \alert{view object}, which is dynamic!
+			\begin{itemize}
+				\item Will change whenever the dictionary changes
+			\end{itemize}
+		\item Can loop over or test if things are in view objects
+			\begin{itemize}
+				\item Trying to change the size a dictionary while looping over it will result in an error
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Get it?}
+	\begin{itemize}
+		\item Commonly might want to access a key from a dictionary, but may be unsure if it exists
+			\begin{itemize}
+				\item Trying to access an invalid key will give an error
+			\end{itemize}
+		\item Use the \pyi{.get} dictionary method, which allows you to provide a fallback option if the desired key is not in the dictionary
+			\begin{itemize}
+				\item \pyi{D.get('desired key', 'fallback value')}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]{Understanding Check}
+	%What is the printed value?
+		%{ \footnotesize
+			%\begin{pythoncode}[tabsize = 2]
+%A = [
+		%{'name': 'Jill', 'weight':125, 'height':62},
+		%{'name': 'Sam', 'weight':156, 'height':68},
+		%{'name': 'Bobby', 'weight':173, 'height':75},
+ %]
+%A.append({'weight':204, 'height':70, 'name':'Jim'})
+%B = A[1]
+%B['weight'] = 167
+%del A[0]['weight']
+%print([d.get('weight',100) for d in A])
+		%\end{pythoncode}
+	%}
+	%\begin{columns}
+		%\column{0.4\textwidth}
+		%\begin{poll}
+		%\item \pyi{[100,167,173,204]}
+		%\item \pyi{[100,156,173,204]}
+		%\end{poll}
+		
+		%\column{0.4\textwidth}
+		%\begin{poll}
+			%\setcounter{enumi}{2}
+		%\item \pyi{[125,167,173,204]}
+		%\item \pyi{[100,156,173,70]}
+		%\end{poll}
+	%\end{columns}
+%\end{frame}
+
+%\begin{frame}{Sets}
+	%\begin{itemize}
+		%\item A \alert{set} is an unordered list of unique immutable objects
+		%\item The set itself can be mutable (normally) or immutable (frozenset)
+		%\item What works the same:
+			%\begin{itemize}
+				%\item The \pyi{in} function
+				%\item Finding the length
+				%\item Looping over elements
+			%\end{itemize}
+		%\item What breaks:
+			%\begin{itemize}
+				%\item No slicing or indexing!
+			%\end{itemize}
+		%\item Common uses:
+			%\begin{itemize}
+				%\item Removing duplicates from a sequence
+				%\item Mathematical operations like intersection, union, difference
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{Non-Scalar Summary}
+	%\begin{center}
+		%\begin{tabular}{cccc}
+			%\toprule
+			%Type & Type of Elements & Examples of literals & Mutable \\
+			%\midrule
+			%\pyi{str} & characters & \pyi{'', 'a', 'abc'} & No \\
+			%\pyi{tuple} & any type & \pyi{(), (2,), ('abc',3)} & No \\
+			%\pyi{range} & integers & \pyi{range(5), range(2,10,2)} & No \\
+			%\pyi{list} & any type & \pyi{[], [3], [6,'abc']} & Yes \\
+			%\pyi{dict} & any type & \pyi{\{\}, \{'a':1\}, \{1:'abc', 2:5\}} & Yup \\
+			%\pyi{set} & any immutable & \pyi{\{\}, \{2\}, \{'abc',5\}} & Both \\
+			%\bottomrule
+		%\end{tabular}
+	%\end{center}
+%\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

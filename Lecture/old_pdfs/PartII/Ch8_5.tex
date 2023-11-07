@@ -1,0 +1,182 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics, multicol}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Tis your Inheritance}
+\author{Jed Rembold}
+\date{April 6, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item I've posted HW9
+				\item Both 8 and 9 are due on Friday
+				\item I finished grading 6 yesterday and pushed results back to your Github
+			\end{itemize}
+		\item From what I've seen, I'm really excited to read over and score your midterm projects, but it will probably take me a week or so
+		\item I'm planning to get grade reports given out for what I do have graded later today or tomorrow
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\begin{columns}
+		\column{0.5\textwidth}
+		\small
+		\begin{pythoncode}
+			class Demo:
+				def __init__(self):
+					self.x = []
+				def add(self,v):
+					self.x.append(v)
+				def get_x(self):
+					return self.x
+
+			A,B = Demo(), Demo()
+			A.add(3)
+			B.add(3)
+			C = B.get_x()
+			C.append(8)
+			print(A.get_x() == B.get_x())
+		\end{pythoncode}
+		\column{0.5\textwidth}
+		The code to the left defines a new class, creates some instances of that class and then manipulates them a bit. What is printed to the screen in the last line?
+		\begin{poll}
+		\item True
+		\item False
+		\item \pyi{None}, as \pyi{Demo} has no \pyi{__eq__} method
+		\item This code would error out before completion
+		\end{poll}
+		\exsol{False}
+		
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Reminders}
+	\begin{itemize}
+		\item We specify what a class's parent is immediately following the class's name
+			\begin{itemize}
+				\item Surround parent's name is parentheses
+				\item \pyi{class Human(Animal):}
+				\item The default parent is type \pyi{object}
+			\end{itemize}
+		\item All data attributes and methods defined for the parent are then defined for the child as well
+			\begin{itemize}
+				\item We are then free to:
+					\begin{itemize}
+						\item Add more methods
+						\item Add more attributes
+						\item Change inherited methods or attributes
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{A Swashbuckling Example}
+	\begin{center}
+		\begin{tikzpicture}[every node/.style={minimum size = 2cm, rounded corners, draw, ultra thick}]
+			\node[Orange](human) at (0,0) {Human};
+			\node[Red, right=1cm of human](pirate) {Pirate};
+			\node[Blue, above right=0mm and 1cm of pirate](pegleg) {PegLeg};
+			\node[Blue, below right=0mm and 1cm of pirate](patch) {Patch};
+
+			\path[very thick, -stealth, Purple]
+				(pegleg) edge (pirate)
+				(patch) edge (pirate)
+				(pirate) edge (human);
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Adding or Changing Data Attributes}
+	\begin{itemize}
+		\item The \pyi{__init__} method is inherited from the parent class like all other methods!
+		\item If we want other or more stuff to be initialized, we need to redefine \pyi{__init__}.
+		\item Have some options in terms of how to do so:
+			\begin{itemize}
+				\item Redefine all the inherited attributes and then add our new attributes
+				\item Call the parent \pyi{__init__} method and then add our own beneath
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{A Change is Coming}
+	\begin{itemize}
+		\item If redefining, ensure that all parent attributes are still present in the child!
+			\begin{itemize}
+				\item If you create a child object and plug it in somewhere in place of a parent object, it should still work!
+			\end{itemize}
+		\item To call the parent \pyi{__init__} method you need to access it through the \pyi{ClassName.__init__} structure
+			\begin{itemize}
+				\item Example:
+					\begin{pythoncode}
+						class Pirate(Human):
+							def __init__(self, age): #redefining __init__
+								Human.__init__(self, age)	 #calling parents __init__
+					\end{pythoncode}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Check}
+	\begin{columns}
+		\column{0.5\textwidth}
+		What expression would best fill in the gap in the code to the right?
+
+		\small
+		\begin{poll}
+		\item \pyi{self.wage = wage}
+		\item \pyi{TechJob.__init__(self, wage)}
+		\item \pyi{TechJob.__init__(wage)}
+		\item \pyi{Job.__init__(wage)}
+		\end{poll}
+		\exsol{\pyi{TechJob.__init__(self, wage)}}
+		
+		\column{0.55\textwidth}
+		\footnotesize
+		\begin{pythoncode}
+			class Job(object):
+				def __init__(self, wage):
+					self.wage = wage
+
+			class TechJob(Job):
+				def __init__(self, wage):
+					self.wage = wage
+					self.code = True
+
+			class SeniorDev(TechJob):
+				def __init__(self, wage, exp):
+					# What goes here?
+					self.exp = exp
+		\end{pythoncode}
+	\end{columns}
+\end{frame}
+
+%\begin{frame}{Multiple Inheritance}
+	%\begin{itemize}
+		%\item A class is not limited to inheriting from only a single parent!
+		%\item Can provide multiple parents!
+			%\begin{itemize}
+				%\item Ordering matters!
+			%\end{itemize}
+		%\item Example: a class that forms the intersection of two other types
+	%\end{itemize}
+%\end{frame}
+
+
+\end{document}
+

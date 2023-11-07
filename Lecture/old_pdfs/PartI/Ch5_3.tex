@@ -1,0 +1,317 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Do you Comprehend?}
+\author{Jed Rembold}
+\date{March 9, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 7 is posted!
+				\item I'm a bit behind on homework grading, but probably will not catch up until the weekend
+			\end{itemize}
+		\item Midterm a week from Friday!
+			\begin{itemize}
+				\item We'll talk more end of the week about preparation and format
+				\item I do have an old test and some study questions I can give you
+			\end{itemize}
+			
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+		The below snippet of code is run. What would this expression evaluate to?
+		\begin{center}
+			\pyi{['One', 2, True][-1:1:-1][0]}
+		\end{center}
+		\begin{poll}
+			\item \pyi{['One']}
+			\item \pyi{2}
+			\item \pyi{True}
+			\item None of the above, or this will error
+		\end{poll}
+		\exsol{\pyi{True}}
+\end{frame}
+
+%\begin{frame}[fragile]{Append, Extend, Comprehend}
+	%\begin{itemize}
+		%\item Can add a new item to a list with \pyi{append} method
+			%\begin{pythoncode}
+				%A = ['Tuna']
+				%A.append('Cod')
+				%A.append('Halibut')
+				%A.append('Salmon')
+				%print(A)
+			%\end{pythoncode}
+		%\item Can add many new items to list with \pyi{extend} method
+			%\begin{pythoncode}
+				%A = ['Tuna']
+				%A.extend(['Cod', 'Halibut', 'Salmon'])
+				%print(A)
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{More useful list methods}
+	%\begin{itemize}
+		%\item Can remove things from lists easily by value
+			%\begin{itemize}
+				%\item \pyi{L.remove(e)}
+				%\item Removes the \emph{first} occurance of \pyi{e} from the list \pyi{L}
+			%\end{itemize}
+		%\item Can find values in the list
+			%\begin{itemize}
+				%\item \pyi{L.index(e)}
+				%\item Returns the index of the \emph{first} occurance of \pyi{e} in the list \pyi{L}
+			%\end{itemize}
+		%\item Can sort the list
+			%\begin{itemize}
+				%\item \pyi{L.sort()}
+				%\item Sorts the list in ascending order
+			%\end{itemize}
+			
+	%\end{itemize}
+	
+%\end{frame}
+
+
+%\begin{frame}[fragile]{Sneaky Mutability}
+	%\begin{itemize}
+		%\item Mutability is usually great for its flexibility
+		%\item I've found two real instances when I have to be careful
+			%\begin{itemize}
+				%\item Initializing a list to look like another list, wanting to make changes to one and then compare
+					%\begin{itemize}
+						%\item \href{http://www.pythontutor.com/visualize.html#code=A%20%3D%20%5B'Aardvark',%20'Butterfly',%20'Centipede'%5D%0AB%20%3D%20A%0A%0AB.append%28'Deer'%29%0AB.remove%28'Butterfly'%29%0A%0Aprint%28A%29%0Aprint%28B%29&cumulative=false&curInstr=6&heapPrimitives=false&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false}{Example}
+					%\end{itemize}
+					
+				%\item Looping over a mutating list
+					%\begin{itemize}
+						%\item \href{http://www.pythontutor.com/visualize.html#code=A%20%3D%20%5B1,2,3,4,5,6,7,8,9%5D%0A%0Afor%20i,num%20in%20enumerate%28A%29%3A%0A%20%20%20%20print%28'At%20index%3A',%20i%29%0A%20%20%20%20if%203%20%3C%20num%20%3C%206%3A%0A%20%20%20%20%20%20%20%20A.remove%28num%29%0A%20%20%20%0Aprint%28A%29&cumulative=false&curInstr=0&heapPrimitives=false&mode=display&origin=opt-frontend.js&py=3&rawInputLstJSON=%5B%5D&textReferences=false}{Example}
+					%\end{itemize}
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Cloning}
+	%\begin{itemize}
+		%\item What can we do then in these instances to not let mutability mess us up?
+		%\item \alert{Clone} the list instead of just assigning a new variable to it!
+			%\begin{itemize}
+				%\item Creates a \emph{new object} in memory
+				%\item Several different ways you can make a clone:
+					%\begin{itemize}
+						%\item Slicing
+						%\item Using \pyi{list}
+					%\end{itemize}
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{Understanding Check}
+	%\begin{columns}
+		%\column{0.7\textwidth}
+		%Given the code to the right, what would be the final printed value of A?
+		%\begin{poll}
+		%\item \pyi{['Fox', 'Giraffe', 'Hippo', 'Iguana']}
+		%\item \pyi{['Fox', 'Hippo', 'Iguana']}
+		%\item \pyi{['Iguana', 'Giraffe', 'Fox']}
+		%\item \pyi{['Fox', 'Iguana']}
+		%\end{poll}
+		
+		%\column{0.4\textwidth}
+		%\begin{pythoncode}
+			%A = [
+				%'Fox',
+				%'Giraffe', 
+				%'Hippo'
+				%]
+			%A.append('Iguana')
+			%A[:].reverse()
+			%B = A
+			%for anim in B:
+				%if anim[1] == 'i':
+					%B.remove(anim)
+			%print(A)
+		%\end{pythoncode}
+	%\end{columns}
+%\end{frame}
+
+\begin{frame}{Do you Comprehend?}
+	\begin{itemize}
+		\item We will frequently use \pyi{for} loops and list appends to construct lists
+		\item Nothing wrong in doing it the way we've done in the past
+		\item Python does offer a more compact and nice way to combine these sorts of actions though
+			\begin{itemize}
+				\item \alert{List Comprehesions!}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Constructing a List Comprehension}
+	\begin{itemize}
+		\item Still need the individual parts:
+			\begin{itemize}
+				\item \pyi{[]}'s for the list
+				\item \pyi{for} variable \pyi{in} sequence
+			\end{itemize}
+		\item What was:
+			\begin{pythoncode}
+				L = []
+				for x in range(10):
+					L.append(x**2)
+			\end{pythoncode}
+		\item Can become:
+			\begin{pythoncode}
+				L = [x**2 for x in range(10)]
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{List Comprehensions further explained}
+	\begin{itemize}
+		\item Combines \pyi{for} loops and \pyi{list}s
+		\item If you don't want both, a list comprehension is probably not what you want
+	\end{itemize}
+	\vspace{-5mm}
+	\begin{center}
+		\begin{tikzpicture}[
+			block/.style={very thick, rounded corners, draw, minimum width=6cm, minimum height=5mm},
+			]
+			\node[text width=6cm, anchor=south](fl) at (0,0) {%
+					\begin{pythoncode}
+						L = []
+						for i in range(10):
+							if i % 2 == 0:
+								L.append(i**2)
+					\end{pythoncode}};
+				\node (lc) at (0,-2) {\pyi{[i**2\ \ for i in range(10) if i \% 2 ==0]}};
+
+				\onslide<2>{
+					\node[block, Blue] (c1) at (0,1.65) {};
+					\node[block, Blue, minimum width=10em] (lc1) at (-.8,-2) {};
+					\draw[thick, -stealth, Blue] (c1.east) -| ++(1,-2) -| (lc1.north);
+				}
+				\onslide<3>{
+					\node[block, Green] (c1) at (0,1.15) {};
+					\node[block, Green, minimum width=6em] (lc1) at (2.7,-2) {};
+					\draw[thick, -stealth, Green] (c1.east) -| ++(1,-2) -| (lc1.north);
+				}
+				\onslide<4>{
+					\node[block, SynPurple] (c1) at (0,0.65) {};
+					\node[block, SynPurple, minimum width=3em] (lc1) at (-3.4,-2) {};
+					\draw[thick, -stealth, SynPurple] (c1.east) -| ++(1,-2) -| (lc1.north);
+				}
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Functional Objects}
+	\begin{itemize}
+		\item Functions are \alert{first-class objects}!
+			\begin{itemize}
+				\item Can treat them just like any other type of object (\pyi{int}, \pyi{list}, etc)
+			\end{itemize}
+		\item Can appear in
+			\begin{itemize}
+				\item expressions
+				\item arguments to other functions
+				\item elements of lists
+				\item etc
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Follow the \pyi{map}}
+	\vspace{5mm}
+	\begin{itemize}
+		\item The builtin \pyi{map} function is like a more general purpose \pyi{apply_func_2_list}
+		\item Simplest just takes a single argument function and a list:
+			\begin{pythoncode}
+				def g(x):
+					return 4*x + 2
+
+				xs = [1,2,3,4,5,6]
+				for result in map(g,xs):
+					print(result)
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Complex Mappings}
+	\begin{itemize}
+		\item Can take multiple argument functions if given multiple lists
+			\begin{pythoncode}
+				def h(x,y):
+					return 4*x + 2*y
+
+				xs = [1,2,3,4,5,6]
+				ys = xs[::-1]
+				hs = [res for res in map(h,xs,ys)]
+				print(hs)
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]{$\lambda$ functions}
+	%\begin{itemize}
+		%\item Often need a quick, one use function
+		%\item Annoying to have to define an entire function for that
+		%\item Can write \alert{anonymous functions} using \pyi{lambda} expressions
+			%\begin{itemize}
+				%\item Anatomy: \pyi{lambda <variables>: <expression>}
+				%\item Example:
+					%\begin{pythoncode}
+						%xs = [1,2,3,4,5]
+						%ys = [r for r in map(lambda x: x**2, xs)]
+					%\end{pythoncode}
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Understanding Check}
+	%One of the below expressions returns something different from the others. Which is the odd one out?
+	%\begin{poll}
+	%\item \pyi{[x+3 \ for x in range(10)]}
+	%\item \pyi{[x for x in map(lambda y: y + 3, range(10))]}
+	%\item \pyi{[lambda x: x+3 \ \ for x in range(10)]}
+	%\item \pyi{[y-3 \ for y in map(lambda x: x + 6, range(10))]}
+	%\end{poll}
+	%\exsol{\pyi{[lambda x: x+3 \ \ for x in range(10)]}}
+%\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

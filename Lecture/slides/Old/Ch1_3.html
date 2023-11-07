@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold">
+  <meta name="dcterms.date" content="2020-08-28">
+  <title>Logical Strings</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/class_python.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/horizon-dark.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Logical Strings</h1>
+  <p class="author">Jed Rembold</p>
+  <p class="date">August 28, 2020</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Homework 1 posted!
+<ul>
+<li>Pdf on the main webpage.</li>
+<li>Link in pdf to add repository, then download to edit on your own system!</li>
+<li>Due at midnight next Friday</li>
+<li>Make sure to change the appropriate spot in the README file to DONE when you are finished so I know it is ready to grade!
+<ul>
+<li>Otherwise it will count against your late days!</li>
+</ul></li>
+</ul></li>
+<li>Polling:
+<ul>
+<li><a href="http://rembold-class.ddns.net">rembold-class.ddns.net</a></li>
+</ul></li>
+<li>The early chapters in this class cover a lot of material. I really do recommend you be following along in the book, as it can flesh many of these concepts out more than we can in limited class time.</li>
+<li>Lab was a bit much on Wednesday, I made sure today’s is more succinct. Sorry!</li>
+</ul>
+</section>
+<section id="review-question" class="slide level2">
+<h2>Review Question</h2>
+<p>What is the final printed value of <code class="python">A</code> in the code below?</p>
+<pre ><code class="idle">>>> A = 10
+>>> B = 4
+>>> C = A * B
+>>> A -= B
+>>> A, B, C = C, A, B
+>>> print(A)
+??</code></pre>
+<div class="poll">
+<ol>
+<li>4</li>
+<li>10</li>
+<li>30</li>
+<li>40</li>
+</ol>
+</div>
+</section>
+<section id="insert-comment-here" class="slide level2">
+<h2>Insert Comment Here</h2>
+<ul>
+<li>Frequently might want to make a note or comment in your code
+<ul>
+<li>Reminders to <em>yourself</em> or future coders</li>
+<li>Do <strong>not</strong> want the computer to try to do anything with it</li>
+</ul></li>
+<li>Two forms of comments
+<ul>
+<li><code class="python"># line comments</code> prefaced with a <code class="python">#</code> symbols
+<ul>
+<li>Commonly used to provide a quick explanation of what a line does</li>
+</ul></li>
+<li><code class="python">"""block comments"""</code> bracketed with triple quotes
+<ul>
+<li>Commonly used to describe what entire scripts or functions do</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="string-theory" class="slide level2">
+<h2>String Theory</h2>
+<ul>
+<li>Would be nice to work with more interesting data than just numbers</li>
+<li>Everything internally is represented as sequences of binary numbers, but more useful to think abstractly about concepts initially</li>
+<li>First non-numeric data type to look at will be <strong>strings</strong>
+<ul>
+<li>Domain is all <em>sequences</em> of characters
+<ul>
+<li>A single string is often comprised of multiple characters</li>
+</ul></li>
+<li>Indicated in Python with pairs of quotes (single or double)</li>
+</ul>
+<pre ><code class="python">"This is a great string!"
+'And this is also a string!'</code></pre></li>
+</ul>
+</section>
+<section id="string-functions" class="slide level2">
+<h2>String Functions</h2>
+<ul>
+<li>Python has several built-in functions that are useful when working with strings</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="python">len(s)</code></td>
+<td>Gets the number of characters in <code class="python">s</code></td>
+</tr>
+<tr class="even">
+<td><code class="python">str(x)</code></td>
+<td>Converts the value of <code class="python">x</code> to a string</td>
+</tr>
+<tr class="odd">
+<td><code class="python">int(s)</code></td>
+<td>Attempts to convert <code class="python">s</code> to an integer</td>
+</tr>
+<tr class="even">
+<td><code class="python">float(s)</code></td>
+<td>Attempts to convert <code class="python">s</code> to a float</td>
+</tr>
+<tr class="odd">
+<td><code class="python">print(...)</code></td>
+<td>Prints all arguments separated by spaces</td>
+</tr>
+<tr class="even">
+<td><code class="python">input(prompt)</code></td>
+<td>Shows the user <code class="python">prompt</code> and then reads in a typed string</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="stringy-operations" class="slide level2">
+<h2>Stringy Operations</h2>
+<ul>
+<li><p>Initially we will focus just on <em>concatenating</em> strings, or combining them end to end</p>
+<ul>
+<li>Many more operations we’ll look at later in Ch 6</li>
+</ul></li>
+<li><p>Concatenate in Python using the <code class="python">+</code> operator:</p>
+<pre ><code class="idle">>>> print("ABC" + "DEF")
+ABCDEF</code></pre></li>
+<li><p><code class="python">+</code> with numbers gets you addition, <code class="python">+</code> with strings gets you concatenation</p></li>
+<li><p>If you have mixed types and want concatenation, need to convert all to strings</p>
+<pre ><code class="idle">>>> print("Catch" + str(-22))
+Catch-22</code></pre></li>
+</ul>
+</section>
+<section id="running-a-program" class="slide level2">
+<h2>Running a Program</h2>
+<ul>
+<li><p>You can run Python programs directly from the command line</p>
+<ul>
+<li>Many development environments do this for you when you click “Run”</li>
+</ul></li>
+<li><p>Python programs specify what part of the code is supposed to be run when this happens using a few special lines at the end of the program</p>
+<pre ><code class="python">if __name__ == '__main__':
+    function_to_run()</code></pre>
+<ul>
+<li><code class="python">function_to_run</code> is the name of whatever function you want to run when the program is run</li>
+</ul></li>
+<li><p>Patterns of this sort are commonly called <em>boilerplate</em></p>
+<ul>
+<li>Less important to fully understand all the pieces of it now</li>
+<li>Is important to understand what it is doing and how to implement it correctly</li>
+</ul></li>
+</ul>
+</section>
+<section id="an-adding-program" class="slide level2">
+<h2>An adding program</h2>
+<pre ><code class="python" style="max-height: 100%"># File: AddTwoIntegers.py
+
+"""
+This program adds two integers entered by the user.
+"""
+
+def add_two_integers():
+    print("This program adds two integers.")
+    n1 = int(input("Enter n1? "))
+    n2 = int(input("Enter n2? "))
+    total = n1 + n2
+    print("The sum is", total)
+
+# Startup boilerplate
+if __name__ == '__main__':
+    add_two_integers()</code></pre>
+</section>
+<section id="making-choices" class="slide level2">
+<h2>Making Choices</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>So far, everything we’ve done proceeds in a straight line
+<ul>
+<li>Simple, but inherently limited (and a bit boring)</li>
+<li>Not much we can do with it beyond basic calculations</li>
+</ul></li>
+<li>Want to transition now to talk about how we can create branching programs</li>
+</ul>
+</div>
+<div class="col">
+<p><img data-src="../images/svg_cache/320610a5fd9f38201cf720149e98161836ebd176.svg" style="width:100.0%" /></p>
+</div>
+</div>
+</section>
+<section id="statement-types" class="slide level2">
+<h2>Statement Types</h2>
+<ul>
+<li>Statements in Python fall into two main types:
+<ul>
+<li>Simple Statements
+<ul>
+<li>Typically variable assignments or function calls</li>
+</ul></li>
+<li>Control Statements
+<ul>
+<li><em>Conditional statements</em> that specify some kind of test</li>
+<li><em>Iterative statements</em> that specify some kind of repetition</li>
+<li>Begin with a <em>header line</em> that defines how the statement affects program flow.</li>
+<li>Takes control over a block of statements, called the <em>body</em>, indented with respect to the header</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="boolean-expressions" class="slide level2">
+<h2>Boolean Expressions</h2>
+<ul>
+<li><p>Python defines two types of operators that work with Boolean data: <em>relational operators</em> and <em>logical operators</em></p></li>
+<li><p>Relational operators compare values of other types and produce a <code class="python">True</code>/<code class="python">False</code> result:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td><code class="python">==</code></td>
+<td style="text-align: left;">Equals</td>
+<td></td>
+<td></td>
+<td></td>
+<td><code class="python">!=</code></td>
+<td style="text-align: left;">Not equals</td>
+</tr>
+<tr class="even">
+<td><code class="python"><</code></td>
+<td style="text-align: left;">Less than</td>
+<td></td>
+<td></td>
+<td></td>
+<td><code class="python"><=</code></td>
+<td style="text-align: left;">Less than or equal too</td>
+</tr>
+<tr class="odd">
+<td><code class="python">></code></td>
+<td style="text-align: left;">Greater than</td>
+<td></td>
+<td></td>
+<td></td>
+<td><code class="python">>=</code></td>
+<td style="text-align: left;">Greater than or equal to</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Be careful! <code class="python">==</code> <em>compares</em> two booleans. A single <code class="python">=</code> <em>assigns</em> a variable. The odds are high you’ll use one when you meant the other at least once this semester!</p></li>
+</ul>
+</section>
+<section id="the-vulcan-way" class="slide level2">
+<h2>The Vulcan Way</h2>
+<ul>
+<li><p>Logical operators act on Boolean pairings</p>
+<table>
+<thead>
+<tr class="header">
+<th>Operator</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="python">A and B</code></td>
+<td>True if both terms True, False otherwise</td>
+</tr>
+<tr class="even">
+<td><code class="python">A or B</code></td>
+<td>True if <em>any</em> term is True, False otherwise</td>
+</tr>
+<tr class="odd">
+<td><code class="python">not A</code></td>
+<td>True if A False, False if A True (opposite)</td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+<div>
+<ul>
+<li class="fragment">Order of operations follows parentheses and then proceeds left to right</li>
+<li class="fragment">Careful that <code class="python">or</code> is still <code class="python">True</code> if both options are <code class="python">True</code> which is a little different than common English use</li>
+<li class="fragment">Similarly, careful with combining <code class="python">not</code> with <code class="python">and</code> and <code class="python">or</code>
+<ul>
+<li class="fragment">“Not A or B” in common English is not the same as <code class="python">not A or B</code></li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="shorting-the-circuit" class="slide level2">
+<h2>Shorting the Circuit</h2>
+<ul>
+<li>Python evaluates <em>and</em> and <em>or</em> operators using a strategy called <em>short-circuit mode</em></li>
+<li>Only evaluates the right operand if it actually needs to
+<ul>
+<li><p>Example: if <code class="python">n=0</code>, then the <code class="python">x % n == 0</code> is never actually checked in the statement</p>
+<pre ><code class="python">n != 0 and x % n == 0</code></pre>
+<p>since <code class="python">n != 0</code> already is <code class="python">False</code> and <code class="python">False and</code> <em>anything</em> is always <code class="python">False</code></p></li>
+</ul></li>
+<li>Can use short-circuit to prevent errors: the above <code class="python">x % n == 0</code> statement would have erred out if <code class="python">n=0</code></li>
+</ul>
+</section>
+<section id="the-conditional" class="slide level2">
+<h2>The Conditional</h2>
+<p><img data-src="../images/svg_cache/a982cb2c7a04ab79fad5d9347d20af75a81a1a66.svg" style="width:100.0%" /></p>
+</section>
+<section id="conditional-syntax" class="slide level2">
+<h2>Conditional Syntax</h2>
+<p>In Python, the basic conditional looks like:</p>
+<pre ><code class="python">if boolean_expression:
+    # True block of code
+    # Code to run if the test evaluates to True
+else:
+    # False block of code
+    # Code to run if the test evaluates to False</code></pre>
+<ul>
+<li>Things to note
+<ul>
+<li>A colon <code class="python">:</code> ends the header and <code class="python">else</code> lines (before each indent block)</li>
+<li>You do not need an <code class="python">else</code> portion if your desired false block is empty</li>
+<li>The <code class="python">boolean_expression</code> just has to be something that evaluates to either <code class="python">True</code> or <code class="python">False</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="controlling-functions" class="slide level2">
+<h2>Controlling Functions</h2>
+<ul>
+<li><p>The body of a function can contain statements of any type, including control statements</p></li>
+<li><p>Example:</p>
+<pre ><code class="python">def max(x, y):
+    if x > y:
+        return x
+    else:
+        return y</code></pre></li>
+<li><p><code class="python">return</code> statements can be used anywhere and may appear more than once</p>
+<ul>
+<li>The function terminates as soon as it hits a <code class="python">return</code> statement though!</li>
+</ul></li>
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: true,
+        // Vertical centering of slides
+        center: false,
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } }
+		],
+      });
+    </script>
+    </body>
+</html>

@@ -1,0 +1,282 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{import tuples!}
+\author{Jed Rembold}
+\date{March 2, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 6 posted!
+				\item Should already be able to do Prob 1 and 2
+				\item Prob 3 should be doable by Wednesday
+			\end{itemize}
+		\item \alert{Grade reports actually got posted!}
+			\begin{itemize}
+				\item Includes everything that I currently have gotten graded.
+				\item Today is last day to choose credit/no credit
+			\end{itemize}
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\begin{columns}[b]
+		\column{0.5\textwidth}
+		To the right is a text file that was written to. Which of the below sample codes could have resulted in the text file to the right?
+		\column{0.5\textwidth}
+		\begin{pythoncode}[style=]
+			Number: 34
+			Number: 39
+			Number: 44
+		\end{pythoncode}
+	\end{columns}
+	\begin{columns}
+		\scriptsize
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			f = open('File.txt', 'w')
+			for i in range(34,45,5):
+				f.write('Number:', i, '\n')
+			f.close()
+		\end{pythoncode}
+		\tikz[remember picture,overlay]{\node[font=\Large, Teal] at (6.5,1.25) {A};}
+		\begin{pythoncode}
+			f = open('File.txt', 'w')
+			for i in range(34,45,5):
+				f.write('Number: ' + i )
+			f.close()
+		\end{pythoncode}
+		\tikz[remember picture,overlay]{\node[font=\Large, Teal] at (6.5,1.25) {B};}
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			f = open('File.txt', 'w')
+			for i in range(34,45,5):
+				f.write('Number: '+str(i)+'\n')
+			f.close()
+		\end{pythoncode}
+		\tikz[remember picture,overlay]{\node[font=\Large, Teal] at (6.5,1.25) {C};}
+		\begin{pythoncode}
+			f = open('File.txt', 'w')
+			for i in range(34,45,5):
+				f.write('Number:' + i + '\n')
+			f.close()
+		\end{pythoncode}
+		\tikz[remember picture,overlay]{\node[font=\Large, Teal] at (6.5,1.25) {D};}
+	\end{columns}
+\end{frame}
+
+
+%\begin{frame}[fragile]{Global Details}
+	%\vspace{5mm}
+	%\begin{itemize}
+		%\item A global variable is defined at the outermost scope of the program
+			%\begin{itemize}
+				%\item This can make it accessible to all functions in the program
+			%\end{itemize}
+		%\item To change a global variable, a function must declare explicitly within its code block that it wants to treat that variable name as a global variable
+		%\item Syntax is: 
+			%\begin{pythoncode}
+				%def func(x):
+					%global y
+					%y += x
+
+				%y = 2
+				%func(5)
+				%print(y)
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{HW4 Example}
+	%\vspace{5mm}
+	%\begin{example}
+	%On HW4 there was a scoping issue with the below code. How could we fix it with a global variable?
+	%\begin{pythoncode}[backgroundcolor=, numbers=left]
+		%def odd_sum(maxnum=10):
+			%def add_odd(x,total):
+				%if x % 2 == 1:
+					%total += x
+
+			%total = 0
+			%for n in range(maxnum+1):
+				%add_odd(n,total)
+			%return total
+	%\end{pythoncode}
+	%\end{example}
+%\end{frame}
+
+%\begin{frame}{With Great Power\ldots}
+	%\begin{itemize}
+		%\item The whole point of functions is to improve readability by keeping everything in a function local
+		%\item Global variables destroy that localization
+		%\item \textcolor{Red}{Wanton use of globals can wreck havoc on the clarity and readability of your code!}
+			%\begin{itemize}
+				%\item Use with caution and only where they are really needed
+				%\item Can you achieve something without them? Then it is almost always better to do without
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+\begin{frame}{\textcolor{Blue}{Import}ant Ideas}
+	\begin{itemize}
+		\item At some point, programs will reach a complexity where it would be nice to separate them over multiple files
+			\begin{itemize}
+				\item This helps with teamwork as well, since different people can easily work on different files then
+			\end{itemize}
+		\item Need some way to bring all those files together in a master program when the program is run
+		\item Python does this through the use of \pyi{import}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Modules}
+	\begin{itemize}
+		\item A \alert{module} is a \texttt{.py} file which is imported into another program
+		\item Can consist of both executable statements as well as function definitions
+			\begin{itemize}
+				\item Usually mostly function definitions
+				\item Statements usually just for initialization
+			\end{itemize}
+		\item Can think of as a library, from which you can checkout a particular function that you want to use
+		\item \pyi{import}ing the module gives you access to all or some subset of those functions
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Usage example}
+	\begin{example}
+		Importing and using the module \texttt{circles.py}
+	\end{example}
+\end{frame}
+
+\begin{frame}{Namespaces}
+	\begin{itemize}
+		\item If just imported, functions and constants exist only in that modules namespace
+			\begin{itemize}
+				\item Need to refer to them with module name first, ie. \pyi{circles.area()}
+			\end{itemize}
+		\item This prevents conflicts with any other functions you might have also called \pyi{area()}!
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{I'm Lazy}
+	\begin{itemize}
+		\item You can import in such a way that you don't have to use the module name
+			\begin{itemize}
+				\item Import only the function you want
+					\begin{itemize}
+						\item \pyi{from circles import area}
+						\item Could then call normal as just \pyi{area(3)}
+					\end{itemize}
+				\item Import everything into global namespace
+					\begin{itemize}
+						\item \pyi{from circles import *}
+						\item Then \emph{all} functions can be called without the module in front
+					\end{itemize}
+			\end{itemize}
+		\item Be \textcolor{Red}{very} careful doing this!! Especially if you are importing a bunch of modules.
+			\begin{itemize}
+				\item Easy to accidentally override mission critical functions!
+				\item Can make debugging a nightmare
+			\end{itemize}
+		\item I recommend just sticking to typing out the module name
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The name is main}
+	\begin{itemize}
+		\item Sometimes you might want to write a script that serves multiple purposes
+			\begin{itemize}
+				\item Can be imported to give access to the defined functions
+				\item Can be run directly to give some output
+			\end{itemize}
+		\item In these situations you can use
+			\begin{center}
+				\pyi{if __name__ == '__main__':}
+			\end{center}
+			\begin{itemize}
+				\item Code inside that \pyi{if} statement will be run \alert{only} if the program is run directly, \alert{not} if it is imported
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{What's your vector?}
+	\begin{itemize}
+		\item So far we've looked mostly at scalar variable types
+			\begin{itemize}
+				\item \pyi{int}
+				\item \pyi{float}
+				\item \pyi{bool}
+				\item \pyi{str} $\leftarrow$ the only non-scalar type!
+			\end{itemize}
+		\item Chapter 5 is all about non-scalar variable types
+			\begin{itemize}
+				\item \pyi{tuple}
+				\item \pyi{list}
+				\item \pyi{range}
+				\item \pyi{dict}
+				\item \pyi{set}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Introducing Tuples}
+	\begin{itemize}
+		\item<+-> Recall basic properties of a string
+			\begin{itemize}
+				\item Comprised of ordered smaller elements (characters)
+				\item Immutable (can not be changed in place)
+				\item Delimited by quotes 
+			\end{itemize}
+		\item<+-> Pythonic tuples: generalized strings
+			\begin{itemize}
+				\item Comprised of ordered smaller elements (of \emph{any} type!)
+					\begin{itemize}
+						\item Element variable types don't even need to be consistent!
+					\end{itemize}
+					
+				\item Still immutable
+				\item Delimited by parentheses
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Assigning Tuples}
+	\begin{itemize}
+		\item<+-> Place any sequence of variable types between parentheses, separated by commas
+			\begin{itemize}
+				\item \pyi{t_one = (1, 2, 3, 4)}
+				\item \pyi{t_two = ('a', 'b', 'c')}
+				\item \pyi{t_three = (1, 'a', 2, 'fish', True)}
+			\end{itemize}
+		\item<+-> Empty tuple just empty parentheses
+			\begin{itemize}
+				\item \pyi{t_empty = ()}
+			\end{itemize}
+		\item<+-> Tuple of 1 is the tricky one
+			\begin{itemize}
+				\item We already use parentheses to group together order of operation terms
+				\item Even if you have only a single element, you \alert{need the trailing comma} to make it a tuple
+				\item \pyi{t_single = ('a',)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\end{document}
+

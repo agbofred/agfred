@@ -1,0 +1,394 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Peering through the Scope}
+\author{Jed Rembold}
+\date{February 21, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item I'm so sorry HW3 scores are not back to you yet. My Intro Physics class had a test today, which had priority. I'm hoping to get caught up over the weekend.
+				\item I've relaxed the deadline for HW4 till Sunday night owing to the delayed presentation of material this week.
+			\end{itemize}
+		\item Much of what we are talking about today is fairly abstract, and it seemed trivial to make a super simple Arcade animation lab if you are just doing that for your homework. So lab today will just be open for you to work on your HW if you need to finish it up.
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Review Question}
+	In which below situation would using the Newton-Raphson approach to find a solution be most useful?
+	\begin{poll}
+		\item Finding an integer solution $a$ and $b$ for $a^2 + b^2 = 450$. 
+		\item Finding two prime numbers that sum to 100
+		\item Finding a value $a$ such that $a^2+\sin(a) = \frac{1}{a}$
+		\item Finding the number of ways in which 5 chips can be drawn from a bag containing chips of 7 different colors
+	\end{poll}
+\end{frame}
+
+%\begin{frame}[fragile]{Review Question}
+	%\begin{columns}
+		%\column{0.5\textwidth}
+		%When the final line of the code to the right is run, what type of variable is \pyi{x}?
+		%\begin{poll}
+			%\item \texttt{int}
+			%\item \texttt{float}
+			%\item \texttt{string}
+			%\item \texttt{NoneType}
+		%\end{poll}
+		
+		%\column{0.5\textwidth}
+		%\begin{pythoncode}
+			%def func(A):
+				%m = str(A)
+				%n = m * 10
+				%print(n)
+
+			%y = 5.0
+			%x = func(y)
+			%print(type(x))
+		%\end{pythoncode}
+	%\end{columns}
+%\end{frame}
+
+
+%\begin{frame}[fragile]{Default Slide Title}
+	%\begin{itemize}[<+->]
+		%\item Often times it can be useful to specify default values for a formal parameter
+			%\begin{pythoncode}
+				%def func(name='Jed', age=34)
+					%print('My name is', name, 'and I am', age)
+			%\end{pythoncode}
+		%\item You then don't need to always provide that actual parameter
+		%\item If setting any parameters out of order though, you \alert{must} indicate them through keywords.
+			%\begin{pythoncode}
+				%func()
+				%func('Bob',25)
+				%func('Larry')
+				%func(age=68)
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+\begin{frame}[fragile]{Arcade Functions}
+	\begin{itemize}
+		\item Functions can be used to group common tasks together in arcade
+		\item Can use
+			\begin{pythoncode}
+				arcade.schedule(<function name>, <interval>)
+			\end{pythoncode}
+			to schedule a function to run at some point in the future
+		\item Forms the basis for animation, but some challenges we need to still overcome
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Opinion Poll}
+	\begin{columns}
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			def vegas(x):
+				y = 2
+				for i in range(5):
+					x = x + y
+				return x
+
+			x = 3
+			z = vegas(x)
+			print('z =', z)
+			print('x =', x)
+		\end{pythoncode}
+		
+		\column{0.5\textwidth}
+		Consider the code to the right. When the final value of \pyi{x} is printed, what do you think will be the value of \pyi{x}?
+		\begin{poll}
+		\item 3
+		\item 5
+		\item 13
+		\item \texttt{None}
+		\end{poll}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{A Question of Scope}
+	\begin{itemize}
+		\item Functions really do work as self-contained little boxes or environments
+			\begin{itemize}
+				\item What happens in \pyi{vegas} stays in \pyi{vegas}.
+			\end{itemize}
+		\item Whenever the python interpreter enters a new function, it gets out a new whiteboard to keep track of that functions variables
+			\begin{itemize}
+				\item Changes in the variables on that whiteboard do \emph{not} propagate back to other white boards
+			\end{itemize}
+		\item The whiteboard that a function has available to it is called the \alert{scope} of a function.
+		\item When the Python interpreter finishes evaluating a function (and returns), that scope (or whiteboard) is \emph{thrown away}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Scoping example}
+	\vspace{3mm}
+	\begin{columns}
+		\column{0.4\textwidth}
+		\begin{pythoncode}[numbers=right]
+			def f(x):
+				def g():
+					x = 'cat'
+					y = 2
+					print(x)
+				def h():
+					z = x
+					print(z)
+				x = x + 1
+				h()
+				g()
+				return g
+			x = 5
+			z = f(x)
+		\end{pythoncode}
+		\column{0.5\textwidth}
+		\begin{center}
+			\begin{tikzpicture}[
+				block/.style={minimum size=1cm, draw, very thick, rounded corners},
+				label/.style={rotate=90, anchor=east},
+				]
+
+				\onslide<2-8>
+				\node[block, Orange] (f) at (0,0) {f};
+				\node[Orange, below=2mm of f, label] {Main};
+				\node[block, Orange, above= 2mm of f] (x) {x};
+				\node[block, Orange, above= 2mm of x] (z) {z};
+
+				\onslide<3-7>{
+					\node[block, Blue, right=2mm of f] (x2) {x};
+					\node[Blue, below=2mm of x2, label] {f scope};
+					\node[block, Blue, above=2mm of x2] (g) {g};
+					\node[block, Blue, above=2mm of g] (h) {h};
+				}
+
+				\onslide<4>{
+					\node[block, Red, right=2mm of x2] (z) {z};
+					\node[Red, below=2mm of z, label] {h scope};
+				}
+
+				\onslide<6>{
+					\node[block, Green, right=2mm of x2] (x3) {x};
+					\node[Green, below=2mm of x3, label] {g scope};
+					\node[block, Green, above=2mm of x3] (y) {y};
+				}
+
+			\end{tikzpicture}
+		\end{center}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Scoping Take-aways}
+	\begin{itemize}
+		\item Changes to variables only affect the local scope of that function.
+			\begin{itemize}
+				\item The returned value is the only output or change you get from a function.
+			\end{itemize}
+			
+		\item A variable is added to the local scope only if provided as a formal parameter or defined as a \alert{local variable}.
+		\item A reference to a variable not in the current scope will cause the interpreter to look ``one scope back'' to see if that variable is defined there.
+			\begin{itemize}
+				\item If it is, it will use that value
+				\item Otherwise, you'll get an error
+			\end{itemize}
+			
+	\end{itemize}
+	\pause
+	\begin{center}
+		\color{Red}
+		Scoping can be confusing! When in doubt, just think of the function as its own self-contained box. The only thing it knows about the outside world is the inputs, and the only thing the outside world knows about it is what it returns.
+	\end{center}
+\end{frame}
+
+\begin{frame}{Going Global}
+	\begin{itemize}
+		\item<+-> Thus far, functions are localized
+			\begin{itemize}
+				\item Some inputs in the form of arguments
+				\item Some output in the from of what is returned
+				\item This is one of the major benefits of functions!
+			\end{itemize}
+		\item<+-> Sometimes though, we need some more flexibility
+			\begin{itemize}
+				\item Take our \pyi{on_draw} and \pyi{main} functions. Nothing in one can effect the other!
+			\end{itemize}
+		\item<+-> In these situations, one can use what are called \alert{global variables}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Global Details}
+	\vspace{5mm}
+	\begin{itemize}
+		\item A global variable is defined at the outermost scope of the program
+			\begin{itemize}
+				\item This can make it accessible to all functions in the program
+			\end{itemize}
+		\item To change a global variable, a function must declare explicitly within its code block that it wants to treat that variable name as a global variable
+		\item Syntax is: 
+			\begin{pythoncode}
+				def func(x):
+					global y
+					y += x
+
+				y = 2
+				func(5)
+				print(y)
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{I like to move it move it}
+	\begin{itemize}
+		\item Can use globals to update values in \pyi{on_draw}
+			\begin{itemize}
+				\item Since \pyi{global} they will not vanish each time \pyi{on_draw} finishes
+			\end{itemize}
+		\item Need to draw them at a new position each time \pyi{on_draw} is scheduled.
+		\item Don't forget to have \pyi{arcade.start_render()} in your \pyi{on_draw} function to clear the screen each time!
+			\begin{itemize}
+				\item Or don't, if you want a more smeared effect
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]{HW4 Example}
+	%\vspace{5mm}
+	%\begin{example}
+	%On HW4 there was a scoping issue with the below code. How could we fix it with a global variable?
+	%\begin{pythoncode}[backgroundcolor=, numbers=left]
+		%def odd_sum(maxnum=10):
+			%def add_odd(x,total):
+				%if x % 2 == 1:
+					%total += x
+
+			%total = 0
+			%for n in range(maxnum+1):
+				%add_odd(n,total)
+			%return total
+	%\end{pythoncode}
+	%\end{example}
+%\end{frame}
+
+\begin{frame}{With Great Power\ldots}
+	\begin{itemize}
+		\item The whole point of functions is to improve readability by keeping everything in a function local
+		\item Global variables destroy that localization
+		\item \textcolor{Red}{Wanton use of globals can wreck havoc on the clarity and readability of your code!}
+			\begin{itemize}
+				\item Use with caution and only where they are really needed
+				\item Can you achieve something without them? Then it is almost always better to do without
+			\end{itemize}
+			
+	\end{itemize}
+	
+\end{frame}
+%\begin{frame}{Functional Communication}
+	%\begin{itemize}
+		%\item We've already mentioned using comments to communicate important ideas in your code to readers
+		%\item Communication even more important with the introduction of functions
+			%\begin{itemize}
+				%\item What does this function even do?
+				%\item What types of values can I pass into it?
+				%\item What types of values does it return?
+				%\item Are there any restrictions or qualifications about what can be input or output?
+			%\end{itemize}
+		%\item Supposedly, all of this can be gleaned from the code, but it makes far more sense to present it all upfront
+			%\begin{itemize}
+				%\item Introducing \alert{docstrings}!
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{What's up doc?}
+	%\begin{itemize}
+		%\item A docstring (or specification) is like an elaborate comment at the start of a function
+		%\item Is surrounded in triple quotes to inform the interpreter
+			%\begin{pythoncode}
+				%def important_function(a,b,c):
+					%""" This is a docstring yo! """
+					%<code here>
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Tis Binding}
+	%\begin{itemize}
+		%\item Contract between function writer and function users (even if they are the same person!)
+			%\begin{itemize}
+				%\item What does the function do in broad terms?
+				%\item Assumptions:
+					%\begin{itemize}
+						%\item What variable types are allowed as inputs?
+						%\item Are there any restrictions or restraints on those input parameters?
+					%\end{itemize}
+				%\item Guarantees:
+					%\begin{itemize}
+						%\item What will the program return under potential conditions?
+						%\item How accurate will answers be?
+					%\end{itemize}
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Specific Benefits}
+	%\begin{itemize}
+		%\item Teamwork
+			%\begin{itemize}
+				%\item Individual team-members can work on different functions from the same program
+				%\item Good specifications let them know that everything will work when they bring it all together
+			%\end{itemize}
+		%\item Testing
+			%\begin{itemize}
+				%\item Good specifications state exactly how a function should operate
+				%\item Makes it easy to write small tests to ensure than everything is working as intended
+				%\item Writing a few short tests early can save lots of time later
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Using Functions}
+	%\begin{itemize}
+		%\item Functions are all about providing two main things:
+			%\begin{itemize}
+				%\item Decomposition
+					%\begin{itemize}
+						%\item Allows us to break a program into smaller chunks
+						%\item Can reuse chunks of code in different settings
+					%\end{itemize}
+				%\item Abstraction
+					%\begin{itemize}
+						%\item Hides details that are not currently relevant to the problem at hand
+						%\item Let's us focus only on what is important
+					%\end{itemize}
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

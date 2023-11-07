@@ -1,0 +1,225 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{All About the Format}
+\author{Jed Rembold}
+\date{March 16, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item No homework due this week!
+				\item I'm trying to get caught up on the HW grading\ldots
+			\end{itemize}
+		\item Midterm on Friday!
+			\begin{itemize}
+				\item Learning Objectives have been posted. I write the test from these.
+				\item Last semester's test posted.
+				\item Some sample questions have also been posted
+				\item Format and info on test on next slides
+			\end{itemize}
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Midterm Guidelines}
+	\begin{itemize}
+		\item Test on Chapters 1--5. No new content that we talk about today or Wednesday will be on the test.
+		\item Test will be written to be completed in an hour, but you can take another hour if needed.
+			\begin{itemize}
+				\item We will of course not otherwise have a lab that day.
+			\end{itemize}
+			
+		\item Just a pen(cil) and paper test. No notes, computers, calculators, books, etc.
+		\item Nothing will require knowledge of less common methods (say like \pyi{.count()} for strings or lists).
+			\begin{itemize}
+				\item If its not covered in the Learning Objectives, I won't be asking you to know it come test day.
+			\end{itemize}
+		\item Most likely will distribute it digitally and then ask you to have your camera from your laptop or phone pointing at you from the side or back and connected to a Zoom call, but still finalizing details
+	\end{itemize}
+	
+\end{frame}
+
+\begin{frame}{Format of Midterm}
+	\begin{itemize}
+		\item $\approx2$ problems of the definition/true-false/matching type
+		\item $\approx2$ multiple choice type problems, similar to polling questions
+		\item $\approx1$ question asking you to identify what a program/function does and write a doc-string for it
+		\item $\approx1$ question about deciding if a certain piece of code will meet an objective, and if not how to fix it (like hw)
+		\item $\approx1$ question about reordering all the provided pieces of a program to get a desired effect.
+		\item $\approx1$ question asking you to write out some code to solve a simple problem.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	Three of the below expressions are valid, one is not. Which one would return an error?
+	\begin{poll}
+	\item \pyi{\{'A': \{'B': (1,2)\}, 'C': 3\}}
+	\item \pyi{\{1,2,(3,4),5\}}
+	\item \pyi{[\{'Alpha': 1, 'Omega': 26\}, \{2,3,4,5\}]}
+	\item \pyi{\{['A','B']: \{1,2\}\}}
+	\end{poll}
+	\exsol{\pyi{\{['A','B']: \{1,2\}\}}}
+\end{frame}
+
+\begin{frame}[fragile]{Formatting Detour!}
+	\begin{itemize}
+		\item<+-> Constructing text or a sentence by interleaving strings and other objects comes up a lot in communicating code results to a user.
+			\begin{pythoncode}
+				A = 10
+				print('The value of A is: ' + str(A))
+			\end{pythoncode}
+		\item<+-> Having to convert everything to strings and append together is clunky and easy to mess up
+			\begin{itemize}
+				\item A popular alternative is to use the \pyi{.format} method or its cousin: f-strings
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The \pyi{.format} method}
+	\begin{itemize}
+		\item The \pyi{.format} method operates on \alert{strings}
+		\item Acts on a substitution system
+			\begin{itemize}
+				\item Locations in the string indicated by \pyi{\{ \}} get swapped out
+				\item Objects in the function call get converted to a string automatically and swapped in
+			\end{itemize}
+		\item Simple Examples
+			\begin{itemize}
+				\item \pyi{'The value of A is \{\}'.format(10)}
+				\item \pyi{'\{\} + \{\} is \{\}'.format(2,5,2+5)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Labels can be key}
+	\begin{itemize}
+		\item By default, all arguments to \pyi{.format()} are positional
+			\begin{itemize}
+				\item Order of parameters is matched with order of \pyi{\{\}}
+			\end{itemize}
+		\item Can also provide order index inside \pyi{\{ \}}
+			\begin{itemize}
+				\item \pyi{'\{1\} + \{0\} is \{2\}'.format(2,5,2+5)}
+			\end{itemize}
+			
+		\item Can also provide keyword labels, but then must call with a keyword
+			\begin{itemize}
+				\item \pyi{'\{name\} is \{age\} years old.'.format(age=34, name='Amy')}
+				\item \pyi{'\{\} + \{B\} + \{C\} = \{\}'.format(3,10,C=5,B=2)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The Format of Format}
+	\begin{itemize}
+		\item Often times when displaying a value in a string, we may want a certain format specification:
+			\begin{itemize}
+				\item Certain number of decimals
+				\item Pad with a certain amount of zeros or spaces
+				\item Justify left or right in that space
+				\item Use scientific notation
+				\item etc
+			\end{itemize}
+		\item We can do all this by specifying a sort of code inside the \pyi{\{ \}} \emph{in the string itself}!
+			\begin{itemize}
+				\item Format spec is separated from the label with a \pyi{:}
+				\item \pyi{'The value of A is \{0:.5f\}'.format(A)}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Shaping your format}
+	\begin{itemize}
+		\item Lots we can do, rarely need all at once
+		\item Commonly used \link{https://docs.python.org/3.4/library/string.html\#formatspec}{spec parts}:
+			\begin{itemize}
+				\item 
+					\only<1>{\pyi[output]{[[fill]align][width][,][.precision][type]}}
+					\only<2>{\pyi[output]{[[fill]align][width][,][.precision]|[type]|}}
+					\only<3>{\pyi[output]{[[fill]align][width][,]|[.precision]|[type]}}
+					\only<4>{\pyi[output]{[[fill]align][width]|[,]|[.precision][type]}}
+					\only<5>{\pyi[output]{[[fill]align]|[width]|[,][.precision][type]}}
+					\only<6>{\pyi[output]{|[[fill]align]|[width][,][.precision][type]}}
+			\end{itemize}
+	\end{itemize}
+	\begin{description}
+		\only<1>{\item }
+		\only<2>{
+		\item[type:] What type of object you want to represent as a string
+			\begin{itemize}
+				\item 'd' - base-10 integer (default)
+				\item 'f' - float or decimal
+				\item 'e' - scientific notation
+			\end{itemize}
+		}
+		\only<3>{
+		\item[.precision:] Number of numbers after decimal
+			\begin{itemize}
+				\item Only makes sense for floating values
+			\end{itemize}
+		}
+		\only<4>{
+		\item[comma:] If you want a comma separating thousands
+		}
+		\only<5>{
+		\item[width:] How many characters you want the formatted value to be
+			\begin{itemize}
+				\item If smaller than needed, will expand to fit number
+				\item If larger, right justified by default
+			\end{itemize}
+		}
+		\only<6>{
+		\item[fill-align:] What alignment and fill you want
+			\begin{itemize}
+				\item Alignment is \pyi{<},\pyi{>}, or \pyi{^} for left, right, center justified
+				\item Fill can be any string character (default is space)
+			\end{itemize}
+		}
+	\end{description}
+\end{frame}
+
+\begin{frame}[fragile]{Not to be confused with a g-string}
+	\medskip
+	\begin{itemize}
+		\item Short for format string, an f-string achieves the same thing as \pyi{.format} but with less syntax
+		\item Introduced in Python 3.6
+		\item Need an 'f' right before the string to let Python know it needs to do more with the string
+			\begin{itemize}
+				\item This is important! Otherwise it is not an f-string and Python will just print out the squiggle brackets and their contents!
+			\end{itemize}
+		\item Place the desired variables (or values) directly into the \pyi{\{ \}}!
+			\begin{pythoncode}
+				A = 10
+				B = 15.123234
+				print(f'A is {A} and B is {B:.2f}')
+			\end{pythoncode}
+		\item All other syntax and format specs like \pyi{.format}!
+	\end{itemize}
+	
+\end{frame}
+
+
+
+
+
+
+
+
+\end{document}
+

@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold">
+  <meta name="dcterms.date" content="2023-02-05">
+  <title>Testing English Wordle</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Testing English Wordle</h1>
+  <p class="author">Jed Rembold</p>
+  <p class="date">February 5, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>I’m working on PS2 feedback</li>
+<li>You have Problem Set 3 due at the end of Friday
+<ul>
+<li>You have everything you need to do all the problems after today</li>
+</ul></li>
+<li>Wordle Guidelines will be posted by the end of tonight</li>
+<li>Polling: <a
+href="http://rembold-class.ddns.net">rembold-class.ddns.net</a></li>
+</ul>
+</section>
+<section id="review-question" class="slide level2"
+data-notes="Answer is B, as it would not print the 0">
+<h2 data-notes="Answer is B, as it would not print the 0">Review
+Question</h2>
+<p>Which of the below blocks of code would print something different
+from the others?</p>
+<div class="cols">
+<div class="col">
+<div class="block" name="A">
+<pre ><code class="python" style="margin-left:1em">for n in range(10):
+    if n % 2 == 0:
+        print(n)</code></pre>
+</div>
+<div class="block" name="B">
+<pre ><code class="python" style="margin-left:1em">for i in range(0,10,2):
+    if i > 0:
+        print(i)</code></pre>
+</div>
+</div>
+<div class="col">
+<div class="block" name="C">
+<pre ><code class="python" style="margin-left:1em">for j in '02468':
+    L = int(j)
+    print(L)
+</code></pre>
+</div>
+<div class="block" name="D">
+<pre ><code class="python" style="margin-left:1em">for k in range(0,10):
+    if not (k % 2 > 0):
+        print(k)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="assertions" class="slide level2">
+<h2>Assertions</h2>
+<ul>
+<li><p>You can use Python’s <code class="python">assert</code> statement
+to write test functions, which take the form:</p>
+<pre ><code class="python">assert condition</code></pre>
+<p>where <code class="python">condition</code> is any operation that
+returns a <code class="python">True</code> or
+<code class="python">False</code></p></li>
+<li><p>Assert statements “expect” a condition to yield a
+<code class="python">True</code>, and if they do, nothing happens</p>
+<ul>
+<li>No news is good news in this case</li>
+</ul></li>
+<li><p>If an assert condition evaluates to
+<code class="python">False</code>, an error is raised</p></li>
+<li><p>Naming your test functions starting with the word
+<code class="python">test_</code> will make them automatically
+discoverable by other tools</p></li>
+</ul>
+</section>
+<section id="testing-example" class="slide level2">
+<h2>Testing Example</h2>
+<ul>
+<li>Suppose we wanted to write some checks of the
+<code class="python">count_letters</code> function from earlier</li>
+</ul>
+<pre ><code class="python">def test_count_letters():
+    """ Runs several tests on the function count_letters """
+    assert count_letters("z", "banana") == 0
+    assert count_letters("a", "strawberry") == 1
+    assert count_letters("A", "apple") == 0
+    assert count_letters("e", "eerie") == 3</code></pre>
+</section>
+<section id="showcasing-autochecks" class="slide level2">
+<h2>Showcasing Autochecks</h2>
+<ul>
+<li>When you submit code to GitHub, my pre-written tests are run
+<ul>
+<li>If <strong>any</strong> check fails, you’ll see the red X (and
+possibly get an email)</li>
+<li>Let’s look at how to get information about what went wrong</li>
+</ul></li>
+<li>VSCode actually can run all the tests locally as well
+<ul>
+<li>Let’s also walk through how that works (and looks)</li>
+</ul></li>
+</ul>
+</section>
+<section id="algorithms" class="slide level2">
+<h2>Algorithms</h2>
+<ul>
+<li>Recall that when approaching a computation problem, you
+<strong>must</strong> have an algorithm designed before you start
+coding</li>
+<li>An <strong>algorithm</strong> is a problem-solving strategy, and
+should be:
+<ul>
+<li><em>Clear and unambiguous</em>, in the sense that it is
+understandable and leaves no gaps</li>
+<li><em>Effective</em>, in the sense that each step is actually
+possible</li>
+<li><em>Finite</em>, in the sense that it ends at some point</li>
+</ul></li>
+<li>You need to come up with an algorithm before you start coding!</li>
+</ul>
+</section>
+<section id="creating-your-own-algorithms" class="slide level2">
+<h2>Creating your own Algorithms</h2>
+<ul>
+<li>Some useful hints to keep in mind when constructing your own
+algorithms:
+<ul>
+<li>Think about how you would solve the problem <strong>without</strong>
+a computer. You can’t write code if you don’t understand what you want
+the computer to do.</li>
+<li>Try to use tools and programming patterns you have already seen. It
+is often far easier to write programs by assembling pieces from code you
+have already seen than writing each program entirely from scratch.
+<ul>
+<li>Common patterns we have already seen include: looping over
+sequences, using variables to track/control a loop, and building up
+sequences from empty sequences using concatenation</li>
+</ul></li>
+<li>Recognize that the program you write is highly unlikely to work the
+first time
+<ul>
+<li>Errors can occasionally be in your algorithms</li>
+<li>More often, early on, errors are in your translating of the
+algorithm into Python</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="learning-english" class="slide level2">
+<h2>Learning English</h2>
+<ul>
+<li>When working with sequences of characters, it is often useful or
+desirable to determine if they form actual valid English words</li>
+<li>This class provides for you a new library, through the file
+<code class="python">english.py</code></li>
+<li>The <code class="python">english</code> library provides two objects
+you can import into your programs:
+<ul>
+<li>The constant <code class="python">ENGLISH_WORDS</code>, which is a
+list of all the valid words in the English dictionary</li>
+<li>The function <code class="python">is_english_word()</code>, which
+accepts a single string as an argument and returns
+<code class="python">True</code> is the string represents a valid
+English word.</li>
+</ul></li>
+<li>This library will be particularly useful for Wordle!</li>
+</ul>
+</section>
+<section id="example-how-many-2-letter-words" class="slide level2">
+<h2>Example: How many 2 letter words?</h2>
+<ul>
+<li>Before we start writing code, let’s pause. Give a physical English
+dictionary, how could you go about figuring out the number of two letter
+words?</li>
+</ul>
+<div class="cols">
+<div class="col fragment">
+<div class="block" name="Check valid words for right length">
+<pre ><code class="python fragment" style="width: 100%">from english import ENGLISH_WORDS
+
+count = 0
+for word in ENGLISH_WORDS:
+    if len(word) == 2:
+        count += 1
+print(count)</code></pre>
+</div>
+</div>
+<div class="col fragment" style="flex-grow:1.15">
+<div class="block" name="Check all two letter combinations">
+<pre ><code class="python fragment" style="width:100%">from english import is_english_word
+
+count = 0
+alphabet = 'abcdefghijklmnopqrstuvwxyz'
+for letter1 in alphabet:
+    for letter2 in alphabet:
+        word = letter1 + letter2
+        if is_english_word(word):
+            count += 1
+print(count)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="introduction-to-wordle" class="slide level2">
+<h2>Introduction to Wordle</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>Our first project will be Wordle</li>
+<li>Milestone guide will be posted today</li>
+<li>Not due until February 17th</li>
+<li>You still have PS3 due this Friday</li>
+<li>Could complete in a week, but we are getting it to you early in case
+you want to start sooner</li>
+</ul>
+</div>
+<div class="col">
+<figure>
+<img data-src="../images/wordle.png" alt="The game of Wordle" />
+<figcaption aria-hidden="true">The game of Wordle</figcaption>
+</figure>
+</div>
+</div>
+</section>
+<section id="your-responsibilities" class="slide level2">
+<h2>Your Responsibilities</h2>
+<ul>
+<li>We will provide you with a custom data type that will handle all the
+graphics and user interaction
+<ul>
+<li>Don’t worry, you’ll have a chance to implement your own GUIs later
+in the semester!</li>
+</ul></li>
+<li>Your responsibilities will include:
+<ul>
+<li>Displaying and reading letters from boxes</li>
+<li>Evaluating whether a word is valid</li>
+<li>Determining what color each letter of a word should be</li>
+<li>Determining when victory or defeat occurs</li>
+</ul></li>
+</ul>
+</section>
+<section id="your-toolbox" class="slide level2">
+<h2>Your Toolbox</h2>
+<ul>
+<li>Special functions provided by the provided graphics data type:
+<code class="python">WordleGWindow</code>
+<ul>
+<li>These will be well documented, and include, but are not limited to,
+things like
+<ul>
+<li>Getting or setting a letter in a particular box</li>
+<li>Getting or changing the color of a given box</li>
+<li>Changing which row is used when characters are entered</li>
+</ul></li>
+</ul></li>
+<li>Variables and functions</li>
+<li>Control statements
+<ul>
+<li>Good use of loops and if statements will be very useful</li>
+</ul></li>
+<li>Basic string functions</li>
+</ul>
+</section>
+<section id="receiver-syntax" class="slide level2">
+<h2>Receiver Syntax</h2>
+<div style="font-size:.9em">
+<ul>
+<li><p>So far, all operations between or on objects have used symbols to
+indicate the operation</p>
+<ul>
+<li>The <code class="python">+</code> sign, for instance</li>
+</ul></li>
+<li><p>Going forward, we will begin to see more examples of operations
+on objects that use <em>receiver syntax</em></p></li>
+<li><p>In receiver syntax, we specify the object to act on, followed by
+a dot and then a predefined function (called a <em>method</em> here)
+name</p>
+<pre ><code class="python">obj.method_name()</code></pre>
+<ul>
+<li>This is like you are running this special function on the object, so
+you <strong>need</strong> the <code class="python">()</code> at the
+end</li>
+<li>Some methods also allow arguments, to influence exactly how the
+operation will proceed</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="an-approach-to-success" class="slide level2">
+<h2>An Approach to Success</h2>
+<ul>
+<li>Each project is accompanied by a highly detailed guide: <strong>read
+it!</strong>
+<ul>
+<li>Explains background ideas so that you can understand the big picture
+of what you are needing to do</li>
+<li>Also included a breakdown of individual <em>milestones</em>
+<ul>
+<li>A <em>milestone</em> is a discrete checkpoint that you should ensure
+is working (and that you understand!) before moving on</li>
+</ul></li>
+</ul></li>
+<li>Projects are all about managing complexity. If you start trying to
+implement milestones out of order, you are asking for disaster</li>
+<li>Don’t let yourself get overwhelmed by scale. Focus on one particular
+milestone at a time, which should involve focusing only on a small part
+of your overall code</li>
+</ul>
+<!-- next time
+## The Worth of a Picture
+:::{style='font-size:.9em'}
+- There comes a time when reading and entering text on a terminal doesn't cut it
+    - Maybe you need more complicated input
+    - Maybe you need a more complicated interface that pure text can manage
+    - Maybe you have output that can not be shown as text
+- Standard Python really only deals with the terminal interface
+- Lots of outside libraries give Python more visual input/output
+    - Turtle
+    - Matplotlib
+    - Tkinter <span class='fragment'>← PGL</span>
+    - PyGame
+    - Arcade
+:::
+
+## The Portable Graphics Library
+- Built atop Tkinter
+- The library (`pgl.py`) is available on the website
+    - Put it in the same folder as your code, and then you can import it
+- Operates on the idea of a collage or cork-board
+
+![Test](../images/CorkBoard.svg)
+
+- Note that newer objects can obscure older objects. This layering arrangement is called the _stacking order_.
+
+
+## The Pieces
+- At its simplest then, we have two main parts:
+    - The window (or felt-board/cork-board)
+        - Created with the `GWindow` function
+        - Takes two arguments: a width and a height in pixels
+    - The contents
+        - A wide assortment of shapes that can be added to the scene
+        - Control over where they are placed, how large they are, what color they are, etc
+
+
+## Blue Rectangle!
+```{.python data-line-numbers="1|3,4|6|7|8|9|10|11"}
+from pgl import GWindow, GRect
+
+GW_WIDTH = 500
+GW_HEIGHT = 200
+
+gw = GWindow(GW_WIDTH, GW_HEIGHT)
+rect = GRect(150, 50 ,200, 100)
+rect.set_color("Blue")
+rect.set_filled(True)
+gw.add(rect)
+```
+
+## The Coordinate System
+![PGL Coordinates](../images/pgl_coordinates.svg)
+
+- Positions and distances on the screen are measured in terms of pixels
+- The location of the origin and orientation of the y-axis are **different from math**!
+    - Origin is in the upper left instead of lower left
+    - Y-values increase as you move downwards
+
+## Other Simple Objects
+Functions to create simple geometric objects:
+<br>
+
+- Rectangles!
+    - `GRect( x, y, width, height )`
+    - Creates a rectangle whose upper left corner is at (x,y) of the specified size
+- Circles/Ovals!
+    - `GOval( x, y, width, height )`
+    - Creates an oval that fits inside the rectangle with the same dimensions
+- Lines!
+    - `GLine( x1, y1, x2, y2 )`
+    - Creates a line extending from (x1,y1) to (x2,y2)
+
+
+## The `GObject` Hierarchy
+- The types of graphical objects form a hierarchy:
+
+![](../images/GObject_Hierarchy.svg)
+
+- The `GObject` type represents the collection of all graphical objects
+- The `GFillableObject` type represents those that have a fillable interior
+
+
+## Interacting with the `GWindow`
+- We've already shown creation:
+
+  ```python
+  gw = GWindow(width, height)
+  ```
+- You have several more operations that you can apply to the `GWindow` object:
+
+-------------------------------------- -------------------------------------
+       `gw.add(object)`{.no-highlight} Adds an object to the window
+ `gw.add(object, x, y)`{.no-highlight} Adds an object to the window after moving it to (x,y)
+    `gw.remove(object)`{.no-highlight} Removes an object from the window
+       `gw.get_width()`{.no-highlight} Returns the width of the graphics window in pixels
+      `gw.get_height()`{.no-highlight} Returns the height of the graphics window in pixels
+-------------------------------------- -------------------------------------
+
+
+## Interacting with `GObject`s
+- The following operations apply to all GObjects,  where `object`{.no-highlight} is the name of any specific instance.
+
+---------------------------------------- ----------------------------
+         `object.get_x()`{.no-highlight} Returns the x coordinate of this object
+         `object.get_y()`{.no-highlight} Returns the y coordinate of this object
+     `object.get_width()`{.no-highlight} Returns the width of this object
+    `object.get_height()`{.no-highlight} Returns the height of this object
+`object.set_color(color)`{.no-highlight} Sets the color of the object to the specified color
+---------------------------------------- ----------------------------
+
+- All coordinates and distances are measured in pixels
+
+
+## Interacting with `GFillableObject`s
+- Fillable GObjects have a smaller subset of commands that also apply to them.
+- Initially the only fillable objects available to you are rectangles and ovals
+
+--------------------------------------------- ----------------------------
+     `object.set_filled(bool)`{.no-highlight} Sets the fill state of the object
+`object.set_fill_color(color)`{.no-highlight} Sets the color to be used to fill the interior, otherwise same as the outer line
+     `object.get_fill_color()`{.no-highlight} Gets the current color used to display the object interior
+          `object.is_filled()`{.no-highlight} Returns True or False depending on whether the object is currently filled
+--------------------------------------------- ----------------------------
+
+-->
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+      
+    </script>
+    </body>
+</html>

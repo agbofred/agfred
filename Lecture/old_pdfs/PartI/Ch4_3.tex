@@ -1,0 +1,305 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Recursion( Recursion( Recursion( \ldots)))}
+\author{Jed Rembold}
+\date{February 24, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item If you haven't gotten HW4 in yet, get it finished up! I'm around all afternoon today if you have any last little questions.
+				\item HW5 should be posted.
+			\end{itemize}
+		\item I'm trying to get some grade reports generated this week so you can know where you are sitting at in the class currently.
+			\begin{itemize}
+				\item I'll send out a blast on Campuswire when that happens
+			\end{itemize}
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\begin{columns}
+		\column{0.5\textwidth}
+		What would be the final  printed value of the code to the right?
+		\begin{poll}
+		\item 50
+		\item 12
+		\item 10
+		\item This code would error out
+		\end{poll}
+		\exsol{10}
+
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			def func(a, b=5, c=True):
+				if c:
+					return a + b
+				else:
+					return a * b
+
+			b = 2
+			print(func(10,False))
+		\end{pythoncode}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Functional Communication}
+	\begin{itemize}
+		\item We've already mentioned using comments to communicate important ideas in your code to readers
+		\item Communication even more important with the introduction of functions
+			\begin{itemize}
+				\item What does this function even do?
+				\item What types of values can I pass into it?
+				\item What types of values does it return?
+				\item Are there any restrictions or qualifications about what can be input or output?
+			\end{itemize}
+		\item Supposedly, all of this can be gleaned from the code, but it makes far more sense to present it all upfront
+			\begin{itemize}
+				\item Introducing \alert{docstrings}!
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What's up doc?}
+	\begin{itemize}
+		\item A docstring (or specification) is like an elaborate comment at the start of a function
+		\item Is surrounded in triple quotes to inform the interpreter
+			\begin{pythoncode}
+				def important_function(a,b,c):
+					""" This is a docstring yo! """
+					<code here>
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Tis Binding}
+	\begin{itemize}
+		\item Contract between function writer and function users (even if they are the same person!)
+			\begin{itemize}
+				\item What does the function do in broad terms?
+				\item Assumptions:
+					\begin{itemize}
+						\item What variable types are allowed as inputs?
+						\item Are there any restrictions or restraints on those input parameters?
+					\end{itemize}
+				\item Guarantees:
+					\begin{itemize}
+						\item What will the program return under potential conditions?
+						\item How accurate will answers be?
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Specific Benefits}
+	\begin{itemize}
+		\item Teamwork
+			\begin{itemize}
+				\item Individual team-members can work on different functions from the same program
+				\item Good specifications let them know that everything will work when they bring it all together
+			\end{itemize}
+		\item Testing
+			\begin{itemize}
+				\item Good specifications state exactly how a function should operate
+				\item Makes it easy to write small tests to ensure than everything is working as intended
+				\item Writing a few short tests early can save lots of time later
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Functional Summary}
+	\begin{itemize}
+		\item Functions are all about providing two main things:
+			\begin{itemize}
+				\item Decomposition
+					\begin{itemize}
+						\item Allows us to break a program into smaller chunks
+						\item Makes troubleshooting more efficient
+						\item Can reuse chunks of code in different settings
+					\end{itemize}
+				\item Abstraction
+					\begin{itemize}
+						\item Hides details that are not currently relevant to the problem at hand
+						\item Let's us focus only on what is important
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Recursion}
+	\begin{itemize}[<+->]
+		\item \alert{Recursion} is the process of repeating items in a self-similar way
+		\item Algorithmically: method of finding solutions to problems with a divide and conquer strategy
+			\begin{itemize}
+				\item Reduce a problem to solving simpler versions of the same problem
+			\end{itemize}
+		\item Programatically: a technique of writing a function which \emph{calls itself} within the body of the function.
+			\begin{itemize}
+				\item We do NOT want infinite recursion
+					\begin{itemize}
+						\item Need 1 or more \alert{base cases} that we can solve without recursion
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Looping vs Recursion}
+	\begin{example}
+		It can be illustrative to look at a very simple example of how a looping algorithm compares to a recursive algorithm.
+
+		Take the case of multiplication, where multiplying a value $A$ by $B$ is the same as ``adding $A$ to itself $B$''
+		\[A \times B = A_1 + A_2 + A_3 + \cdots + A_B\]
+		
+		How would we approach this using both looping and recursion?
+	\end{example}
+\end{frame}
+
+\begin{frame}[fragile]{The Looping Case}
+	\begin{itemize}
+		\item Define a variable (often called a \alert{state variable} to keep track of the current state of the multiplication and which gets updated each iteration
+		\item Loop through the necessary number of iterations, updating the state variable each time
+	\end{itemize}
+	\begin{pythoncode}
+		def mult_w_loop(A, B):
+			total = 0
+			for i in range(B):
+				total += A
+			return total
+	\end{pythoncode}
+\end{frame}
+
+\begin{frame}[fragile]{The Recursive Case}
+	\vspace{5mm}
+	\begin{itemize}
+		\item Need a Recursive Step
+			\begin{itemize}
+				\item How to reduce the problem to a simpler/smaller version of the same problem?
+					\[A\times B = A + {\color{Orange}\underbrace{A + A + A + \cdots + A}_{B-1}}\]
+					\[A\times B = A + A \times (B-1)\]
+			\end{itemize}
+		\item Need a Base Case
+			\begin{itemize}
+				\item When $B=1$, $A\times B = A$
+			\end{itemize}
+	\end{itemize}
+	{\small
+	\begin{pythoncode}
+		def mult_w_rec(A,B):
+			if B == 1:
+				return A
+			else:
+				return A + mult_w_rec(A, B-1)
+	\end{pythoncode}
+	}
+\end{frame}
+
+\begin{frame}{Example!}
+	\begin{example}
+		The factorial of a number is defined as the product of all the positive integers equal to or smaller than that number. In variable form, this would look like:
+		\[n! = n \times (n-1) \times (n-2) \times \cdots \times 1\]
+		Write a recursive function to return the factorial of any provided positive integer.
+	\end{example}
+\end{frame}
+
+\begin{frame}{Factorial in Pictures}
+	\begin{center}
+		\begin{tikzpicture}[block/.style={draw, very thick, rounded corners}]
+			\node[block](4) at (0,0) {\pyi{fact(4)}};
+			\node[right=3cm of 4](r4) {\pyi{return 4*fact(3)}};
+
+			\node[block, below=1cm of 4](3) {\pyi{fact(3)}};
+			\node[right=3cm of 3](r3) {\pyi{return 3*fact(2)}};
+
+			\node[block, below=1cm of 3](2) {\pyi{fact(2)}};
+			\node[right=3cm of 2](r2) {\pyi{return 2*fact(1)}};
+
+			\node[block, below=1cm of 2] (1) {\pyi{fact(1)}};
+			\node[right=3cm of 1](r1) {\pyi{return 1}};
+
+			\draw<+->[Orange, -latex, thick] (4) -- (r4);
+			\draw<+->[Orange, -latex, thick] (r4.-45) -- (3);
+			\draw<+->[Orange, -latex, thick] (3) -- (r3);
+			\draw<+->[Orange, -latex, thick] (r3.-45) -- (2);
+			\draw<+->[Orange, -latex, thick] (2) -- (r2);
+			\draw<+->[Orange, -latex, thick] (r2.-45) -- (1);
+			\draw<+->[Orange, -latex, thick] (1) -- (r1);
+
+			\onslide<+->{
+				\draw[Teal, -latex, thick] (r1) -- (r2.-30);
+				\node[right=5mm of r2, Teal](s2) {= 2};
+			}
+			\onslide<+->{
+				\draw[Teal, -latex, thick] (s2) -- (r3.-30);
+				\node[right=5mm of r3, Teal](s3) {= 6};
+			}
+			\onslide<+->{
+				\draw[Teal, -latex, thick] (s3) -- (r4.-30);
+				\node[right=5mm of r4, Teal](s4) {= 24};
+			}
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Some Observations}
+	\begin{itemize}
+		\item Each call of the function (even the same function) \emph{creates its own scope}.
+		\item Variable values defined in a particular scope are not changed by further recursive calls
+		\item Once a function returns its value, the flow of control passes back to the previous scope
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Iteration vs Recursion}
+	\begin{columns}
+		\column{0.5\textwidth}
+		\begin{pythoncode}[tabsize=2]
+			def fact_iter(n):
+				prod = 1
+				for i in range(1,n+1):
+					prod *= i
+				return prod
+		\end{pythoncode}
+		\column{0.5\textwidth}
+		\begin{pythoncode}[tabsize=2]
+			def fact_rec(n):
+				if n == 1:
+					return 1
+				else:
+					return n * fact_rec(n)
+		\end{pythoncode}
+	\end{columns}
+
+	\vspace{5mm}
+	\begin{itemize}
+		\item Recursion may be simpler or more intuitive in some cases
+		\item Recursion might be more efficient from a programmer's POV
+		\item Recursion may not be efficient at all from a computer's POV
+	\end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+
+\end{document}
+

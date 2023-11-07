@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold &amp; Fred Agbo">
+  <meta name="dcterms.date" content="2023-09-11">
+  <title>Functional Control</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Functional Control</h1>
+  <p class="author">Jed Rembold &amp; Fred Agbo</p>
+  <p class="date">September 11, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Problem Set 1 is due today!
+<ul>
+<li>I’ll try to get feedback to you all on PS1, hopefully by
+Wednesday</li>
+</ul></li>
+<li>I’m trying to post Problem Set 2 by tomorrow, and it will be due
+next week Monday</li>
+<li>Don’t forget you can contact your section leaders to ask questions
+as well!</li>
+<li>You have section meetings on Wednesdays and Thursdays!</li>
+<li>If you have just joined the course and not in section yet, see me
+after to class to fill out the form</li>
+<li>The last day you can <strong>add/drop</strong> a class without issue
+is <strong><em>Today</em></strong></li>
+<li>Polling continues today! Remember to use this link <a
+href="https://www.polleverywhere.com/agbofred203">https://www.polleverywhere.com/agbofred203</a>
+when it becomes <strong>active</strong></li>
+</ul>
+</section>
+<section id="review-question" class="slide level2"
+data-notes="Solution: 40">
+<h2 data-notes="Solution: 40">Review Question</h2>
+<p>What is the printed value of <code class="python">A</code> in the
+code below?</p>
+<pre ><code class="idle">>>> A = 10
+>>> B = 5 % 3
+>>> C = A * B ** B
+>>> A -= B + A // 2
+>>> A, B, C = C, A, B
+>>> print(A)
+??</code></pre>
+<div class="hpoll">
+<ol>
+<li>3</li>
+<li>12</li>
+<li>30</li>
+<li>40</li>
+</ol>
+</div>
+</section>
+<section id="a-quick-string-primer" class="slide level2">
+<h2>A quick String primer</h2>
+<ul>
+<li>A <em>string</em> in Python represents textual data, in form of a
+sequence of individual characters
+<ul>
+<li>Domain: all possible sequences of characters</li>
+<li>Operations: <strong>Many!</strong> But we’ll keep in quite simple
+initially</li>
+</ul></li>
+<li>Denoted by placing the desired sequence of characters between two
+quotation marks
+<ul>
+<li><code class="python">'I am a string'</code></li>
+<li>In Python, either single or double quotes can be used, but the ends
+must match
+<ul>
+<li><code class="python">"I am also a string!"</code></li>
+<li><code class="python">"I'm sad you've gone"</code></li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="what-is-your-function" class="slide level2">
+<h2>What is your Function?</h2>
+<ul>
+<li>As discussed in the context of Karel, a <em>function</em> is a
+sequence of commands that have been collected together and given a
+name.</li>
+<li>Unlike in Karel though, functions typically go beyond that and can
+have inputs and outputs</li>
+</ul>
+<p><img
+data-src="../images/svg_cache/cccf49edc6991a2d280154bffc41be691b400980.svg"
+style="width:70.0%" /></p>
+</section>
+<section id="writing-your-own-functions" class="slide level2">
+<h2>Writing your own functions</h2>
+<div>
+<ul>
+<li class="fragment"><p>The general form of a function definition looks
+like:</p>
+<pre ><code class="python">def name(parameter_list):
+    #statements in function body</code></pre>
+<ul>
+<li class="fragment"><code class="python">name</code> is your chosen
+name for the function</li>
+<li class="fragment"><code class="no-highlight">parameter_list</code> is
+a comma-separated list of <strong>variable names</strong> that will hold
+each input value</li>
+</ul></li>
+<li class="fragment"><p>You can return or output a value from the
+function by including a return statement in the function body</p>
+<pre ><code class="python">return expression</code></pre>
+<ul>
+<li class="fragment"><code class="python">expression</code> is the value
+you want to return or output</li>
+<li class="fragment">If no <code class="python">return</code> statement
+is included, Python will by default return
+<code class="python">None</code></li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="a-functional-diagram" class="slide level2">
+<h2>A Functional Diagram</h2>
+<p><?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="378.26358mm"
+   height="129.73212mm"
+   viewBox="0 0 378.26358 129.73212"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.2.1 (9c6d41e410, 2022-07-14, custom)"
+   sodipodi:docname="function_io.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#676767"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:zoom="1.2938725"
+     inkscape:cx="706.02012"
+     inkscape:cy="210.60808"
+     inkscape:window-width="2560"
+     inkscape:window-height="1413"
+     inkscape:window-x="1080"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <marker
+       style="overflow:visible"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="RoundedArrow5040"
+       markerWidth="2.135"
+       markerHeight="2.063915"
+       viewBox="0 0 6.1347524 5.9304951"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid"
+       id="RoundedArrow5040">
+      <path
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:#66d9ef;fill-opacity:1;fill-rule:evenodd;stroke:#66d9ef;stroke-opacity:1"
+         id="path21997" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="RoundedArrow6178"
+       markerWidth="2.135"
+       markerHeight="2.063915"
+       viewBox="0 0 6.1347524 5.9304951"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid"
+       id="RoundedArrow6178">
+      <path
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:#ffe792;fill-opacity:1;fill-rule:evenodd;stroke:#ffe792;stroke-opacity:1"
+         id="path22857" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="RoundedArrow9360"
+       markerWidth="2.135"
+       markerHeight="2.063915"
+       viewBox="0 0 6.1347524 5.9304951"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid"
+       id="RoundedArrow9360">
+      <path
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:#f92672;fill-opacity:1;fill-rule:evenodd;stroke:#f92672;stroke-opacity:1"
+         id="path23739" />
+    </marker>
+    <marker
+       style="overflow:visible"
+       refX="0"
+       refY="0"
+       orient="auto-start-reverse"
+       inkscape:stockid="RoundedArrow7675"
+       markerWidth="2.135"
+       markerHeight="2.063915"
+       viewBox="0 0 6.1347524 5.9304951"
+       inkscape:isstock="true"
+       inkscape:collect="always"
+       preserveAspectRatio="xMidYMid"
+       id="RoundedArrow7675">
+      <path
+         transform="scale(0.7)"
+         d="m -0.21114562,-4.1055728 6.42229122,3.21114561 a 1,1 90 0 1 0,1.78885438 L -0.21114562,4.1055728 A 1.236068,1.236068 31.717474 0 1 -2,3 v -6 a 1.236068,1.236068 148.28253 0 1 1.78885438,-1.1055728 z"
+         style="fill:#fd971f;fill-opacity:1;fill-rule:evenodd;stroke:#fd971f;stroke-opacity:1"
+         id="path24643" />
+    </marker>
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-279.74475,-84.336907)">
+    <g
+       id="g3318">
+      <rect
+         style="fill:none;stroke:#a6e22e;stroke-width:3.69738;stroke-linecap:round"
+         id="rect234"
+         width="181.39629"
+         height="106.60329"
+         x="380.33548"
+         y="105.61704"
+         ry="8.8196535" />
+      <path
+         style="fill:none;stroke:#ffe792;stroke-width:3;stroke-linecap:round;marker-end:url(#RoundedArrow6178)"
+         d="M 281.24475,158.91868 H 385.13043"
+         id="path391" />
+      <path
+         style="fill:none;stroke:#f92672;stroke-width:3;stroke-linecap:round;marker-end:url(#RoundedArrow9360)"
+         d="m 556.00098,158.91868 h 96.71404"
+         id="path447" />
+      <text
+         xml:space="preserve"
+         style="font-size:15.3703px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#f92672;stroke:none;stroke-width:0.847814;stroke-linecap:round"
+         x="578.92444"
+         y="175.24992"
+         id="text1426"><tspan
+           sodipodi:role="line"
+           id="tspan1424"
+           style="fill:#f92672;stroke:none;stroke-width:0.847814"
+           x="578.92444"
+           y="175.24992">output</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:15.3703px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#ffe792;stroke:none;stroke-width:0.847814;stroke-linecap:round"
+         x="303.08331"
+         y="175.24992"
+         id="text1484"><tspan
+           sodipodi:role="line"
+           id="tspan1482"
+           style="fill:#ffe792;stroke:none;stroke-width:0.847814"
+           x="303.08331"
+           y="175.24992">input</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:15.3703px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#a6e22e;stroke:none;stroke-width:0.847814;stroke-linecap:round"
+         x="413.90338"
+         y="96.522797"
+         id="text1590"><tspan
+           sodipodi:role="line"
+           id="tspan1588"
+           style="fill:#a6e22e;stroke:none;stroke-width:0.847814"
+           x="413.90338"
+           y="96.522797">function def</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:14.3204px;line-height:1.1;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#f8f8f2;stroke:none;stroke-width:0.78991;stroke-linecap:round"
+         x="403.76147"
+         y="139.95215"
+         id="text1646"><tspan
+           sodipodi:role="line"
+           id="tspan1644"
+           style="fill:#f8f8f2;stroke-width:0.78991"
+           x="403.76147"
+           y="139.95215">def cool(a,b):</tspan><tspan
+           sodipodi:role="line"
+           style="fill:#f8f8f2;stroke-width:0.78991"
+           x="403.76147"
+           y="155.70459"
+           id="tspan1700">   c = a + b</tspan><tspan
+           sodipodi:role="line"
+           style="fill:#f8f8f2;stroke-width:0.78991"
+           x="403.76147"
+           y="171.45703"
+           id="tspan1702">   return c + a</tspan><tspan
+           sodipodi:role="line"
+           style="fill:#f8f8f2;stroke-width:0.78991"
+           x="403.76147"
+           y="187.20947"
+           id="tspan1648" /></text>
+      <text
+         xml:space="preserve"
+         style="font-size:13.2792px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#ffe792;stroke:none;stroke-width:0.732473;stroke-linecap:round"
+         x="290.52838"
+         y="151.41565"
+         id="text3284"><tspan
+           sodipodi:role="line"
+           id="tspan3282"
+           style="fill:#ffe792;stroke:none;stroke-width:0.732473"
+           x="290.52838"
+           y="151.41565">cool(4,5)</tspan></text>
+    </g>
+    <g
+       id="g9053"
+       class="fragment">
+      <path
+         style="fill:none;stroke:#66d9ef;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#RoundedArrow5040)"
+         d="m 335.76215,137.62261 v -18.6155 h 151.25056 v 7.2729"
+         id="path3386"
+         sodipodi:nodetypes="cccc" />
+      <rect
+         style="fill:none;stroke:#66d9ef;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"
+         id="rect5875"
+         width="37.176975"
+         height="21.179291"
+         x="400.44476"
+         y="183.86345" />
+      <text
+         xml:space="preserve"
+         style="font-size:14.1111px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#66d9ef;stroke:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"
+         x="388.09344"
+         y="198.66487"
+         id="text6719"><tspan
+           sodipodi:role="line"
+           id="tspan6717"
+           style="font-size:14.1111px;fill:#66d9ef;stroke:none;stroke-width:3"
+           x="388.09344"
+           y="198.66487">a</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:14.1111px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#66d9ef;stroke:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"
+         x="414.68774"
+         y="199.515"
+         id="text8307"><tspan
+           sodipodi:role="line"
+           id="tspan8305"
+           style="font-size:14.1111px;fill:#66d9ef;stroke:none;stroke-width:3"
+           x="414.68774"
+           y="199.515">4</tspan></text>
+    </g>
+    <g
+       id="g12434"
+       class="fragment">
+      <path
+         style="fill:none;stroke:#fd971f;stroke-width:3;stroke-linecap:round;stroke-linejoin:round;marker-end:url(#RoundedArrow7675)"
+         d="m 352.1798,138.38495 v -25.96603 h 153.38669 v 12.12954"
+         id="path9109"
+         sodipodi:nodetypes="cccc" />
+      <rect
+         style="fill:none;stroke:#fd971f;stroke-width:3.0839;stroke-linecap:round;stroke-linejoin:round"
+         id="rect10087"
+         width="37.155491"
+         height="21.031683"
+         x="460.3447"
+         y="183.90414" />
+      <text
+         xml:space="preserve"
+         style="font-size:14.1111px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#fd971f;stroke:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"
+         x="447.52106"
+         y="199.95361"
+         id="text6719-7"><tspan
+           sodipodi:role="line"
+           id="tspan6717-5"
+           style="font-size:14.1111px;fill:#fd971f;stroke:none;stroke-width:3"
+           x="447.52106"
+           y="199.95361">b</tspan></text>
+      <text
+         xml:space="preserve"
+         style="font-size:14.1111px;font-family:'Fira Code';-inkscape-font-specification:'Fira Code, Normal';fill:#fd971f;stroke:none;stroke-width:3;stroke-linecap:round;stroke-linejoin:round"
+         x="474.67825"
+         y="199.31908"
+         id="text12426"><tspan
+           sodipodi:role="line"
+           id="tspan12424"
+           style="font-size:14.1111px;fill:#fd971f;stroke:none;stroke-width:3"
+           x="474.67825"
+           y="199.31908">5</tspan></text>
+    </g>
+  </g>
+</svg>
+</p>
+</section>
+<section id="simple-function-examples" class="slide level2">
+<h2>Simple function examples</h2>
+<ul>
+<li><p>Convert Fahrenheit temperatures to their Celsius equivalent</p>
+<pre ><code class="python">def f_to_c(f):
+    return 5 / 9 * (f - 32)</code></pre>
+<ul>
+<li><p>Using the function:</p>
+<pre ><code class="python">print(f_to_c(45))</code></pre></li>
+</ul></li>
+<li><p>Computes the volume of a cylinder of height
+<code class="python">h</code> and radius
+<code class="python">r</code></p>
+<pre ><code class="python">def cylinder_volume(r, h):
+    return 3.14159 * r**2 * h</code></pre>
+<ul>
+<li><p>Using the function:</p>
+<pre ><code class="python">print(cylinder_volume(2,10))</code></pre></li>
+</ul></li>
+</ul>
+</section>
+<section id="built-ins" class="slide level2">
+<h2>Built-ins</h2>
+<ul>
+<li>All modern languages include a collection of pre-defined functions
+for convenience</li>
+<li>In Python, common build-in functions that operate on numbers
+include:</li>
+</ul>
+<table>
+<thead>
+<tr class="header">
+<th>Function</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="python">abs(x)</code></td>
+<td>The absolute value of x</td>
+</tr>
+<tr class="even">
+<td><code class="python">max(x,y,...)</code></td>
+<td>The largest of all the arguments</td>
+</tr>
+<tr class="odd">
+<td><code class="python">min(x,y,...)</code></td>
+<td>The smallest of all the arguments</td>
+</tr>
+<tr class="even">
+<td><code class="python">round(x)</code></td>
+<td>The value of x rounded to the nearest integer</td>
+</tr>
+<tr class="odd">
+<td><code class="python">int(x)</code></td>
+<td>The value of x truncated to an integer</td>
+</tr>
+<tr class="even">
+<td><code class="python">float(x)</code></td>
+<td>The value of x as a decimal</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="python-applications" class="slide level2">
+<h2>Python Applications</h2>
+<ul>
+<li>In Python, application programs are generally stored in files whose
+names end with <code class="python">.py</code>. Such files are called
+<em>modules</em>.</li>
+<li>Most interesting applications interact with the user
+<ul>
+<li>In modern applications, this often happens through a <em>graphical
+user interface</em> or <em>GUI</em>
+<ul>
+<li>We’ll be constructing some GUIs later this semester!</li>
+</ul></li>
+<li>For now, all interaction will happen through the terminal
+<ul>
+<li>Requires we know how to output information to the terminal and how
+to input information into the terminal</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="output-print" class="slide level2">
+<h2>Output: <code class="python">print</code></h2>
+<div style="font-size:.89em">
+<ul>
+<li class="fragment">We’ve already seen examples of how to output
+information to the terminal</li>
+<li class="fragment">Python’s built-in
+<code class="python">print()</code> command will display whatever is
+between the <code class="python">()</code> to the screen</li>
+<li class="fragment">If you want to display several things, you have
+options:
+<ul>
+<li class="fragment"><p>Separate each thing by a comma inside the
+<code class="python">print</code> statement. This will insert a space
+between each when printed.</p>
+<pre ><code class="python">print(1,2,'blue')</code></pre></li>
+<li class="fragment"><p>Concatenate what you want together with
+<code class="python">+</code>, converting to strings as needed
+<code class="python">python       print('2000' + ' - ' + '2023')</code></p>
+<pre ><code class="python">print(str(1) + ' ' + str(2) + ' blue')</code></pre></li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="boolean-expressions" class="slide level2">
+<h2>Boolean Expressions</h2>
+<ul>
+<li><p>Python defines two types of operators that work with Boolean
+data: <em>relational operators</em> and <em>logical
+operators</em></p></li>
+<li><p>Relational operators compare values of other types and produce a
+<code class="python">True</code>/<code class="python">False</code>
+result:</p>
+<table>
+<tbody>
+<tr class="odd">
+<td><code class="python">==</code></td>
+<td style="text-align: left;">Equals</td>
+<td></td>
+<td></td>
+<td></td>
+<td><code class="python">!=</code></td>
+<td style="text-align: left;">Not equals</td>
+</tr>
+<tr class="even">
+<td><code class="python"><</code></td>
+<td style="text-align: left;">Less than</td>
+<td></td>
+<td></td>
+<td></td>
+<td><code class="python"><=</code></td>
+<td style="text-align: left;">Less than or equal too</td>
+</tr>
+<tr class="odd">
+<td><code class="python">></code></td>
+<td style="text-align: left;">Greater than</td>
+<td></td>
+<td></td>
+<td></td>
+<td><code class="python">>=</code></td>
+<td style="text-align: left;">Greater than or equal to</td>
+</tr>
+</tbody>
+</table></li>
+<li><p>Be careful! <code class="python">==</code> <em>compares</em> two
+booleans. A single <code class="python">=</code> <em>assigns</em> a
+variable. The odds are high you’ll use one when you meant the other at
+least once this semester!</p></li>
+</ul>
+</section>
+<section id="the-vulcan-way" class="slide level2">
+<h2>The Vulcan Way</h2>
+<ul>
+<li><p>Logical operators act on Boolean pairings</p>
+<table>
+<thead>
+<tr class="header">
+<th>Operator</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code class="python">A and B</code></td>
+<td>True if both terms True, False otherwise</td>
+</tr>
+<tr class="even">
+<td><code class="python">A or B</code></td>
+<td>True if <em>any</em> term is True, False otherwise</td>
+</tr>
+<tr class="odd">
+<td><code class="python">not A</code></td>
+<td>True if A False, False if A True (opposite)</td>
+</tr>
+</tbody>
+</table></li>
+</ul>
+<div>
+<ul>
+<li class="fragment">Order of operations follows parentheses and then
+proceeds left to right</li>
+<li class="fragment">Careful that <code class="python">or</code> is
+still <code class="python">True</code> if both options are
+<code class="python">True</code></li>
+<li class="fragment">Similarly, careful with combining
+<code class="python">not</code> with <code class="python">and</code> and
+<code class="python">or</code>
+<ul>
+<li class="fragment">“Not A or B” in common English is not the same as
+<code class="python">not A or B</code></li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="understanding-check" class="slide level2">
+<h2>Understanding Check</h2>
+<p>What value is printed when the code to the right runs?</p>
+<div class="cols">
+<div class="col">
+<div class="poll">
+<ol>
+<li><code class="python">True</code></li>
+<li><code class="python">False</code></li>
+<li><code class="python">"4Quiz"</code></li>
+<li>This would give an error</li>
+</ol>
+</div>
+</div>
+<div class="col" style="flex-grow:2;">
+<pre ><code class="python">A = 10
+B = 4
+C = "Quiz"
+A *= B
+if A > 40 and C != "C":
+    print(str(B)+C)
+else:
+    print(A < B or not (C == "C"))
+</code></pre>
+</div>
+</div>
+</section>
+<section id="shorting-the-circuit" class="slide level2">
+<h2>Shorting the Circuit</h2>
+<ul>
+<li>Python evaluates <em>and</em> and <em>or</em> operators using a
+strategy called <em>short-circuit mode</em></li>
+<li>Only evaluates the right operand if it actually needs to
+<ul>
+<li><p>Example: if <code class="python">n=0</code>, then the
+<code class="python">x % n == 0</code> is never actually checked in the
+statement</p>
+<pre ><code class="python">n != 0 and x % n == 0</code></pre>
+<p>since <code class="python">n != 0</code> already is
+<code class="python">False</code> and
+<code class="python">False and</code> <em>anything</em> is always
+<code class="python">False</code></p></li>
+</ul></li>
+<li>Can use short-circuit to prevent errors: the above
+<code class="python">x % n == 0</code> statement would have erred out if
+<code class="python">n=0</code></li>
+</ul>
+</section>
+<section id="input-input" class="slide level2">
+<h2>Input: <code class="python">input</code></h2>
+<ul>
+<li><p>To retrieve data from a user, we can use Python’s built-in
+<code class="python">input()</code> function</p></li>
+<li><p>The form will generally look like:</p>
+<pre ><code class="python">variable = input(prompt_text)</code></pre>
+<ul>
+<li><code class="python">variable</code> is the variable name you want
+to assign the user’s typed input to</li>
+<li><code class="python">prompt_text</code> is the string that will be
+displayed on the screen to communicate to the user what they should be
+doing</li>
+</ul></li>
+<li><p>The <code class="python">input()</code> function <strong>always
+returns a string</strong></p>
+<ul>
+<li><p>If you want to get an integer from the user, you will need to
+convert it yourself after retrieving it</p>
+<pre ><code class="python">num = int(input('Pick a number between 1 and 10: '))</code></pre></li>
+</ul></li>
+</ul>
+</section>
+<section id="running-a-program" class="slide level2">
+<h2>Running a Program</h2>
+<ul>
+<li><p>Python programs specify what part of the code is supposed to be
+executed when a program is run using a few special lines at the end of
+the program</p>
+<pre ><code class="python">if __name__ == '__main__':
+    function_to_run()</code></pre>
+<ul>
+<li><code class="python">function_to_run</code> is the name of whatever
+function you want to execute when the program is run directly</li>
+</ul></li>
+<li><p>Patterns of this sort are commonly called
+<em>boilerplate</em></p>
+<ul>
+<li>Less important to fully understand all the pieces of it now</li>
+<li>Is important to understand what it is doing and how to implement it
+correctly</li>
+</ul></li>
+</ul>
+</section>
+<section id="sample-program" class="slide level2">
+<h2>Sample Program</h2>
+<pre ><code class="python" style="max-height: 900px">
+NUM_ODDS = 100 # Constant, so using all caps
+
+def print_odds():
+    """
+    Prints the first NUM_ODDS odd numbers 
+    starting at 1.
+    """
+    value = 1
+    for i in range(NUM_ODDS):
+        print(value)
+        value += 2
+
+if __name__ == '__main__':
+    print_odds()</code></pre>
+</section>
+<section id="sentinels" class="slide level2">
+<h2>Sentinels</h2>
+<ul>
+<li>Many programs in programming can be approached similarly by using a
+particular <em>idiom</em> or <em>pattern</em></li>
+<li>A common one with repetition is to use a variable to keep track of
+the loop state until something particular happens (the sentinel is
+triggered) <br><br></li>
+</ul>
+<pre ><code class="python">finished = False
+while not finished:
+    line = input("Enter a number: ")
+    if line == "":
+        finished = True
+    else:
+        print(line)</code></pre>
+<!--
+## Other Data Types
+- Numbers are great, but what about other types of data?
+- We will spend considerable time on the details of these data types later
+- For now, let us introduce:
+    - strings!
+    - lists!
+
+
+## Strings
+- A _string_ in Python represents textual data, in form of a sequence of individual characters
+    - Domain: all possible sequences of characters
+    - Operations: **Many!** But we'll keep in quite simple initially
+- Denoted by placing the desired sequence of characters between two quotation marks
+    - `'I am a string'`
+    - In Python, either single or double quotes can be used, but the ends must match
+        - `"I am also a string!"`
+        - `"I'm sad you've gone"`
+
+
+## Lists
+- A _list_ in Python represents a sequence of **any** type of data
+- Denote by bordering with square brackets (`[`, `]`) with commas separating each element of the sequence
+    - Each element could be any data type (even mixing from element to element!)
+    - `['This', 'is', 'a', 'list']`
+    - `['Great', 4, 'storing', 5 * 10]`
+- There are many operations that we will see are possible on lists, but will start with only the basics
+
+
+## Sequences
+- Both _strings_ and _lists_ are examples of a more general type called a _sequence_
+    - Strings are sequences of characters
+    - Lists are sequences of anything
+- Sequences are _ordered_, so we can number off their elements, which we call their _index_
+    - Counting in Python always starts with **0**, so the first element of the sequence has index 0
+- Python defines operations that work on all sequences
+    - Selecting an individual element out of a sequence
+    - Concatenating two sequences together
+    - Determing the number of elements in a sequence
+
+## Selection
+- You can select or "pluck out" just a single element from a sequence using square brackets `[` `]`
+    - There are **no** commas between these square brackets, so they can't be confused with a list
+    - The square brackets come after the sequence (or variable name representing a sequence)
+    - Inside the square brackets, you place the index number of the element you want to select
+
+:::::cols
+::::{.col .fragment}
+```python
+>>> A = [2, 4, 6, 8]
+>>> print(A[1])
+4
+```
+::::
+::::{.col .fragment}
+```python
+>>> B = "Spaghetti"
+>>> print(B[6])
+'t'
+```
+::::
+:::::
+
+## Concatenation
+- _Concatenation_ is the act of taking two separate objects and bringing them together to create a single object
+- For sequences, concatenation takes the contents of one sequence and add them to the end of another sequence
+- The `+` operator concatenates sequences
+    - This is why it is important to keep track of your variable types! `+` will **add** two integers, but will **concatenate** two strings
+  
+  :::::cols
+  ::::{.col .fragment}
+  ```python
+  >>> 'fish' + 'sticks'
+  'fishsticks'
+  ```
+  ::::
+  ::::{.col .fragment}
+  ```python
+  >>> A = [1, 'fish']
+  >>> B = [2, 'fish']
+  >>> print(A + B)
+  [1, 'fish', 2, 'fish']
+  ```
+  ::::
+  :::::
+
+## Lengths
+- The number of elements in a sequence is commonly called its _length_, and can be given by the `len( )` function
+- Simply place the sequence you desire to know the length of between the parentheses:
+
+  ```python
+  >>> len("spaghetti")
+  9
+  ```
+- You can have sequences of 0 length as well!
+  
+  ```python
+  >>> A = ""
+  >>> B = [ ]
+  >>> print( len(A) + len(B) )
+  0
+  ```
+
+## Understanding Check
+:::::cols
+::::col
+What would be the printed output of the code to the right?
+
+:::poll
+#. 12
+#. 13
+#. 14
+#. 15
+:::
+::::
+::::col
+```python
+A = "hots"
+B = ["fire", A + A]
+C = A[3] + A[1]
+B += C + C[0]
+D = B[0] + B[1] + B[2]
+print(len(D))
+```
+
+::::
+:::::
+
+-->
+<!--
+## Running a Program
+- Python programs specify what part of the code is supposed to be when a program is run using a few special lines at the end of the program
+
+    ```python
+    if __name__ == '__main__':
+        function_to_run()
+    ```
+    - `function_to_run` is the name of whatever function you want to execute when the program is run
+- Patterns of this sort are commonly called _boilerplate_
+    - Less important to fully understand all the pieces of it now
+    - Is important to understand what it is doing and how to implement it correctly
+
+## Visiting the library(ies)
+- A huge strength of Python is that it offers a very large number of code collections called _libraries_
+    - Can save you the effort from writing that code yourself!
+- Requires you to _import_ that library, which can take several different forms
+    - Most common is to use `import` to grab everything in a library
+
+        ```python
+        import math
+        ```
+        - You must then access any function in that library using its _fully qualified name_, which includes the library name (`var = math.sqrt(4)`)
+    - Can also use `from ... import` to grab specific functions from the library
+
+        ```python
+        from math import sqrt
+        ```
+        - You do not need to use the library name then when you call it (`var = sqrt(4)`)
+
+
+## Useful `math` definitions
+
+Code | Description
+--- | ---
+`math.pi` | The mathematical constant $\pi$
+`math.e` | The mathematical constant $e$
+`math.sqrt(x)` | The square root of x
+`math.log(x)` | The natural logarithm of x
+`math.log10(x)` | The base 10 logarithm of x
+`math.sin(x)` | The sine of x in radians
+`math.cos(x)` | The cosine of x in radians
+`math.asin(x)` | The arcsin of x
+`math.degrees(x)` | Converts from radians to degrees
+`math.radians(x)` | Converts from degrees to radians
+
+
+
+
+## An adding program
+
+``` {.python style="max-height: 100%"}
+# File: AddTwoIntegers.py
+
+"""
+This program adds two integers entered by the user.
+"""
+
+def add_two_integers():
+    print("This program adds two integers.")
+    n1 = int(input("Enter n1? "))
+    n2 = int(input("Enter n2? "))
+    total = n1 + n2
+    print("The sum is", total)
+
+# Startup boilerplate
+if __name__ == '__main__':
+    add_two_integers()
+```
+-->
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+      
+    </script>
+    </body>
+</html>

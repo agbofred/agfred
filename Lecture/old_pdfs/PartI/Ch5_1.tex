@@ -1,0 +1,389 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Listing Types of Tuples}
+\author{Jed Rembold}
+\date{March 4, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item I got the HW4 graded. Hopefully will be able to start in on HW5 before this weekend.
+				\item You have HW6 due on Friday! Should be able to answer everything I think after today!
+			\end{itemize}
+		\item CS Tea tomorrow at 11:30!
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	Which of the following is an invalid way of importing modules and referring to them?
+	\begin{columns}
+		\small
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			import circles
+			y = circles.area(5)
+			print(y)
+		\end{pythoncode}
+		\tikz[remember picture,overlay]{\node[font=\Large, Teal] at (6.5,1.25) {A};}
+		\begin{pythoncode}
+			from circles import area
+			y = circles.area(5)
+			print(y)
+		\end{pythoncode}
+		%\tikz[remember picture, overlay]{
+			%\draw<2->[rounded corners, Orange, ultra thick, anchor=south west] (-.5,0.5) rectangle +(7.5,1.5);
+		%}
+		\tikz[remember picture,overlay]{\node[font=\Large, Teal] at (6.5,1.25) {B};}
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			from circles import *
+			y = area(5)
+			print(y)
+		\end{pythoncode}
+		\tikz[remember picture,overlay]{\node[font=\Large, Teal] at (6.5,1.25) {C};}
+		\begin{pythoncode}
+			import circles as c
+			y = c.area(5)
+			print(y)
+		\end{pythoncode}
+		\tikz[remember picture,overlay]{\node[font=\Large, Teal] at (6.5,1.25) {D};}
+	\end{columns}
+	\exsol{B}
+\end{frame}
+
+
+%\begin{frame}{The name is main}
+	%\begin{itemize}
+		%\item Sometimes you might want to write a script that serves multiple purposes
+			%\begin{itemize}
+				%\item Can be imported to give access to the defined functions
+				%\item Can be run directly to give some output
+			%\end{itemize}
+		%\item In these situations you can use
+			%\begin{center}
+				%\pyi{if __name__ == '__main__':}
+			%\end{center}
+			%\begin{itemize}
+				%\item Code inside that \pyi{if} statement will be run \alert{only} if the program is run directly, \alert{not} if it is imported
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+
+%\begin{frame}{What's your vector?}
+	%\begin{itemize}
+		%\item So far we've looked mostly at scalar variable types
+			%\begin{itemize}
+				%\item \pyi{int}
+				%\item \pyi{float}
+				%\item \pyi{bool}
+				%\item \pyi{str} $\leftarrow$ the only non-scalar type!
+			%\end{itemize}
+		%\item Chapter 5 is all about non-scalar variable types
+			%\begin{itemize}
+				%\item \pyi{tuple}
+				%\item \pyi{list}
+				%\item \pyi{range}
+				%\item \pyi{dict}
+				%\item \pyi{set}
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Introducing Tuples}
+	%\begin{itemize}
+		%\item<+-> Recall basic properties of a string
+			%\begin{itemize}
+				%\item Comprised of ordered smaller elements (characters)
+				%\item Immutable (can not be changed in place)
+				%\item Delimited by quotes 
+			%\end{itemize}
+		%\item<+-> Pythonic tuples: generalized strings
+			%\begin{itemize}
+				%\item Comprised of ordered smaller elements (of \emph{any} type!)
+					%\begin{itemize}
+						%\item Element variable types don't even need to be consistent!
+					%\end{itemize}
+					
+				%\item Still immutable
+				%\item Delimited by parentheses
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Assigning Tuples}
+	%\begin{itemize}
+		%\item<+-> Place any sequence of variable types between parentheses, separated by commas
+			%\begin{itemize}
+				%\item \pyi{t_one = (1, 2, 3, 4)}
+				%\item \pyi{t_two = ('a', 'b', 'c')}
+				%\item \pyi{t_three = (1, 'a', 2, 'fish', True)}
+			%\end{itemize}
+		%\item<+-> Empty tuple just empty parentheses
+			%\begin{itemize}
+				%\item \pyi{t_empty = ()}
+			%\end{itemize}
+		%\item<+-> Tuple of 1 is the tricky one
+			%\begin{itemize}
+				%\item We already use parentheses to group together order of operation terms
+				%\item Even if you have only a single element, you \alert{need the trailing comma} to make it a tuple
+				%\item \pyi{t_single = ('a',)}
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+\begin{frame}{Tuple Operations}
+	\begin{itemize}
+		\item Almost identical to available string operations
+			\begin{itemize}
+				\item Strings are basically just a special tuple
+			\end{itemize}
+		\item Can add for concatenation (adding one to the end of another)
+			\begin{itemize}
+				\item \pyi{(1,2,3) + ('a', 'b', 'c')}
+			\end{itemize}
+		\item Can duplicate with multiplication
+			\begin{itemize}
+				\item \pyi{3*(1,2,3)}
+			\end{itemize}
+		\item Can index and slice just like strings
+			\begin{itemize}
+				\item \pyi{(1,2,3,4)[2]}
+					\begin{itemize}
+						\item Single index gives you back whatever variable type that element is
+					\end{itemize}
+					
+				\item \pyi{(1,'b',3,'d')[:2]}
+					\begin{itemize}
+						\item Slices return another tuple
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Tuples all the way down}
+	\begin{itemize}
+		\item Tuples can contain more tuples!
+			\begin{itemize}
+				\item Getting through concatenation can be a bit tricky, so be careful
+					
+			\end{itemize}
+			\begin{pythoncode}
+				t1 = (1,2,3)
+				t2 = (t1, 2*t1, 'a', ('x','y','z'))
+			\end{pythoncode}
+		\item Means in some cases you might need multiple indexes to ``drill down'' to get the value that you want
+			\begin{itemize}
+				\item Nested indexes work from ``outside in''
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{What are they good \pyi{for}?}
+	\begin{itemize}
+		\item Can loop through tuples just like we could with strings
+		\item Can either loop through the indices or the values directly:
+			\begin{itemize}
+				\item Indices:
+					\begin{pythoncode}
+						t = ('a', 'b', 'c')
+						for i in range(len(t)):
+							print(t[i])
+					\end{pythoncode}
+				\item Values directly:
+					\begin{pythoncode}
+						t = ('a', 'b', 'c')
+						for value in t:
+							print(value)
+					\end{pythoncode}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Check}
+	\begin{columns}
+		\column{0.5\textwidth}
+		What would be the output of the printed statement in the code to the right?
+		\begin{poll}
+		\item \pyi{(1,'a','b')}
+		\item \pyi{(1,'a')}
+		\item Error: can't add strings and tuples
+		\item Error: index out of range
+		\end{poll}
+		\exsol{\pyi{(1,'a')}}
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			A = (1,3,5)
+			B = (2*A, ('a',))
+			C = B + ('b','c','d')
+			D = ()
+			for v in C[:2]:
+				D += v[:1]
+			print(D)
+		\end{pythoncode}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Out of Control Slicing}
+	\begin{itemize}
+		\item Try to slice a tuple (or string!) where one side of the slice would be out of range of the tuple
+			\begin{itemize}
+				\item \pyi{(1,2,3)[1:100]}
+			\end{itemize}
+		\item Instead of giving an error, Python will return what it thinks you wanted
+			\begin{itemize}
+				\item Everything starting at 1 and up till the end of the list
+				\item \pyi{(1,2,3)[1:100] == (1,2,3)[1:3]}
+			\end{itemize}
+		\item Works the same for negative indices as well!
+		\item A slice will not give you an out-of-bounds error, it just returns what it can
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Multiple Assignment}
+	\begin{itemize}
+		\item We've already seen we can assign multiple variables at once
+			\begin{itemize}
+				\item \pyi{x, y = 2, 5}
+			\end{itemize}
+		\item We can use this same syntax to ``unpack'' tuples into separate variables
+			\begin{itemize}
+				\item \pyi{row, col = (2,5)}
+				\item \pyi{x, y, z = ('fish', 'steak', 'potatoes')}
+				\item \pyi{(a,b,c) = (1,2,3)}
+			\end{itemize}
+		\item You need the same number of variables as elements of your tuple for this to work
+			\begin{itemize}
+				\item Assign dummy variables if you need (a common one is \pyi{_})
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Count 'em off}
+	\begin{itemize}
+		\item We know how to use a \pyi{for} loop to loop over either indices or values
+			\begin{itemize}
+				\item If indices, we can always get the value
+				\item If values though, we'd have to track the indices ourselves
+			\end{itemize}
+		\item The values notation tends to make a lot of sense for many, so they prefer it
+		\item Still have many situations where it is important to know an index of a value
+			\begin{itemize}
+				\item Can use \pyi{enumerate}!
+					\begin{pythoncode}
+						t = ('a', 'b', 'c')
+						for i,v in enumerate(t):
+							print('Index:',i,'Value:', v)
+					\end{pythoncode}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{\pyi{list} out the similarities\ldots}
+	\begin{itemize}
+		\item<+-> A \pyi{list} is another type of non-scalar object in Python
+			\begin{itemize}
+				\item Delimited with square brackets: \pyi{A = [1,2,3]}
+			\end{itemize}
+		\item<+-> Very similar to a tuple, in that they are an ordered sequence
+			\begin{itemize}
+				\item Still concatenate with addition
+				\item Still can index, and slice
+				\item Still can loop over with \pyi{for} loops
+			\end{itemize}
+		\item<+-> The primary difference?
+			\begin{itemize}
+				\item Lists are \alert{mutable}!
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Mutability: Part I}
+	\begin{itemize}
+		\item<1-> Touched on mutability before in that strings and tuples are immutable
+			\begin{itemize}
+				\item We can \alert{not} do the below:
+					\begin{pythoncode}
+						A = 'hello'
+						A[0] = 'H'
+
+						B = ('This', 'is', 'Sparta')
+						B[2] = 'Patrick'
+					\end{pythoncode}
+			\end{itemize}
+		\item<2-> Presumably, this is allowed with lists (and it is)
+		\item<2-> Mutability has some other ramifications though that we want to touch on
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{}
+	\begin{center}
+		\begin{tikzpicture}[
+			code/.style={rounded corners, minimum width=12cm, minimum height=2cm},
+			memcode/.style={draw, Teal, font=\small, fill=DGray, },
+			]
+			\node[code, draw, ultra thick, FG, fill=DGray, label={168:Code}] (cblock) at (0,0) {};
+			\node[rounded corners, minimum width=7cm, minimum height=5cm, draw, ultra thick, Teal, fill=Teal!50!black, fill opacity=0.5, anchor = north east] (mem) at ($(cblock.south east)-(0,0.5)$) {};
+			\node[Teal, rotate=-90, right = 0mm of mem.east, anchor=south] {Memory};
+
+			\node<2>[code] at (cblock) {\pyi{cool = ['blue', 'violet]}};
+			\node<2-5>[memcode](ccode) at ($(mem) + (0,2)$) {\pyi{['blue', 'violet']}};
+			\node<2->[memcode, text = FG] (clab) at ($(ccode) + (-7cm,0)$) {\texttt{cool}};
+			\draw<2->[very thick, Orange, -stealth] (clab) -- (ccode);
+
+			\node<3>[code] at (cblock) {\pyi{warm = ['red', 'orange']}};
+			\node<3->[memcode](wcode) at ($(mem) + (0,0)$) {\pyi{['red', 'orange']}};
+			\node<3->[memcode, text = FG] (wlab) at ($(wcode) + (-7cm,0)$) {\texttt{warm}};
+			\draw<3->[very thick, Orange, -stealth] (wlab) -- (wcode);
+
+			\node<4>[code] at (cblock) {\pyi{colors = [cool, warm]}};
+			\node<4->[memcode](colcode) at ($(mem) + (0,1)$) {\pyi{[        ,       ]}};
+			\node<4->[memcode, text = FG] (collab) at ($(colcode) + (-5cm,0)$) {\texttt{colors}};
+			\path<4->[very thick, Orange, -stealth] (collab) edge (colcode)
+				($(colcode.center)-(0.25,0)$) edge (ccode)
+				($(colcode.center)+(0.25,0)$) edge (wcode);
+
+			\node<5>[code] at (cblock) {\pyi{COLORS = [['blue','violet'],['red','orange']]}};
+			\node<5->[memcode, font=\footnotesize] (COLcode) at ($(mem) + (-2,-1.5)$){\pyi{[  ,  ]}};
+			\node<5->[memcode, font=\footnotesize] (cCOLcode) at ($(COLcode) + (10:3)$){\pyi{['blue','violet']}};
+			\node<5->[memcode, font=\footnotesize] (wCOLcode) at ($(COLcode) + (-10:3)$){\pyi{['red','orange']}};
+			\node<5->[memcode, text=FG] (COLlab) at ($(COLcode)+(-4cm,0)$) {\texttt{COLORS}};
+			\path<5->[very thick, Orange, -stealth] (COLlab) edge (COLcode)
+				($(COLcode.center)-(0.25,0)$) edge[to path={|- (\tikztotarget)}] (cCOLcode)
+				($(COLcode.center)+(0.25,0)$) edge[to path={|- (\tikztotarget)}](wCOLcode);
+
+
+			\node<6>[code] at (cblock) {\pyi{cool[0] = 'indigo'}};
+			\node<6->[memcode](ccode) at ($(mem) + (0,2)$) {\pyi{['indigo', 'violet']}};
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

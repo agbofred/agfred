@@ -1,0 +1,251 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{While Slicing and Dicing}
+\author{Jed Rembold}
+\date{February 3, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 2 has been posted!
+				\item I may well still be working on getting through grading all your HW1. Hopefully by the end of today all feedback will be posted
+				\item If you are still working on HW1, try to get it in soon! Late days/hours are burning away!
+			\end{itemize}
+		\item Remember that tutors are available Monday and Thursday nights, from 7-10pm
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Review Question}
+	\vspace{4mm}
+	What will the output of the below code be upon completion?
+	\begin{pythoncode}
+		x = 7
+		y = 0
+		while x >= 0:
+			y = y + x
+			x = x - 2
+		print(y)
+	\end{pythoncode}
+	\begin{poll}
+		\item 15
+		\item 16
+		\item 28
+		\item Code will not complete (infinite loop)
+	\end{poll}
+	\exsol{16}
+\end{frame}
+
+\begin{frame}[fragile]{Lost Woods Examples}
+	\begin{columns}
+		\column{0.5\textwidth}
+		\begin{pythoncode}[style=output,]
+			************************
+			************************
+						:(
+			************************
+			************************
+			Go (L)eft or (R)ight?
+		\end{pythoncode}
+		
+		\column{0.5\textwidth}
+		\begin{pythoncode}[style=output,]
+			**********     **********
+			**********     **********
+						 :)
+			**********     **********
+			**********     **********
+			Go (N)orth, (S)outh, 
+			(E)ast, or (W)est?
+		\end{pythoncode}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Nesting Loops}
+	\begin{columns}
+		\column{0.4\textwidth}
+		\begin{itemize}
+			\item You are allowed to nest loops, and in many cases might want to
+			\item Realize that one loop must finish \alert{before} the next advances one iteration!
+				\begin{itemize}
+					\item At which point the inner loop would run in its entirety again
+				\end{itemize}
+		\end{itemize}
+		
+		\column{0.6\textwidth}
+		\begin{pythoncode}
+			week = 1
+			day = 1
+
+			while week <= 52:
+				while day <= 3:
+					if day == 1:
+						print('Monday')
+					elif day == 2:
+						print('Wednesday')
+					elif day == 3:
+						print('Friday')
+
+					day = day + 1
+				week = week + 1
+		\end{pythoncode}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Taking a break}
+	\vspace{5mm}
+	\begin{itemize}
+		\item Sometimes it can be useful to exit a loop without checking the initial test
+			\begin{itemize}
+				\item Maybe you have multiple conditions that could stop the loop
+				\item Maybe you have a special condition that when certain requirements are met the loop ends
+			\end{itemize}
+		\item The \pyi{break} statement will force an immediate exit from whatever loop it happens to be in
+	\end{itemize}
+	\begin{pythoncode}
+		x = 1
+		while True:
+			print(x)
+			x = x + 1
+			if x > 10:
+				break
+	\end{pythoncode}
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Check}
+	What would be the \emph{last} number printed by the below code?
+	\begin{columns}
+		\column{0.5\textwidth}
+		\begin{pythoncode}
+			x = 1
+			while x < 10:
+				y = 10
+				while y > x:
+					if y % 3 == 0:
+						break
+					print(x*y)
+					y = y - 2
+				x = x + 1
+		\end{pythoncode}
+		
+		\column{0.5\textwidth}
+		\begin{poll}
+		\item 90
+		\item 60
+		\item 56
+		\item 25
+		\end{poll}
+	\end{columns}
+	\exsol{90}
+\end{frame}
+
+\begin{frame}{Dissecting Strings}
+	\vspace{5mm}
+	\begin{itemize}
+		\item Recall that strings are a non-scalar object
+			\begin{itemize}
+				\item Made up of smaller pieces, \alert{characters} in the case of strings
+			\end{itemize}
+		\item Each character has an ``address'' within the string where it lives, called its \alert{index}.
+	\end{itemize}
+	\begin{center}
+		\begin{tikzpicture}
+			\node[font=\Huge\ttfamily, SynPurple, anchor=south west] at (0,0) {"Spaghetti"};
+			\foreach[count=\t] \x in {.8,1.26,...,4.5}{
+				\node<2->[font=\small] at (\x, -0.5) {\t};
+			}
+			\draw<4->[Red, very thick] (0,-.5) -- (5.5,-0.5);
+			\foreach[count=\t from 0] \x in {.8,1.26,...,4.5}{
+				\node<4->[font=\small, Green] at (\x, -1.0) {\t};
+			}
+			\foreach[count=\t from -9] \x in {.8,1.26,...,4.5}{
+				\node<5->[font=\small, Teal] at (\x, -1.5) {\t};
+			}
+		\end{tikzpicture}
+	\end{center}
+			\begin{alertblock}<3->{Start at 0!}
+				Counting (and indexing) in Python always starts with 0!! This is easy to forget!
+			\end{alertblock}
+\end{frame}
+
+\begin{frame}{Indexing Notation}
+	\begin{itemize}
+		\item To get the character at a certain address or index, use \emph{square brackets}
+	\begin{center}
+		\begin{tikzpicture}
+			\node[font=\Huge\ttfamily, SynPurple, anchor=south west] at (0,0) {x = "Spaghetti"};
+			\foreach[count=\t from 0] \x in {.8,1.26,...,4.5}{
+				\node[font=\small, Green] at (\x+1.8, -0.5) {\t};
+			}
+		\end{tikzpicture}
+	\end{center}
+	\begin{itemize}
+		\item \pyi{x[0] = "S"}
+		\item \pyi{x[4] = "h"}
+		\item \pyi{x[-1] = "i"}
+		\item \pyi{x[1] = "p"}
+	\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The Slicing}
+	\begin{itemize}
+		\item Frequently, you want more than a single character
+		\item Would be useful to give a start and stop point to extract a ``sub''-string
+			\begin{itemize}
+				\item Possible through \alert{slicing}!
+				\item Notation is: \pyi{var[<start>:<stop>]}
+				\item Could be read as: ``Get me all the characters from the \pyi{<start>} up to the \pyi{<stop>} \emph{but not including the stop}''
+			\begin{center}
+				\begin{tikzpicture}
+					\node[font=\Huge\ttfamily, SynPurple, anchor=south west] at (0,0) {x = "Spaghetti"};
+					\foreach[count=\t from 0] \x in {.8,1.26,...,4.5}{
+						\node[font=\small, Green] at (\x+1.8, -0.5) {\t};
+					}
+				\end{tikzpicture}
+			\end{center}
+			\item \pyi{x[0:3] = "Spa"}
+			\item \pyi{x[4:] = "hetti"}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{and the Dicing}
+	\begin{itemize}
+		\item Slices are a form of shorthand for looping through a string and pulling out the value between two indices
+		\item But what if you don't want \emph{every} character between the two endpoints?
+			\begin{itemize}
+				\item Only want every other character? Or every 10th character?
+			\end{itemize}
+		\item Can achieve by adding one more term to our slices:
+			\begin{center}
+				\pyi{x[<start>:<stop>:<step>]}
+			\end{center}
+			\begin{itemize}
+				\item A \pyi{<step>} of 2 would take every other character
+				\item Default is a \pyi{<step>} of 1
+				\item A \emph{negative} step will go backwards from stop to start!
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+
+\end{document}
+

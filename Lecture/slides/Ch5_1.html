@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold &amp; Fred Agbo">
+  <meta name="dcterms.date" content="2023-10-02">
+  <title>Scoping Out Functions</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Scoping Out Functions</h1>
+  <p class="author">Jed Rembold &amp; Fred Agbo</p>
+  <p class="date">October 2, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Remember the due date for Problem 1 is <strong><em>tomorrow at 12
+noon</em></strong>.</li>
+<li>I’m still tackling with PS3, will be done ASAP! Apologies for the
+delay.</li>
+<li>We will enter Ch 6 this week in the text, which is a return to
+graphics</li>
+<li>Before that, we will talk about the following:
+<ul>
+<li>Some quick information about your 1st mid-term test taking place on
+<strong>Friday 6th Oct</strong></li>
+<li>Ch 5 - Scoping Function -</li>
+</ul></li>
+<li>I suggested some of you to attend the BoT luncheon- watchout for the
+email invite.</li>
+<li>Polling continues today! Remember to use this link <a
+href="https://www.polleverywhere.com/agbofred203">https://www.polleverywhere.com/agbofred203</a>
+when it becomes <strong>active</strong></li>
+</ul>
+<!--
+## Wordle Tidbits
+- Two useful ideas for Wordle:
+    - You can check if an individual element is in a particular sequence of elements using the `in` keyword
+      
+      ```python
+      "1" in "12345"
+      ```
+      - Always returns a boolean (True/False)
+    - You can change the case of all letters in a string using `upper()` or `lower()` methods
+      
+      ```python
+      lowered = "ABCDEF".lower()
+      uppered = "abcDEF".upper()
+      ```
+      - The method returns a **new** string, so make sure you assign it to something
+-->
+</section>
+<section id="mid-term-test" class="slide level2">
+<h2>Mid-term test</h2>
+<ul>
+<li>Test will take place during the class time <strong>9:10 - 10:10 0n
+Friday</strong>.</li>
+<li>Those with accommodations should already contact the testing center
+and cc me.</li>
+<li>Practice questions are posted on this week’s module</li>
+<li>Basic things to keep in mind:
+<ul>
+<li>The test contain detailed information to guide on what to expect.
+<strong><em>Read it carefully</em></strong></li>
+<li>The exam is partially open, and thus you are free to utilize:
+<ul>
+<li>The text</li>
+<li>Your notes</li>
+<li>Class slides</li>
+<li>Any past work you have done as part of sections, problem sets, or
+projects, provided it has been uploaded, and you access it through
+GitHub.</li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="mid-term-test-1" class="slide level2">
+<h2>Mid-term test</h2>
+<ul>
+<li>You are allowed to use a computer for ease of typing and accessing
+the above resources,</li>
+<li>You are <strong>prohibited</strong> from accessing and using any
+editor or terminal to run your code.
+<ul>
+<li>Visual Studio Code or any similar editor should
+<strong>never</strong> be open on your computer during this exam.</li>
+</ul></li>
+<li>Additionally, you are <strong>prohibited</strong> from accessing
+outside internet resources beyond the webpages described above.</li>
+</ul>
+</section>
+<section id="review-question" class="slide level2"
+data-notes="Answer is 27">
+<h2 data-notes="Answer is 27">Review Question!</h2>
+<div class="cols">
+<div class="col">
+<p>What would be the printed value of z at the end of the code to the
+right?</p>
+<div class="poll">
+<ol>
+<li>19</li>
+<li>25</li>
+<li>27</li>
+<li>None of the above</li>
+</ol>
+</div>
+</div>
+<div class="col">
+<pre ><code class="python">def f(x,y=0):
+    z = (x + 3) ** 2
+    return y + z
+
+x = 1
+z = x + f(y=x,x=2)
+print(z)
+</code></pre>
+</div>
+</div>
+</section>
+<section id="summary-of-a-function-call" class="slide level2">
+<h2>Summary of a Function Call</h2>
+<div style="font-size:.8em">
+<ol>
+<li class="fragment">Evaluate the arguments in the context of the
+caller</li>
+<li class="fragment">Reserve space for the function in a new stack
+frame</li>
+<li class="fragment">Copy each positional argument to the corresponding
+parameter variable</li>
+<li class="fragment">Copy each keyword argument to the parameter with
+that name</li>
+<li class="fragment">For parameters with default values, if not already
+assigned, assign those values</li>
+<li class="fragment">Evaluate statements in the function body, using
+current stack frame to look up values of local variables</li>
+<li class="fragment">On encountering a
+<code class="python">return</code>, compute the return value and
+substitute that value in place of the function call</li>
+<li class="fragment">Remove the stack frame</li>
+<li class="fragment">Return to the caller, continuing from just after
+the function call</li>
+</ol>
+</div>
+</section>
+<section id="name-resolution-and-scope" class="slide level2">
+<h2>Name Resolution and Scope</h2>
+<ul>
+<li>When Python encounters a variable name in a program, it looks for
+where the variable was defined in an expanding search:
+<ol type="1">
+<li><strong>Local</strong> - The local context is all the variables
+defined within the current function. This includes variables appearing
+as a parameter!</li>
+<li><strong>Enclosing</strong> - The enclosing context consists of the
+names defined in a function enclosing the current one.</li>
+<li><strong>Global</strong> - The global context consists of names
+defined outside of any function or imported into the current
+module.</li>
+<li><strong>Built-in</strong> - The last place Python looks is in the
+names of any built-in functions, like <code class="python">abs</code>,
+<code class="python">str</code>, <code class="python">print</code>,
+etc.</li>
+</ol></li>
+<li>The part of a program in which a name is defined in called its
+<em>scope</em></li>
+</ul>
+</section>
+<section id="scoping-example" class="slide level2">
+<h2>Scoping Example</h2>
+<pre ><code class="python" data-line-numbers="" style="max-height:900px">def func1(x,y):
+    return z + func2(x,y)
+
+def func2(x,y):
+    def func3(x):
+        return (y + x) ** 2
+
+    z = x - func3(y)
+    return z - y
+
+z = 1
+print(func1(2,z))</code></pre>
+</section>
+<section id="local-variables" class="slide level2">
+<h2>Local Variables</h2>
+<ul>
+<li><p>In Python, assigning any value to a variable means that the
+variable is assumed to be <em>local</em></p>
+<ul>
+<li>This generally makes sense, as you would not want more specific
+functions overriding variables in other areas</li>
+</ul></li>
+<li><p>Can lead to issues though:</p>
+<pre ><code class="python badcode">def increment():
+  x = x + 1
+
+x = 0
+increment()</code></pre></li>
+<<<<<<< HEAD
+<li><p>The variable x in the fuction is local within that scope, and
+another <strong><em>global</em></strong> x with value 0 can cause
+issues</p></li>
+=======
+<li><p>The variable x in the fuction is local within that scope, and then
+another global x with value 0 can cause issues</p></li>
+>>>>>>> da4c1b30af81e4fd7225cc1a7eef0e0c19956569
+</ul>
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+      
+    </script>
+    </body>
+</html>

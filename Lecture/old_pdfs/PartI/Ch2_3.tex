@@ -1,0 +1,235 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Getting Loopy}
+\author{Jed Rembold}
+\date{January 31, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework 1 is due tonight!
+			\begin{itemize}
+				\item Make sure you upload a pdf of your written work called HW1.pdf
+				\item Make sure to change the assignment status to DONE in the assignment README.
+				\item All changes should be committed to the same master branch
+				\item If you have issues, let me know earlier rather than later!
+				\item I'm aiming to grade these on Sunday, and I'll let you know when I'm done so you can check for any comments
+			\end{itemize}
+		\item Homework 2 will be posted later today
+		\item Add/Drop deadline next Monday
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Some Musings\ldots}
+		\emph{My experience has been that people good at following directions tend to be better at giving directions. Programming is all about giving directions. If you make a concerted effort to focus and improve your ability to follow directions, I think you'll be surprised at how it improves your coding!}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	Which of the below expressions could be assigned to \pyi{x} and would result in
+	\begin{pythoncode}
+		('hi all' * 3) != x
+	\end{pythoncode}
+	evaluating to \pyi{True}?
+	\begin{poll}
+	\item \pyi{x = 'hi all' + 'hi all' + 'hi all'}
+	\item \pyi{x = 'hi allhi allhi all'}
+	\item \pyi{x = str(3) + 'hi all'}
+	\item \pyi{x = "hi" + 2 * ' allhi' + " all"}
+	\end{poll}
+	\exsol{\pyi{x = str(3) + 'hi all'}}
+
+\end{frame}
+
+\begin{frame}[fragile]{Getting Your Input}
+	\begin{itemize}
+		\item We already have \pyi{print()} for writing things to the terminal
+		\item How can we give the program some sort of input short of editing the code?
+			\begin{itemize}
+				\item One method is the aptly named \pyi{input()} function
+				\item Gives you a \alert{prompt} at the terminal to enter something
+					\begin{pythoncode}
+						guess = input('Guess any number between 1 and 10: ')
+					\end{pythoncode}
+				\item \emph{Always} returns a \alert{string}, so further conversion may be necessary
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Troubleshooting:}
+	\begin{itemize}
+		\item If your program reports an error when you run it:
+			\begin{itemize}
+				\item Look for the last line in the error message
+				\item Frequently will give you some info on what bad thing happened and where in the code it happened
+				\item Sometimes the actual mistake is not on that line, but immediately above it
+			\end{itemize}
+		\item If your program reports no error but a test is failing:
+			\begin{itemize}
+				\item Something is flawed in your set of instructions
+				\item Walk yourself line by line through your code
+				\item Frequently can help to \alert{hand-simulate} the code, writing down values and changing them as you move through your code.
+					\begin{itemize}
+						\item A great source to help you visualize this (and not by hand!) is \link{http://www.pythontutor.com/visualize.html\#mode=edit}{PythonTutor}!
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{If \pyi{if} fails}
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{lost_woods.png}
+	\end{center}
+	\begin{itemize}
+		\item Moving to right (for instance) always resets to the same screen
+		\item Moving any other direction reaches the exit
+		\item How to code?
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Coding the Lost Woods}
+	\vspace{5mm}
+	\begin{pythoncode}
+		if <move right>:
+			<background = lost woods>
+			if <move right>:
+				<background = lost woods>
+				if <move right>:
+					<background = lost woods>
+					...
+				else:
+					<background = exit>
+			else:
+				<background = exit>
+		else:
+			<background = exit>
+
+	\end{pythoncode}
+\end{frame}
+
+
+\begin{frame}{Groundhog Day}
+	\begin{center}
+		\begin{tikzpicture}[
+			block/.style={rounded corners, draw, very thick, fill=Orange, minimum width=2cm, minimum height=1cm, font=\Large, text=BG},
+			choice/.style={rounded corners, draw, very thick, fill=Blue, minimum width=2cm, minimum height=1cm, font=\Large, diamond, text=BG}
+			]
+			\draw[line width=3pt, Purple] (1.5,-3) rectangle (9.5,3);
+			\node[Purple, above right] at (1.5,-3) {Loop};
+
+			\node[block](c1) at (-.5,0) {Code};
+			\node[choice](t) at (3.5,0) {Test};
+			\node[block, fill=Teal](loop) at (7,0) {Loop Body};
+			\node[block](c2) at (11.5,0) {Code};
+
+			\draw[ultra thick, -latex] (c1.east) -- (t.west);
+			\draw[ultra thick, -latex, Teal] (t.east) |- (loop.west);
+			\draw[ultra thick, -latex, Red] (t.north) |- ($(c2.west)+(-.5,1.5)$) |- (c2.west);
+			\draw[ultra thick] (loop.east) -| +(.5,-1.5) -| (2,0);
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Python Notation}
+	Multiple types of loop in Python, but looking at a \alert{while} loop first:
+	\begin{pythoncode}
+		<code>
+
+		while <test>:
+			<loop body>
+
+		<code>
+	\end{pythoncode}
+\end{frame}
+
+\begin{frame}[fragile]{Loop Simulations}
+	Let's determine what the below code does by working through it by hand:
+	\begin{pythoncode}
+		x = 1
+		total = 0
+		while x < 10:
+			if x % 2 == 1:
+				total = total + x ** 2
+			x = x + 1
+	\end{pythoncode}
+	\pause
+	\begin{itemize}
+		\item Should have found it adds the squares of all the odd numbers less than 10
+		\item Result should have been 165
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{While Loop Tips}
+	\begin{itemize}
+		\item Make sure the body of your \pyi{while} loop is indented and has a colon after the condition
+		\item \pyi{while} loops test some condition, so you may well need to define variable for that condition before the start of the loop.
+		\item \emph{Make sure your loop will actually terminate at some point!} It can be easy to make infinite loops!
+	\end{itemize}
+	\begin{alertblock}{Infinite Loop Advice!}
+		If you find yourself in an infinite loop, pressing Ctl+C in the terminal window will generally interrupt and stop the program!
+	\end{alertblock}
+\end{frame}
+
+
+%\begin{frame}[fragile]{Understanding Check!}
+	%\vspace{4mm}
+	%What will the output of the below code be upon completion?
+	%\begin{pythoncode}
+		%x = 7
+		%y = 0
+		%while x >= 0:
+			%y = y + x
+			%x = x - 2
+		%print(y)
+	%\end{pythoncode}
+	%\begin{poll}
+		%\item 15
+		%\item \alert<2>{16}
+		%\item 28
+		%\item Code will not complete (infinite loop)
+	%\end{poll}
+%\end{frame}
+
+%\begin{frame}[fragile]{Lost Woods Examples}
+	%\begin{columns}
+		%\column{0.5\textwidth}
+	%\begin{pythoncode}[style=output,]
+		%************************
+		%************************
+					%:(
+		%************************
+		%************************
+		%Go (L)eft or (R)ight?
+	%\end{pythoncode}
+		
+		%\column{0.5\textwidth}
+	%\begin{pythoncode}[style=output,]
+		%**********     **********
+		%**********     **********
+					 %:)
+		%**********     **********
+		%**********     **********
+		%Go (N)orth, (S)outh, 
+		%(E)ast, or (W)est?
+	%\end{pythoncode}
+		
+	%\end{columns}
+%\end{frame}
+
+
+
+
+\end{document}
+

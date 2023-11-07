@@ -1,0 +1,147 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics, multicol}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes, fit}
+
+%Preamble
+\title{All about Control}
+\author{Jed Rembold}
+\date{Nov 15, 2019}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 10 due tonight!
+				\item Homework 9 was graded and results pushed back to your repositories
+			\end{itemize}
+		\item We'll talk projects the second half of class today
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\vspace{4mm}
+	The below code is run. Which image best depicts the state of the screen at the end of the program?
+	\small
+	\begin{pythoncode}
+		w = g.GraphWin('Example', 400, 400)
+		c = g.Circle(g.Point(100, 200), 20)
+		c.draw(w)
+		c.move(200, -100)
+		c.move(0, 200)
+		w.getMouse()
+	\end{pythoncode}
+	\begin{center}
+		\vspace{-7mm}
+		\begin{tikzpicture}
+			\node(Ap) at (0,0) {\includegraphics[width=2.5cm]{A.png}};
+			\node[below=1mm of Ap] {A};
+			\node[right=of Ap] (Bp) {\includegraphics[width=2.5cm]{B.png}};
+			\node[below=1mm of Bp] {B};
+			\node[right=of Bp] (Cp) {\includegraphics[width=2.5cm]{C.png}};
+			\node[below=1mm of Cp] {C};
+			\node[right=of Cp] (Dp) {\includegraphics[width=2.5cm]{D.png}};
+			\node[below=1mm of Dp] {D};
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+
+\begin{frame}{Understanding the Event Loop}
+	\begin{itemize}
+		\item When you create a \pyi{GraphWin} object, \pyi{graphics.py} starts running its own \alert{event loop}
+		\item Runs alongside your code and controls the timing and actions that take place in the window
+		\item Actions you make in your code get scheduled in the windows loop to get executed when the program has a chance
+			\begin{itemize}
+				\item If not much is going on, this is likely immediately
+				\item If there is a LOT going on in your window, there might be a delay
+			\end{itemize}
+		\item \pyi{update()} generally brings the event loop and your code into agreement before moving on in each
+		\item \pyi{.after()} schedules a task to take place at some future time in the event loop (when its schedule is free)
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Blocking Events}
+	\begin{itemize}
+		\item \alert{Blocking events} will hold up \textcolor{Blue}{your code} (not the event loop) until that event happens
+		\item The \pyi{.getMouse()} or \pyi{.getKey()} methods are blocking
+			\begin{itemize}
+				\item Python will not move onto the next line of your code until it either receives a mouse click or a key press!
+				\item Essentially pauses your code until that happens (which may or may not be desired)
+				\item Other things scheduled in the event loop may mean things are still happening in the window!
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Return to Sender}
+	\begin{itemize}
+		\item \pyi{.getMouse()} returns a \pyi{Point} object which contains the coordinates of where in the window a left click occurred
+			\begin{itemize}
+				\item Need to save the returned value as some variable to make use of it!
+				\item Can access the individual elements of the \pyi{Point} object using \pyi{.getX()} or \pyi{.getY()}
+				\item Only left click has an affect, and holding it down will not issue multiple clicks
+			\end{itemize}
+		\item \pyi{.getKey()} returns a string of the key that was pressed
+			\begin{itemize}
+				\item Again, need to save it as some variable to use it
+				\item Don't know what string a certain key corresponds to? Just capture it and then print it out!
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Non-Blocking Events}
+	\begin{itemize}
+		\item \alert{Non-Blocking events} will \emph{not} stop your code when run
+		\item The \pyi{.checkMouse()} and \pyi{.checkKey()} methods are non-blocking
+			\begin{itemize}
+				\item If no key or mouse is pressed when the command is run in your loop, \pyi{None} is returned instead
+				\item Regardless, your loop continues on, no pausing
+				\item If you are saving the value to be later used, make sure you handle \pyi{None} cases, since the majority of the time \pyi{None} is what will be returned
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Projects}
+	\begin{itemize}
+		\item Mostly groups of 3, which I have created and will be sending out
+		\item Largely open to whatever you want or are interested in! I can help with ideas if you like.
+		\item Will do a 10 min + questions presentation on the project on the last day of classes.
+			\begin{itemize}
+				\item Should include:
+					\begin{itemize}
+						\item What your project was
+						\item How you approached it and divided up the problem
+						\item Who worked on what parts
+						\item How it came together and works
+						\item Maybe a demonstration
+					\end{itemize}
+			\end{itemize}
+		\item Code will be submitted to Github, but besides the presentation and code no other ``output'' necessary.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Timeline}
+	\begin{itemize}
+		\item Campuswire groups made for each grouping
+		\item Monday's class will focus on planning a project and collaborative coding
+		\item Wednesday we'll do some fun things with a program I wrote
+		\item Before break, your group should have arrived at strong idea of what you want to do, how you'll go about doing that, and who is responsible for what.
+		\item After break, probably both the Monday and the Wednesday class and lab time will be devoted to time you can work on the project and ask questions.
+	\end{itemize}
+\end{frame}
+
+
+\end{document}
+

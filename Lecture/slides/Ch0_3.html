@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold">
+  <meta name="dcterms.date" content="2023-01-23">
+  <title>Round and Round</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Round and Round</h1>
+  <p class="author">Instructor: Fred Agbo <br><strong> Slide by: Jed Rembold</strong> </p>
+  <p class="date">September 1, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Problem Set 1 posted today! </li>
+<li>The <em>PDF file</em> containing all instructions and link to the Github classroom is posted on Canvas!
+<ul>
+<li>Problem Set 1 is due <em>next 2</em> Monday's night at 11:59 pm</li>
+<li>You’ll have basically all you need to solve it after today</li>
+</ul></li>
+<li>Small sections starting up next week Wednesday/Thursday (depending on when your
+section meets)
+<ul>
+<li>If you got an email from me, it means you had not signed up your availability as at <strong>4:00pm yesterday</strong>.
+You must fill out the availability poll <strong>NOW!</strong></li>
+</ul></li>
+<li>Polling continues today! Remember to use this link when I make it <strong>active</strong> <a href="https://www.polleverywhere.com/agbofred203">https://www.polleverywhere.com/agbofred203</a> </li>
+<ul>
+<li>Reminder: include enough of your name that I can uniquely identify
+you!</li>
+</ul></li>
+</ul>
+</section>
+<section id="kinda-iffy" class="slide level2">
+<h2>Kinda Iffy</h2>
+<ul>
+<li><p>Predicate functions can be used to control a kind of “switch”:
+running one piece of code if the answer is yes and a different piece of
+code if the answer is no.</p></li>
+<li><p>Commonly called <em>if</em> or <em>if-else</em> statements, they
+take on the syntax of:</p>
+<pre ><code class="python">if conditional_test:
+    # Code to run if test answer is yes
+else:
+    # Code to run if test answer is no</code></pre></li>
+<li><p>If you don’t want the code to do anything special if the answer
+is no, you can ignore the “else” part of the statement:</p>
+<pre ><code class="python">if conditional_test:
+    # Code to run if test is true
+# Carrying on with code that will always run</code></pre></li>
+</ul>
+</section>
+<section id="karels-decisions-example" class="slide level2">
+<h2>Karel’s Decisions Example</h2>
+<ul>
+<li>Suppose we want Karel to move across the bottom of the world and
+fill in any gaps in the beepers
+<ul>
+<li>We want an even layer of beepers, no stacks</li>
+<li>What questions should we have Karel ask?</li>
+</ul></li>
+</ul>
+<p><img
+data-src="../images/svg_cache/cbb1d667e55a3e0db68cbdcd40529fb8fee0cf5f.svg"
+style="width:60.0%" /></p>
+</section>
+<section id="its-been-a-while" class="slide level2">
+<h2>It’s been a while</h2>
+<ul>
+<li><p>Another common use of predicate functions is in controlling a
+type of iterative function called a <em>while</em> loop</p></li>
+<li><p>The structure of a while loop looks like:</p>
+<pre ><code class="python">while some_conditional_test:
+    # Code to repeat as long as the answer
+    # to the conditional_test is yes (true)
+# Code to run once the answer is no</code></pre></li>
+<li><p>All of our predicate functions give yes-or-no answers though! So
+we can do something like</p>
+<pre ><code class="python">while front_is_clear():
+    move()</code></pre>
+<p>which will continually move Karel forward as long as there is not a
+wall in front of them!</p></li>
+</ul>
+</section>
+<section id="smarty-karel" class="slide level2">
+<h2>Smarty Karel</h2>
+<ul>
+<li>Combining conditional statements with loops lets us write a program
+for Karel in which it can <strong>react</strong> to different situations
+in different ways, all using the same code</li>
+<li>Our pothole code from earlier could <strong>only</strong> handle two
+potholes, and they had to be perfectly spaced</li>
+<li>With one loop and one if statement, we can make the program fill any
+number of potholes with any manner of spacing!</li>
+<li>Key questions:
+<ul>
+<li>How do we know when we are done?</li>
+<li>How do we know when we reach a pothole?</li>
+</ul></li>
+</ul>
+</section>
+<section id="smart-potholes" class="slide level2">
+<h2>Smart Potholes</h2>
+<pre ><code class="python" style="max-height: 900px">def main():
+    """
+    Main function to fill any number of
+    potholes at any location!
+    """
+    while front_is_clear():
+        if right_is_clear():
+            fill_pothole()
+        move()
+
+def fill_pothole():
+    """
+    Fills a single pothole and returns 
+    to where it started. 
+    """
+    turn_right()
+    move()
+    put_beeper() #assuming infinite beepers available
+    turn_around()
+    move()
+    turn_right()
+
+def turn_right():
+    """ Turns Karel 90 deg to the right. """
+    turn_left()
+    turn_left()
+    turn_left()
+
+def turn_around():
+    """ Turns Karel 180 deg around. """
+    turn_left()
+    turn_left()</code></pre>
+</section>
+<section id="inception-loops-in-loops" class="slide level2">
+<h2>Inception: Loops in Loops</h2>
+<ul>
+<li><p>Whenever a loop ends, you just return to the same indentation
+level as when that loop began</p></li>
+<li><p>For loops inside other loops then, this means that the
+“inner-most” loop runs from start to finish for <em>every</em> step of
+the outer loop</p>
+<pre ><code class="python">while front_is_clear():
+    move()
+    while not_facing_north():
+        turn_left()
+    turn_left()
+put_beeper()</code></pre></li>
+</ul>
+</section>
+<section id="understanding-check" class="slide level2">
+<h2>Understanding Check</h2>
+<div class="cols">
+<div class="col" style="flex-grow:1.5">
+<p>Karel starts as shown to the right with 20 beepers in its bag. After
+executing the commands below, how many beepers are left in the bag upon
+the conclusion of the program?</p>
+<pre ><code class="python">while left_is_clear():
+    while front_is_clear():
+        move()
+        if no_beepers_present():
+            put_beeper()
+    turn_left()</code></pre>
+</div>
+<div class="col">
+<p><img
+data-src="../images/svg_cache/cbde3e64ccbc14da42aa984998fbfe99ad5de32c.svg"
+style="width:90.0%" /></p>
+</div>
+</div>
+<div class="hpoll">
+<ol>
+<li>12</li>
+<li>13</li>
+<li>15</li>
+<li>19</li>
+</ol>
+</div>
+<aside class="notes">
+<p>There should be 12 beepers left</p>
+</aside>
+</section>
+<section id="counting-loops" class="slide level2">
+<h2>Counting Loops</h2>
+<ul>
+<li><p>Sometimes we <strong>know</strong> the number of times we want to
+loop</p>
+<ul>
+<li>It is not dependent on some condition like a while loop</li>
+</ul></li>
+<li><p>In these circumstances, the iterative statement called a
+<em>for</em> loop is best used</p></li>
+<li><p>Syntax looks like:</p>
+<pre ><code class="python">for i in range(desired_count):
+    # statements to be repeated</code></pre>
+<ul>
+<li><code class="python">desired_count</code> is an <em>integer</em>
+indicating the number of times you want the loop to repeat</li>
+<li>The <code class="python">i</code> is a name that we will later make
+more general, but for now you can always leave it as an
+<code class="python">i</code></li>
+</ul></li>
+</ul>
+</section>
+<section id="an-example-for-you" class="slide level2">
+<h2>An Example <code class="python">for</code> you</h2>
+<div class="cols">
+<div class="col">
+<ul>
+<li>Suppose we want Karel to create a 6x6 square outline of beepers in a
+room</li>
+<li>Need to repeat making each side 4 times</li>
+<li>Need to repeat placing a beeper and moving 6 times for each side
+<ul>
+<li>Placing 6 beepers requires moving only 5 times. So not everything
+can be in the loop</li>
+</ul></li>
+</ul>
+</div>
+<div class="col">
+<p><img
+data-src="../images/svg_cache/5c1f9b98dd235a17765d24b1fca63b1752094378.svg"
+style="width:100.0%" /></p>
+</div>
+</div>
+</section>
+<section id="a-potential-solution" class="slide level2">
+<h2>A Potential Solution</h2>
+<pre ><code class="python" style="max-height: 900px">import karel
+
+def main():
+    """Draw a 4x4 square in the world."""
+    position()
+    draw_box()
+
+def position():
+    """Move to starting corner of box."""
+    move()
+    move()
+    turn_left()
+    move()
+    move()
+    turn_right()
+
+def turn_right():
+    """Turns Karel 90 deg to the right."""
+    turn_left()
+    turn_left()
+    turn_left()
+
+def draw_box():
+    """Draws a box with 4 equal sides in a CCW direction."""
+    for i in range(4):
+        draw_6_line()
+        turn_left()
+
+def draw_6_line():
+    """Draws a straight line of 6 beepers, if space."""
+    for i in range(5):
+        if no_beepers_present():
+            put_beeper()
+        if front_is_clear():
+            move()
+    if no_beepers_present(): # Last beeper to make 6
+        put_beeper()</code></pre>
+</section>
+<section id="summary-so-far" class="slide level2">
+<h2>Summary So Far</h2>
+<div class="cols">
+<div class="col">
+<div class="block" name="Karel Cmds">
+<ul>
+<li>Karel can only:
+<ul>
+<li><code class="python">move()</code></li>
+<li><code class="python">turn_left()</code></li>
+<li><code class="python">pick_beeper()</code></li>
+<li><code class="python">put_beeper()</code></li>
+</ul></li>
+<li>Can get info about surroundings using predicate functions
+<ul>
+<li>Eg. <code class="python">front_is_clear()</code>
+<!--- Inverse options exist as well--></li>
+</ul></li>
+</ul>
+</div>
+<div class="block" name="Functions">
+<ul>
+<li><p>Group code into bundles</p>
+<pre ><code class="python">def function_name():
+    # Code to be grouped</code></pre></li>
+</ul>
+</div>
+</div>
+<div class="col" style="flex-grow:1.5">
+<div class="block" name="Control Statements">
+<ul>
+<li>Conditional statements
+<ul>
+<li><p>Run certain code blocks only if a condition is true</p>
+<pre ><code class="python">if condition_test:
+    # Code if answer yes
+else:
+    # Code if answer no</code></pre></li>
+</ul></li>
+<li>Iterative statements
+<ul>
+<li><p><code class="python">while</code> loop: repeat code block as long
+as condition is true</p>
+<pre ><code class="python">while condition_test:
+    # Code to repeat</code></pre></li>
+<li><p><code class="python">for</code> loop: repeat set number of
+times</p>
+<pre ><code class="python">for i in range(desired_count):
+    # Code to repeat</code></pre></li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+<!--
+## Algorithms
+- The process of designing a solution strategy to a problem is called _algorithmic design_
+- An _algorithm_ is just an approach or recipe for a method to solve a particular problem
+    - Frequently language agnostic
+- Algorithms are not a new concept
+    - Euclids algorithm to find greatest common denominators for instance
+- A large part of computer science is focused on the study or analysis of algorithms
+
+## Algorithm ⮕ Code
+- You need to have an algorithm in place **before** you can write the code to tell the computer what you want to do
+    - Imagine an alien asking me how to bake a cake. I need to understand the steps to baking the cake before I can even worry about the translation or communication
+- Programming tools like conditional statements and loops will frequently play a role in your algorithm, but as general concepts
+    - I can easily describe a loop to you without needing the exact syntax of Python
+- The implementation of the algorithm is the act of translating it into Python (or whatever language you are using)
+
+## An Amazing Algorithm
+::::::cols
+::::col
+- Consider a simple, loop-less, maze that we want to move through
+- A common algorithm to get through the maze is to essentially always follow or touch the wall to your right
+- Practically speaking, this largely means to go forward unless a passage opens to your right, in which case you take that passage
+- In Karel, if the exit was a beeper, we might implement the above algorithm as:
+
+::::
+
+::::col
+```{.python .fragment style='max-height:900px; font-size: .75em;'}
+while no_beepers_present():
+    # if opening on right, we follow
+    if right_is_clear():
+        turn_right()
+        move()
+    else:
+        # go forward if possible or turn
+        if front_is_clear():
+            move()
+        else:
+            turn_left()
+```
+
+::::
+::::::
+
+
+## Complications
+- More complicated problems will generally result or require more complex and longer code
+- _Stepwise Refinement_ is the process of starting with the biggest problem and breaking it into smaller and smaller pieces
+    - Eventually, you should be able to solve one of those pieces with a fairly straightforward piece of code
+- Taking some time to plan ahead will save you a lot of time coding!
+    - Sketch out how you want to break the problem up, before you start coding
+    - Things can always shift some later if you realize something while writing the code
+
+## Example: Pillar Repair
+- Suppose Karel comes across some arches which have broken pillars supporting them.
+- Our goal is to have Karel repair the pillars by filling in the missing beepers
+
+\begin{tikzpicture}%%width=60%
+\karelgrid[MGreen]{13}{8}
+\draw[very thick, MGreen] (0.5,5.5) \foreach \c in {1,2,3} {
+                                    -| ++(1,1) -| ++(1,1) -| ++(1,-1) -| ++(1,-1)
+                                    } --++(1,0);
+\karelmark[fill=MYellow]{1}{1}{0}
+\foreach \y in {4,5} \karelbeeper[fill=MBlue]{1}{\y};
+\foreach \y in {1,2,4} \karelbeeper[fill=MBlue]{5}{\y};
+\foreach \y in {4,5} \karelbeeper[fill=MBlue]{9}{\y};
+\foreach \y in {1,3,5} \karelbeeper[fill=MBlue]{13}{\y};
+\end{tikzpicture}
+
+## Breaking it down
+![A potential breakdown](../images/Pillar_Fixing.svg)
+
+## A potential solution
+```{.python style='max-height: 900px;'}
+import karel
+
+
+def rebuild_arches():
+    while front_is_clear():
+        repair_pillar()
+        move()
+    repair_pillar()
+
+
+def repair_pillar():
+    turn_left()
+    # Beeper chain up
+    create_beeper_chain()
+    turn_around()
+    # Beeper chain back down
+    create_beeper_chain()
+    turn_left()
+
+
+def turn_around():
+    turn_left()
+    turn_left()
+
+
+def create_beeper_chain():
+    while front_is_clear():
+        if beepers_present():
+            move()
+            if no_beepers_present():
+                put_beeper()
+        else:
+            move()
+```
+-->
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 7,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+    </script>
+    </body>
+</html>

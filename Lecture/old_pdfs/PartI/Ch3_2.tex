@@ -1,0 +1,292 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{For once again we shall loop}
+\author{Jed Rembold}
+\date{February 10, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item I'm still working on getting all of HW2 scored, but hopefully by the end of today!
+				\item Homework 3 has been posted! Should be good to do Problems 1 and 2 after today.
+			\end{itemize}
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Review Question}
+	Which of the following questions would be a suitable candidate for using some sort of exhaustive enumeration type algorithm?
+	\begin{poll}
+	\item Finding all multiples of 3 that are also divisible by 5
+	\item Counting the number of vowels in a sentence
+	\item Determining the precise amount of time to fire a rockets thrusters to reach a certain speed
+	\item Calculating the cubic root of 50
+	\end{poll}
+	\exsol{Counting the number of vowels in a sentence}
+\end{frame}
+
+\begin{frame}{Example 2: Substring exists?}
+	\begin{itemize}
+		\item Countable solution set?
+			\begin{itemize}
+				\item Just need to check each piece of the bigger string.
+				\item It is made up of a countable number of parts, so we just need to check a countable number
+			\end{itemize}
+		\item Terminating Condition?
+			\begin{itemize}
+				\item Assume \pyi{i=0} initially and increments by one
+				\item Taking the big string to be \pyi{b_str} and the substring to be \pyi{l_str}, keep going until
+					\begin{center}
+						\pyi{i + len(l_str) > len(b_str)}
+					\end{center}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Example 3: Money Money}
+	\begin{itemize}
+		\item Countable solution set?
+			\begin{itemize}
+				\item We have a limited amount of coins to check
+				\item Just need to check all possible combinations
+			\end{itemize}
+		\item Terminating Condition(s)?
+			\begin{itemize}
+				\item Probably want one for each loop here
+				\item Assume \pyi{num_nic}, \pyi{num_dime}, \pyi{num_pen} all start at zero and increment by one
+				\item Stop when
+					\begin{center}
+						\pyi{num_nic > max_nic}\\
+						\pyi{num_dime > max_dime}\\
+						\pyi{num_pen > max_pen}
+					\end{center}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Iterating over sequences}
+	\begin{itemize}
+		\item It comes up often that we iterate over some sequence or range
+			\begin{pythoncode}
+				i = 0
+				while i < 10:
+					print(i)
+					i = i + 1
+			\end{pythoncode}
+		\item Python provides us with a simplified type of loop to do these sorts of iterations
+		\item Called a \alert{for} loop
+			\begin{itemize}
+				\item Can think of it as saying: ``\alert{For} each thing in this stuff, run this code.''
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Anatomy of a For Loop}
+	\begin{itemize}[<+->]
+		\item For loops have a simple syntax:
+			\begin{pythoncode}
+				for <variable> in <sequence>:
+					<loop code>
+			\end{pythoncode}
+		\item \pyi{<loop code>} is no different from what we have already been doing inside loops
+		\item \pyi{<variable>} is the variable name that will take on every value in the sequence over the course of the loop
+		\item \pyi{<sequence>} is a non-scalar object who individual pieces will be looped over
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Simple String Example}
+	\vspace{5mm}
+	\begin{itemize}
+		\item We already know strings are non-scalar objects, so they can be looped over with for loops!
+			\begin{pythoncode}
+				dessert = "Pumpkin Pie"
+				for letter in dessert:
+					print(letter)
+			\end{pythoncode}
+		\item This is functionally identical to:
+			\begin{pythoncode}
+				dessert = "Pumpkin Pie"
+				i = 0
+				while i < len(dessert):
+					print(dessert[i])
+					i = i + 1
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Far Ranging Sequences}
+	\begin{itemize}
+		\item How can this be useful with numbers?
+		\item Python's \pyi{range()} function
+			\begin{itemize}
+				\item Can pass in the same options as slicing
+					\begin{itemize}
+						\item Start (defaults to 0)
+						\item Stop
+						\item Step (defaults to 1)
+					\end{itemize}
+				\item Like slicing, the \pyi{Stop} element will not be included
+				\item Unlike slicing though, use a comma (\pyi{,}) to separate the options!!
+				\item Generates values ``as needed'', so very memory efficient
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{For Ranging Examples}
+	\begin{itemize}
+		\item Providing just a stop
+			\begin{pythoncode}
+				for n in range(5):
+					print(n)
+			\end{pythoncode}
+		\item Providing start and stop
+			\begin{pythoncode}
+				for n in range(1,11):
+					print(n)
+			\end{pythoncode}
+		\item Providing start, stop and step
+			\begin{pythoncode}
+				for n in range(10,0,-1):
+					print(n)
+			\end{pythoncode}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Understanding Check}
+	Which of the below blocks of code would print something different than the others?
+	\begin{poll}
+		\small
+		\begin{columns}[t]
+			\column{0.45\textwidth}
+	\item 
+		\begin{pythoncode}
+			for n in range(10):
+				if n % 2 == 0:
+					print(n)
+		\end{pythoncode}
+
+	\item
+		\begin{pythoncode}
+			for i in range(0,10,2):
+				if i:
+					print(i)
+		\end{pythoncode}
+			
+			\column{0.45\textwidth}
+	\item
+		\begin{pythoncode}[showlines=true]
+			for j in range(0,20,4):
+				print(j // 2)
+				  
+		\end{pythoncode}
+
+	\item
+		\begin{pythoncode}
+			for k in range(0,10):
+				if not k % 2:
+					print(k)
+		\end{pythoncode}
+			
+		\end{columns}
+
+	\end{poll}
+	\exsol{B}
+\end{frame}
+
+%\begin{frame}[fragile]{Pythagorean Integers: For Loop Version}
+	%\vspace{5mm}
+	%\begin{itemize}
+		%\item Let's revisit our problem of finding all positive integers $a$ and $b$ such that
+			%\[a^2 + b^2 = 250\]
+	%\end{itemize}
+	%\vspace{-5mm}
+	%\begin{columns}[t]
+		%\column{0.5\textwidth}
+		%\begin{block}{While Loops}
+			%\scriptsize
+			%\begin{pythoncode}[basicstyle=\color{FG}\ttfamily]
+				%a = 0
+				%while 250 - a > 0:
+					%b = 0
+					%while 250 - b > 0:
+						%if a**2 + b**2 == 250:
+							%print('-----')
+							%print('A=',a)
+							%print('B=',b)
+						%b = b + 1
+					%a = a + 1
+			%\end{pythoncode}
+		%\end{block}
+		%\column{0.5\textwidth}
+		%\begin{block}{For Loops}
+			%\scriptsize
+			%\begin{pythoncode}[basicstyle=\color{FG}\ttfamily]
+				%for a in range(250):
+					%for b in range(250):
+						%if a**2 + b**2 == 250:
+							%print('-----')
+							%print('A=',a)
+							%print('B=',b)
+			%\end{pythoncode}
+		%\end{block}
+	%\end{columns}
+%\end{frame}
+
+%\begin{frame}{Making the Choice}
+	%\begin{columns}[t]
+		%\column{0.5\textwidth}
+			%\textcolor{Teal}{While Loops:}
+				%\begin{itemize}
+					%\item Very general and flexible
+					%\item Can check and terminate on any condition you can imagine
+					%\item You are responsible for initializing and updating needed variables
+					%\item Need to be careful of infinite loops
+					%\item Can mimic behavior of any \pyi{for} loop
+				%\end{itemize}
+		%\column{0.5\textwidth}
+			%\textcolor{Teal}{For Loops:}
+			%\begin{itemize}
+				%\item Only iterate over sequences
+				%\item Variable initialization and updating is handled by the sequence
+				%\item Impossible to get an infinite loop
+				%\item Simpler syntax in general
+				%\item Can not mimic every \pyi{while} loop
+			%\end{itemize}
+	%\end{columns}
+%\end{frame}
+
+%\begin{frame}{More Involved Example}
+	%Let \pyi{s} be a string that contains a sequence of decimal numbers separated by commas. For example, \pyi{s = 1.23,4.67,8.37}. Write a program that prints the sum of the numbers in \pyi{s}.
+%\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

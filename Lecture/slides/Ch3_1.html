@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold &amp; Fred Agbo">
+  <meta name="dcterms.date" content="2023-09-15">
+  <title>Ranging from Creation to Debugging</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Ranging from Creation to Debugging</h1>
+  <p class="author">Jed Rembold &amp; Fred Agbo</p>
+  <p class="date">September 15, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Feedback on PS1 was out yesterday</li>
+<li>You have Problem Set 2 due on Tuesday at <strong>12 noon</strong>
+<ul>
+<li>You have everything you need to do all the problems after today</li>
+</ul></li>
+<li>I have so many meetings this afternoon, including one during normal
+office hours
+<ul>
+<li>Should you have any issue, ask me in the office until 10:30 am</li>
+<li>Also, get help from your section leader</li>
+</ul></li>
+<li><ul>
+<li>Polling continues today! Remember to use this link <a
+href="https://www.polleverywhere.com/agbofred203">https://www.polleverywhere.com/agbofred203</a>
+when it becomes <strong>active</strong></li>
+</ul></li>
+</ul>
+</section>
+<section id="the-range-iterable" class="slide level2">
+<h2>The <code class="python">range()</code> iterable</h2>
+<ul>
+<li>Need an easy way to produce or describe a range of numeric
+values</li>
+<li>The built-in <code class="python">range()</code> function handles
+this and produces the needed iterable object</li>
+<li>Takes 1, 2, or 3 arguments:
+<ul>
+<li>Start (default 0): where to start the sequence at</li>
+<li>Stop (mandatory): the sequence ends just <em>below</em> this value
+(does not include it!)</li>
+<li>Step (default 1): what value the sequence counts by <br><br></li>
+</ul></li>
+</ul>
+<div class="block" name="Warning!">
+<p>Be careful, the <code class="python">range</code> function will stop
+one step <em>before</em> the final stop value.</p>
+</div>
+</section>
+<section id="for-ranging-examples" class="slide level2">
+<h2>For ranging examples</h2>
+<ul>
+<li><p>Providing just a stop argument:</p>
+<pre ><code class="python">for n in range(5):
+    print(n)</code></pre></li>
+<li><p>Providing a start and stop:</p>
+<pre ><code class="python">for n in range(1,11):
+    print(n)</code></pre></li>
+<li><p>Providing a start, stop, and step:</p>
+<pre ><code class="python">for n in range(10,0,-1):
+    print(n)</code></pre></li>
+</ul>
+</section>
+<section id="review-question-and-understanding-check"
+class="slide level2"
+data-notes="Answer is B, as it would not print the 0">
+<h2 data-notes="Answer is B, as it would not print the 0">Review
+Question and Understanding Check</h2>
+<p>Which of the below blocks of code would print something different
+from the others?</p>
+<div class="cols">
+<div class="col">
+<div class="block" name="A">
+<pre ><code class="python" style="margin-left:1em">for n in range(10):
+    if n % 2 == 0:
+        print(n)</code></pre>
+</div>
+<div class="block" name="B">
+<pre ><code class="python" style="margin-left:1em">for i in range(0,10,2):
+    if i > 0:
+        print(i)</code></pre>
+</div>
+</div>
+<div class="col">
+<div class="block" name="C">
+<pre ><code class="python" style="margin-left:1em">for j in '02468':
+    L = int(j)
+    print(L)
+</code></pre>
+</div>
+<div class="block" name="D">
+<pre ><code class="python" style="margin-left:1em">for k in range(0,10):
+    if not (k % 2 > 0):
+        print(k)</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="algorithms" class="slide level2">
+<h2>Algorithms</h2>
+<ul>
+<li>Recall that when approaching a computation problem, you
+<strong>must</strong> have an algorithm designed before you start
+coding</li>
+<li>An <strong>algorithm</strong> is a problem-solving strategy, and
+should be:
+<ul>
+<li><em>Clear and unambiguous</em>, in the sense that it is
+understandable and leaves no gaps</li>
+<li><em>Effective</em>, in the sense that each step is actually
+possible</li>
+<li><em>Finite</em>, in the sense that it ends at some point</li>
+</ul></li>
+<li>You need to come up with an algorithm before you start coding!</li>
+</ul>
+</section>
+<section id="creating-your-own-algorithms" class="slide level2">
+<h2>Creating your own Algorithms</h2>
+<div style="font-size:.9em">
+<ul>
+<li class="fragment">Some useful hints to keep in mind when constructing
+your own algorithms:
+<ul>
+<li class="fragment">Think about how you would solve the problem
+<strong>without</strong> a computer. You can’t write code if you don’t
+understand what you want the computer to do.</li>
+<li class="fragment">Computers are fast! Brute force methods are often
+very viable, or at least a good starting point.</li>
+<li class="fragment">Try to use tools and programming patterns you have
+already seen. It is often far easier to write programs by assembling
+pieces from code you have already seen than writing each program
+entirely from scratch.
+<ul>
+<li class="fragment">Common patterns we have already seen include:
+looping over sequences, and using variables to track/control a loop</li>
+</ul></li>
+<li class="fragment">Recognize that the program you write is highly
+unlikely to work the first time
+<ul>
+<li class="fragment">Errors can occasionally be in your algorithms</li>
+<li class="fragment">More often, early on, errors are in your
+translating of the algorithm into Python (the implementation)</li>
+</ul></li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="example-greatest-factor" class="slide level2">
+<h2>Example: Greatest Factor</h2>
+<ul>
+<li><p>Suppose we wanted to write a function to compute the greatest
+factor of a provided number (not including the number itself)</p></li>
+<li><p>Algorithm:</p>
+<div>
+<ul>
+<li class="fragment">Brute force – check all smaller values to see if
+factor</li>
+<li class="fragment">Start at top and work down, means first found is
+the greatest</li>
+<li class="fragment">Check if factor by seeing if remainder 0</li>
+</ul>
+</div></li>
+</ul>
+<pre ><code class="python fragment" style="margin:auto;">def greatest_factor(num):
+    """Finds the greatest factor of a number."""
+    for i in range(num-1,0,-1):
+        if num % i == 0:
+            return i</code></pre>
+<!-- not until strings
+
+## Learning English
+- When working with sequences of characters, it is often useful or desirable to determine if they form actual valid English words
+- This class provides for you a new library, through the file `english.py`
+- The `english` library provides two objects you can import into your programs:
+    - The constant `ENGLISH_WORDS`, which is a list of all the valid words in the English dictionary
+    - The function `is_english_word()`, which accepts a single string as an argument and returns `True` is the string represents a valid English word.
+- This library will be particularly useful for Wordle!
+
+
+## Example: How many 2 letter words?
+- Before we start writing code, let's pause. Give a physical English dictionary, how could you go about figuring out the number of two letter words?
+
+::::::cols
+::::{.col .fragment}
+:::{.block name="Check valid words for right length"}
+```{.python style='width: 100%' .fragment}
+from english import ENGLISH_WORDS
+
+count = 0
+for word in ENGLISH_WORDS:
+    if len(word) == 2:
+        count += 1
+print(count)
+```
+:::
+::::
+
+::::{.col style='flex-grow:1.15' .fragment}
+:::{.block name="Check all two letter combinations"}
+```{.python style='width:100%' .fragment}
+from english import is_english_word
+
+count = 0
+alphabet = 'abcdefghijklmnopqrstuvwxyz'
+for letter1 in alphabet:
+    for letter2 in alphabet:
+        word = letter1 + letter2
+        if is_english_word(word):
+            count += 1
+print(count)
+```
+:::
+::::
+::::::
+
+-->
+</section>
+<section id="debugging" class="slide level2">
+<h2>Debugging</h2>
+<div class="quote">
+<blockquote>
+<p>If debugging is the process of removing software bugs, then
+programming must be the process of putting them in.</p>
+</blockquote>
+<div class="attribution">
+<p>Edsger W. Dijkstra</p>
+</div>
+</div>
+<div>
+<ul>
+<li class="fragment">Everyone makes mistakes when writing code</li>
+<li class="fragment">A core skill then is in efficiently finding the
+bugs that you introduce</li>
+<li class="fragment">We’ll spend the rest of today looking at some good
+practices
+<ul>
+<li class="fragment">As always though, practice makes perfect</li>
+</ul></li>
+</ul>
+</div>
+</section>
+<section id="strategy-1" class="slide level2">
+<h2>Strategy #1</h2>
+<div class="quip">
+<p>Concentrate on what your program IS doing, instead of what it SHOULD
+be doing.</p>
+</div>
+<ul>
+<li>It is impossible to find code that is missing</li>
+<li>Instead focus on determining <em>what</em> your program is doing, or
+<em>why</em> it is behaving a certain way</li>
+<li>Only once you understand what it is currently doing can you
+entertain thinking about how to change it productively</li>
+</ul>
+</section>
+<section id="strategy-2" class="slide level2">
+<h2>Strategy #2</h2>
+<div class="quip">
+<p>Let Python help you: print or log the state of different
+variables.</p>
+</div>
+<ul>
+<li>Many errors are caused by you expecting a variable to have some
+content that it doesn’t have</li>
+<li>Get Python to help you by adding print statements to print those
+variables out</li>
+<li>Add print statements in blocks of code that you aren’t sure are
+being accessed to see if you see a message</li>
+</ul>
+</section>
+<section id="strategy-3" class="slide level2">
+<h2>Strategy #3</h2>
+<div class="quip">
+<p>Stop and read. The documentation. The error messages.</p>
+</div>
+<iframe width="888" height="500" src="https://www.youtube.com/embed/X3jw1JVNdPE?start=78&amp;end=139" title="how to never write bug" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</section>
+<section id="parsing-error-messages" class="slide level2">
+<h2>Parsing Error Messages</h2>
+<ul>
+<li>Start at the bottom! That is where the general type of error and a
+short description will show up.</li>
+<li>Want to know where it happened? Look one line up from that.
+<ul>
+<li>Will show a copy of the line where the error occurred</li>
+<li>One line up from that will include the line number</li>
+</ul></li>
+<li>Want nicer error messages?
+<ul>
+<li><p>The <code class="python">rich</code> library offers some very
+pretty error messages: install with
+<code class="python">pip install rich</code></p></li>
+<li><p>At the top of your code, then include:</p>
+<pre ><code class="python">from rich.traceback import install
+install(show_locals=True)</code></pre></li>
+</ul></li>
+</ul>
+</section>
+<section id="strategy-4" class="slide level2">
+<h2>Strategy #4</h2>
+<div class="quip">
+<p>Use PythonTutor or a debugger to track EXACTLY what is happening in
+your program.</p>
+</div>
+<iframe width="888" height="500" src="https://www.youtube.com/embed/X3jw1JVNdPE?start=223&amp;end=261" title="how to never write bug" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+</iframe>
+</section>
+<section id="strategy-5" class="slide level2">
+<h2>Strategy #5</h2>
+<div class="quip">
+<p>Don’t make random changes to your code in the hopes that it will
+miraculously start working.</p>
+</div>
+<ul>
+<li>Making random changes is easy, fast, and doesn’t require a lot of
+thought</li>
+<li>Unfortunately it is, at best, a wildly inefficient method of
+debugging, and at worst, actively detrimental</li>
+<li>If you don’t know <em>what</em> you need to fix yet, you either
+haven’t:
+<ul>
+<li>Defined what you are attempting to do clearly enough, or</li>
+<li>Understood / tracked your program well enough to know what it is
+currently doing</li>
+</ul></li>
+</ul>
+</section>
+<section id="strategy-6" class="slide level2">
+<h2>Strategy #6</h2>
+<div class="quip">
+<p>Talk it out.</p>
+</div>
+<ul>
+<li>Explaining things verbally, in plain English, uncovers a shocking
+amount of misconceptions or mistakes</li>
+<li>Find someone to talk at about your programming issues
+<ul>
+<li>It isn’t even important that they understand how to code, or even
+can talk back to you (though that might help in some cases)</li>
+<li><a href="https://en.wikipedia.org/wiki/Rubber_duck_debugging">Rubber
+Duck Debugging</a> is where a software developer explains an issue out
+loud to an inanimate rubber duck</li>
+</ul></li>
+</ul>
+</section>
+<section id="strategy-7" class="slide level2">
+<h2>Strategy #7</h2>
+<div class="quip">
+<p>Test your code as you go! Either manually or automatically.</p>
+</div>
+<ul>
+<li>Know that <em>everyone</em> makes mistakes. The longer you go
+without testing that something in your program works, the harder it is
+to find where the mistake eventually is.</li>
+<li>Write code that you test in small pieces as you go
+<ul>
+<li>Decomposition into smaller functions is great for this: test each
+function individually as you go</li>
+<li>In the projects we try to construct the Milestones for this exact
+same purpose</li>
+</ul></li>
+</ul>
+</section>
+<section id="assertions" class="slide level2">
+<h2>Assertions</h2>
+<ul>
+<li><p>You can use Python’s <code class="python">assert</code> statement
+to write test functions, which take the form:</p>
+<pre ><code class="python">assert condition</code></pre>
+<p>where <code class="python">condition</code> is any operation that
+returns a <code class="python">True</code> or
+<code class="python">False</code></p></li>
+<li><p>Assert statements “expect” a condition to yield a
+<code class="python">True</code>, and if they do, nothing happens</p>
+<ul>
+<li>No news is good news in this case</li>
+</ul></li>
+<li><p>If an <code class="python">assert</code> condition evaluates to
+<code class="python">False</code>, an error is raised</p></li>
+<li><p>Naming your test functions starting with the word
+<code class="python">test_</code> will make them automatically
+discoverable by other tools</p></li>
+</ul>
+</section>
+<section id="testing-example" class="slide level2">
+<h2>Testing Example</h2>
+<ul>
+<li>Suppose we wanted to write some checks of the
+<code class="python">count_letters</code> function from earlier</li>
+</ul>
+<pre ><code class="python">def test_greatest_factor():
+    """ Runs several tests on the function greatest_factor """
+    assert greatest_factor(10) == 5
+    assert greatest_factor(7) == 1
+    assert greatest_factor(51) == 17
+    assert greatest_factor(9) == 3</code></pre>
+<!--
+
+## Showcasing Autochecks
+- When you submit code to GitHub, my pre-written tests are run
+    - If **any** check fails, you'll see the red X (and possibly get an email)
+    - Let's look at how to get information about what went wrong
+- VSCode actually can run all the tests locally as well
+    - Let's also walk through how that works (and looks)
+-->
+<!-- moved to later
+## Introduction to Wordle
+::::::cols
+::::col
+- Our first project will be Wordle
+- Milestone guide will be posted today
+- Not due until February 17th
+- You still have PS3 due this Friday
+- Could complete in a week, but we are getting it to you early in case you want to start sooner
+::::
+
+::::col
+![The game of Wordle](../images/wordle.png)
+::::
+::::::
+
+## Your Responsibilities
+- We will provide you with a custom data type that will handle all the graphics and user interaction
+    - Don't worry, you'll have a chance to implement your own GUIs later in the semester!
+- Your responsibilities will include:
+    - Displaying and reading letters from boxes
+    - Evaluating whether a word is valid
+    - Determining what color each letter of a word should be
+    - Determining when victory or defeat occurs
+
+
+## Your Toolbox
+- Special functions provided by the provided graphics data type: `WordleGWindow`
+    - These will be well documented, and include, but are not limited to, things like
+        - Getting or setting a letter in a particular box
+        - Getting or changing the color of a given box
+        - Changing which row is used when characters are entered
+- Variables and functions
+- Control statements
+    - Good use of loops and if statements will be very useful
+- Basic string functions
+
+## Receiver Syntax
+:::{style='font-size:.9em'}
+- So far, all operations between or on objects have used symbols to indicate the operation
+    - The `+` sign, for instance
+- Going forward, we will begin to see more examples of operations on objects that use _receiver syntax_
+- In receiver syntax, we specify the object to act on, followed by a dot and then a predefined function (called a _method_ here) name
+
+  ```python
+  obj.method_name()
+  ```
+  - This is like you are running this special function on the object, so you **need** the `()` at the end
+  - Some methods also allow arguments, to influence exactly how the operation will proceed
+:::
+
+## An Approach to Success
+- Each project is accompanied by a highly detailed guide: **read it!**
+    - Explains background ideas so that you can understand the big picture of what you are needing to do
+    - Also included a breakdown of individual _milestones_
+        - A _milestone_ is a discrete checkpoint that you should ensure is working (and that you understand!) before moving on
+- Projects are all about managing complexity. If you start trying to implement milestones out of order, you are asking for disaster
+- Don't let yourself get overwhelmed by scale. Focus on one particular milestone at a time, which should involve focusing only on a small part of your overall code
+-->
+<!-- next time
+## The Worth of a Picture
+:::{style='font-size:.9em'}
+- There comes a time when reading and entering text on a terminal doesn't cut it
+    - Maybe you need more complicated input
+    - Maybe you need a more complicated interface that pure text can manage
+    - Maybe you have output that can not be shown as text
+- Standard Python really only deals with the terminal interface
+- Lots of outside libraries give Python more visual input/output
+    - Turtle
+    - Matplotlib
+    - Tkinter <span class='fragment'>← PGL</span>
+    - PyGame
+    - Arcade
+:::
+
+## The Portable Graphics Library
+- Built atop Tkinter
+- The library (`pgl.py`) is available on the website
+    - Put it in the same folder as your code, and then you can import it
+- Operates on the idea of a collage or cork-board
+
+![Test](../images/CorkBoard.svg)
+
+- Note that newer objects can obscure older objects. This layering arrangement is called the _stacking order_.
+
+
+## The Pieces
+- At its simplest then, we have two main parts:
+    - The window (or felt-board/cork-board)
+        - Created with the `GWindow` function
+        - Takes two arguments: a width and a height in pixels
+    - The contents
+        - A wide assortment of shapes that can be added to the scene
+        - Control over where they are placed, how large they are, what color they are, etc
+
+
+## Blue Rectangle!
+```{.python data-line-numbers="1|3,4|6|7|8|9|10|11"}
+from pgl import GWindow, GRect
+
+GW_WIDTH = 500
+GW_HEIGHT = 200
+
+gw = GWindow(GW_WIDTH, GW_HEIGHT)
+rect = GRect(150, 50 ,200, 100)
+rect.set_color("Blue")
+rect.set_filled(True)
+gw.add(rect)
+```
+
+## The Coordinate System
+![PGL Coordinates](../images/pgl_coordinates.svg)
+
+- Positions and distances on the screen are measured in terms of pixels
+- The location of the origin and orientation of the y-axis are **different from math**!
+    - Origin is in the upper left instead of lower left
+    - Y-values increase as you move downwards
+
+## Other Simple Objects
+Functions to create simple geometric objects:
+<br>
+
+- Rectangles!
+    - `GRect( x, y, width, height )`
+    - Creates a rectangle whose upper left corner is at (x,y) of the specified size
+- Circles/Ovals!
+    - `GOval( x, y, width, height )`
+    - Creates an oval that fits inside the rectangle with the same dimensions
+- Lines!
+    - `GLine( x1, y1, x2, y2 )`
+    - Creates a line extending from (x1,y1) to (x2,y2)
+
+
+## The `GObject` Hierarchy
+- The types of graphical objects form a hierarchy:
+
+![](../images/GObject_Hierarchy.svg)
+
+- The `GObject` type represents the collection of all graphical objects
+- The `GFillableObject` type represents those that have a fillable interior
+
+
+## Interacting with the `GWindow`
+- We've already shown creation:
+
+  ```python
+  gw = GWindow(width, height)
+  ```
+- You have several more operations that you can apply to the `GWindow` object:
+
+-------------------------------------- -------------------------------------
+       `gw.add(object)`{.no-highlight} Adds an object to the window
+ `gw.add(object, x, y)`{.no-highlight} Adds an object to the window after moving it to (x,y)
+    `gw.remove(object)`{.no-highlight} Removes an object from the window
+       `gw.get_width()`{.no-highlight} Returns the width of the graphics window in pixels
+      `gw.get_height()`{.no-highlight} Returns the height of the graphics window in pixels
+-------------------------------------- -------------------------------------
+
+
+## Interacting with `GObject`s
+- The following operations apply to all GObjects,  where `object`{.no-highlight} is the name of any specific instance.
+
+---------------------------------------- ----------------------------
+         `object.get_x()`{.no-highlight} Returns the x coordinate of this object
+         `object.get_y()`{.no-highlight} Returns the y coordinate of this object
+     `object.get_width()`{.no-highlight} Returns the width of this object
+    `object.get_height()`{.no-highlight} Returns the height of this object
+`object.set_color(color)`{.no-highlight} Sets the color of the object to the specified color
+---------------------------------------- ----------------------------
+
+- All coordinates and distances are measured in pixels
+
+
+## Interacting with `GFillableObject`s
+- Fillable GObjects have a smaller subset of commands that also apply to them.
+- Initially the only fillable objects available to you are rectangles and ovals
+
+--------------------------------------------- ----------------------------
+     `object.set_filled(bool)`{.no-highlight} Sets the fill state of the object
+`object.set_fill_color(color)`{.no-highlight} Sets the color to be used to fill the interior, otherwise same as the outer line
+     `object.get_fill_color()`{.no-highlight} Gets the current color used to display the object interior
+          `object.is_filled()`{.no-highlight} Returns True or False depending on whether the object is currently filled
+--------------------------------------------- ----------------------------
+
+-->
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1080,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+      
+    </script>
+    </body>
+</html>

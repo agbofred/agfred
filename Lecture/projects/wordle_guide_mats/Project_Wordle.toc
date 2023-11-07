@@ -1,0 +1,12 @@
+\hypertarget {toc}{}
+\contentsline {section}{The Starting Template}{1}{section*.2}%
+\contentsline {section}{Playing Wordle}{3}{section*.5}%
+\contentsline {section}{The WordleGraphics module}{5}{section*.6}%
+\contentsline {section}{Milestones}{5}{section*.8}%
+\contentsline {subsection}{Milestone 1: Pick a random word and display it}{6}{section*.9}%
+\contentsline {subsection}{Milestone 2: Checking for valid words}{6}{section*.10}%
+\contentsline {subsection}{Milestone 3: Coloring the boxes}{7}{section*.11}%
+\contentsline {subsection}{Milestone 4: Advance or end the game}{7}{section*.12}%
+\contentsline {subsection}{Milestone 5: Color the keys}{8}{section*.13}%
+\contentsline {section}{Strategies and Hints}{8}{section*.14}%
+\contentsline {section}{Extension Ideas}{9}{section*.15}%

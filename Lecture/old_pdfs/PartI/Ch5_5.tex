@@ -1,0 +1,197 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{A Set of Sprites}
+\author{Jed Rembold}
+\date{March 13, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 7 due tonight!
+				\item No homework due next week!
+			\end{itemize}
+		\item Midterm 1 still week from Friday
+			\begin{itemize}
+				\item I'm going to get some study materials up by tomorrow (my plate is a bit full suddenly here\ldots)
+			\end{itemize}
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{The Elephant {\tiny(hopefully not Covid)} in the Room}
+	\begin{itemize}
+		\item Lectures will be streamed via Youtube or possibly Zoom
+			\begin{itemize}
+				\item Same time
+				\item Will have chat interaction
+				\item Still polling questions
+			\end{itemize}
+		\item Labs will probably switch over entirely to GitHub
+			\begin{itemize}
+				\item I'll aim to have some sort of video or voice conference running during those times to help with any questions
+			\end{itemize}
+		\item Homework will resume after Spring Break
+		\item I'm still working out details on the test. I need the weekend.
+		\item \alert{Pay attention to Campuswire}
+			\begin{itemize}
+				\item It will be where I make announcements of any changes
+				\item Still the easiest place to ask and get questions answered
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	What is the printed value?
+		{ \footnotesize
+			\begin{pythoncode}[tabsize = 2]
+A = [
+		{'name': 'Jill',  'weight':125, 'height':62},
+		{'name': 'Sam',   'weight':156, 'height':68},
+		{'name': 'Bobby', 'weight':173, 'height':75},
+ ]
+A.append({'weight':204, 'height':70, 'name':'Jim'})
+B = A[1]
+B['weight'] = 167
+del A[0]['weight']
+print([d.get('weight',100) for d in A])
+		\end{pythoncode}
+	}
+	\begin{columns}
+		\column{0.4\textwidth}
+		\begin{poll}
+		\item \pyi{[100,167,173,204]}
+		\item \pyi{[100,156,173,204]}
+		\end{poll}
+		
+		\column{0.4\textwidth}
+		\begin{poll}
+			\setcounter{enumi}{2}
+		\item \pyi{[125,167,173,204]}
+		\item \pyi{[100,156,173,70]}
+		\end{poll}
+	\end{columns}
+	\exsol{A}
+\end{frame}
+
+\begin{frame}{Sets}
+	\begin{itemize}
+		\item A \alert{set} is an unordered list of unique immutable objects
+		\item The set itself can be mutable (normally) or immutable (frozenset)
+		\item What works the same:
+			\begin{itemize}
+				\item The \pyi{in} function
+				\item Finding the length
+				\item Looping over elements
+			\end{itemize}
+		\item What breaks:
+			\begin{itemize}
+				\item No slicing or indexing!
+			\end{itemize}
+		\item Common uses:
+			\begin{itemize}
+				\item Removing duplicates from a sequence
+				\item Mathematical operations like intersection, union, difference
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Non-Scalar Summary}
+	\begin{center}
+		\begin{tabular}{cccc}
+			\toprule
+			Type & Type of Elements & Examples of literals & Mutable \\
+			\midrule
+			\pyi{str} & characters & \pyi{'', 'a', 'abc'} & No \\
+			\pyi{tuple} & any type & \pyi{(), (2,), ('abc',3)} & No \\
+			\pyi{range} & integers & \pyi{range(5), range(2,10,2)} & No \\
+			\pyi{list} & any type & \pyi{[], [3], [6,'abc']} & Yes \\
+			\pyi{dict} & any type & \pyi{\{\}, \{'a':1\}, \{1:'abc', 2:5\}} & Yup \\
+			\pyi{set} & any immutable & \pyi{\{\}, \{2\}, \{'abc',5\}} & Both \\
+			\bottomrule
+		\end{tabular}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]{Getting Spritely}
+	\begin{itemize}
+		\item \pyi{SpriteList}s are common ways to display collections of images in arcade
+		\item We probably need to understand how a single \pyi{Sprite} works first though!
+		\item Basic syntax:
+			\begin{pythoncode}
+				arcade.Sprite(<filename>, <scale_factor>)
+			\end{pythoncode}
+		\item Image needs to be in the same folder (or a subfolder) of your script
+		\item Can also set the center x and y positions at the same time.
+		\item Draw to the screen with \pyi{.draw()}
+		\item Lots of other built in capabilities in the form of other methods
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Lists of Sprites}
+	\begin{itemize}
+		\item Frequently more useful to deal with groups of sprites
+		\item Arcade also has a lot of performance enhancements for working with groups of sprites over single sprites
+		\item Called a \pyi{SpriteList}
+			\begin{itemize}
+				\item Has similar methods to normal lists
+					\begin{itemize}
+						\item \pyi{.append}, \pyi{.extend}, \pyi{.remove}, etc
+					\end{itemize}
+				\item Has methods to draw or update every sprite in the list
+				\item Can also be used for collision detections
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Animating Sprite Lists}
+	\begin{itemize}
+		\item Can combine to easily animate groups of Sprites
+		\item Sprites can have properties which indicate how they should move:
+			\begin{itemize}
+				\item \pyi{change_x}
+				\item \pyi{change_y}
+				\item \pyi{velocity}
+			\end{itemize}
+		\item Calling an \pyi{.update} method will apply all these incremental movements
+		\item \pyi{SpriteList}s can be drawn and updated all at the same time!
+	\end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

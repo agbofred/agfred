@@ -1,0 +1,298 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Coding (can be) Exhausting}
+\author{Jed Rembold}
+\date{February 7, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item HW2 due tonight!
+				\item Remember to change the ``Assignment status:'' to DONE!
+				\item I'm aiming to get HW3 posted tomorrow or early Sunday
+			\end{itemize}
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}{Homework Comments}
+	%\begin{itemize}
+		%\item All HW1 has been graded. Comments and scores uploaded to GitHub.
+		%\item Most common issues:
+			%\begin{itemize}
+				%\item Not working in the provided file itself, so formatting errors when copying and pasting back into template.
+				%\item Not following instructions about what to print (usually not that big of a deal when I check myself, but can mask other errors)
+				%\item Having ``holes'' in blocks of conditional statements.
+				%\item Comments are optional\ldots until they cost you points.
+			%\end{itemize}
+		%\item That said, most people did quite well
+	%\end{itemize}
+%\end{frame}
+
+
+%\begin{frame}[fragile]{Review Question}
+	%Suppose you have the string: \pyi{x = "consternation"} and you'd like to just extract and print the word \pyi{"nation"}. Which expression below will \alert{not} give you the string \pyi{"nation"}?
+
+	%\begin{poll}
+	%\item \pyi{x[7:len(x)]}
+	%\item \pyi{x[7:]}
+	%\item \pyi{x[-6:len(x)]}
+	%\item \pyi{x[-6:-1]}
+	%\end{poll}
+%\end{frame}
+
+
+%\begin{frame}{And now the Dicing}
+	%\begin{itemize}
+		%\item Realize slices are a form of shorthand for looping through a string and pulling out the value between two indices
+		%\item But what if you don't want \emph{every} character between the two endpoints?
+			%\begin{itemize}
+				%\item Only want every other character? Or every 10th character?
+			%\end{itemize}
+		%\item Can achieve by adding one more term to our slices:
+			%\begin{center}
+				%\pyi{x[<start>:<stop>:<step>]}
+			%\end{center}
+			%\begin{itemize}
+				%\item A \pyi{<step>} of 2 would take every other character
+				%\item Default is a \pyi{<step>} of 1
+				%\item A \emph{negative} step will go backwards from stop to start!
+			%\end{itemize}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{Can't change a string's colors}
+	%\begin{itemize}
+		%\item Strings are what we call \alert{immutable}: they can not be modified in place
+		%\item You can ``look'' at different parts of the string, but you can not ``change'' those parts
+			%\begin{itemize}
+				%\item Phased differently, you can't reassign the various pieces of a string
+			%\end{itemize}
+			
+			%\begin{pythoncode}
+				%s = "Cats!"
+
+				%s[0] = "R"			# This will error!!
+			%\end{pythoncode}
+		%\item You can of course still reassign \pyi{s} to some new string object
+			%\begin{pythoncode}
+				%s = "R" + s[1:]
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\vspace{5mm}
+	Suppose I included all the necessary code to import arcade, create a window of \pyi{WIDTH} and \pyi{HEIGHT}, run it, etc. Inside the start and finish render portions, I include the below code. What image would be drawn to the window?
+	\footnotesize
+	\begin{pythoncode}
+		i = 0
+		while i < WIDTH:
+			A = i / WIDTH * 360
+			arcade.draw_arc_outline(i, i, 20, 20, arcade.color.BLACK, 
+											A, A+90, 15)
+			i = i + 30
+	\end{pythoncode}
+	\begin{center}
+		\begin{tikzpicture}
+			\foreach \x/\L in {0/A, 3/B, 6/C, 9/D}{
+				\node(i) at (\x,0) {\includegraphics[width=2.75cm]{Images/ArcadeImg\L.png}};
+				\node[below, black, font=\Large\bf] at (i.north) {\L};
+			}
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Moving On}
+	\begin{itemize}
+		\item For the next 2 weeks we'll focus on common algorithms or approaches to solving problems
+		\item Most code (with one exception) will mostly just use the pieces we've already learned
+		\item Algorithms will mostly focus on trying to answer more numeric types of problems
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Guess and Check the Python Way}
+	\begin{itemize}[<+->]
+		\item Suppose we were tasked with solving the (very simple) problem
+			\[(x + 12)^2 = 36\]
+			where we wanted to find any integer solutions of \pyi{x}.
+		\item Instead of doing math, we could ``guess'' values of \pyi{x} and then check to see if we got the correct answer
+		\item This would be a terrible way for \alert{you} to solve the problem, but computers are king of solving tedious problems
+		\item Looking for solutions in this way is called \alert{exhaustive enumeration}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Why guess?}
+	\begin{itemize}
+		\item No doubt, exhaustive enumeration is usually not the most efficient way to find an answer, so why do it?
+			\begin{itemize}
+				\item Algorithm is easy to read and understand
+				\item Tends to be simple to implement
+				\item Can easily give whole sets of solutions that meet conditions
+				\item Modern computers are \textbf{fast}
+					\begin{itemize}
+						\item No sense spending hours coming up with a super efficient algorithm if it only saves you 5 milliseconds on runtime
+					\end{itemize}
+					
+			\end{itemize}
+			
+	\end{itemize}
+	
+\end{frame}
+
+
+\begin{frame}{Exhaustive Tips}
+	\begin{itemize}
+		\item Important pieces to consider before using exhaustive enumeration:
+			\begin{itemize}
+				\item You need to be able to (in theory) list out every single possible value that might be solution
+					\begin{itemize}
+						\item Mathematically \emph{countable}
+						\item Integers are a good example, as you could list them all out (even a huge number of them)
+						\item Real numbers or floats would \emph{not} work, as they are uncountable
+					\end{itemize}
+				\item You need to be able to come up with a loop conditional which assures that your loop will end, even if a solution is not found.
+					
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}{Decrementing Functions}
+	%\vspace{5mm}
+	%\begin{itemize}
+		%\item Just a more formal way of looking at the condition we place on our \pyi{while} loop
+		%\item Requirements:
+			%\begin{itemize}
+				%\item Maps variables to an integer
+				%\item Non-negative when the loop starts
+				%\item Loop terminates when value is $\leq 0$
+				%\item Value is decreased each iteration through the loop
+			%\end{itemize}
+		%\pause
+		%\item In our example, our decrementing function would have been
+			%\[36 - x\]
+		%\item Can be useful for more complex conditions to check the decrementing function (print it to the screen) to ensure that it is indeed decrementing
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Understanding Check}
+	%Suppose I wanted to solve the problem:
+	%\[x^3 = 216\]
+	%where \pyi{x} would start at 0 and increment by one each iteration. What decrementing function would be appropriate?
+	%\begin{poll}
+	%\item \pyi{x ** 3 + 216}
+	%\item \pyi{216 + x ** 3}
+	%\item \pyi{x ** 3 - 216}
+	%\item \pyi{216 - x ** 3}
+	%\end{poll}
+%\end{frame}
+
+\begin{frame}{Understanding Check}
+	Which of the following questions would \emph{not} be a suitable candidate for using some sort of exhaustive enumeration type algorithm?
+	\begin{poll}
+	\item Determining if a 3 digit number is prime
+	\item Checking if a particular substring exists within a larger string
+	\item Given 3 nickels, 2 dimes, and 8 pennies, finding all possible combinations totalling 25 cents
+	\item Finding all values of $a$ and $b$ where $a^2 + b^2 = 250$
+	\end{poll}
+	\exsol{Finding all values of $a$ and $b$ where $a^2 + b^2 = 250$}
+\end{frame}
+
+\begin{frame}{Example 1: 3 digit prime?}
+	\begin{itemize}
+		\item Countable solution set?
+			\begin{itemize}
+				\item For any number ($n$), we would just need to check all the values smaller than that number to see if they divide the larger number equally
+				\item Set of values to check from 2 $\rightarrow$ $n-1$, so countable
+			\end{itemize}
+		\item Terminating condition?
+			\begin{itemize}
+				\item Start at \pyi{x=2}
+				\item Stop when \pyi{x == n} (yes, there are more optimal ways)
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Example 2: Substring exists?}
+	\begin{itemize}
+		\item Countable solution set?
+			\begin{itemize}
+				\item Just need to check each piece of the bigger string.
+				\item It is made up of a countable number of parts, so we just need to check a countable number
+			\end{itemize}
+		\item Terminating Condition?
+			\begin{itemize}
+				\item Assume \pyi{i=0} initially and increments by one
+				\item Taking the big string to be \pyi{b_str} and the substring to be \pyi{l_str}, keep going until
+					\begin{center}
+						\pyi{i + len(l_str) > len(b_str)}
+					\end{center}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Example 3: Money Money}
+	\begin{itemize}
+		\item Countable solution set?
+			\begin{itemize}
+				\item We have a limited amount of coins to check
+				\item Just need to check all possible combinations
+			\end{itemize}
+		\item Terminating Condition(s)?
+			\begin{itemize}
+				\item Probably want one for each loop here
+				\item Assume \pyi{num_nic}, \pyi{num_dime}, \pyi{num_pen} all start at zero and increment by one
+				\item Stop when
+					\begin{center}
+						\pyi{num_nic > max_nic}\\
+						\pyi{num_dime > max_dime}\\
+						\pyi{num_pen > max_pen}
+					\end{center}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+%\begin{frame}[fragile]{Exhaustive Letters}
+	%\begin{itemize}
+		%\item It is easy to check a wide range of numbers: we just add one each time
+		%\item How to check a range of letters?
+			%\begin{itemize}
+				%\item Check a range of numbers and use indexing to associate those numbers with letters
+			%\end{itemize}
+			%\pause
+			%\begin{pythoncode}
+				%letters = 'abcdefghijklmnopqrstuvwxyz'
+				%i = 0
+				%while letters[i] != secret_letter:
+					%i = i + 1
+				%print('The secret letter was: ', letters[i])
+			%\end{pythoncode}
+			
+	%\end{itemize}
+	
+%\end{frame}
+
+
+
+
+
+
+
+
+
+\end{document}
+

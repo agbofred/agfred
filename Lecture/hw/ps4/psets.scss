@@ -1,0 +1,25 @@
+/*-- scss:defaults --*/
+
+/*-- scss:rules --*/
+
+section.level1 {
+    border-left: 5px solid $primary;
+    padding-left: 20px;
+    margin-bottom: 40px;
+}
+
+section.level2 {
+    margin-left: 40px;
+}
+
+h1 {
+    margin-top: 0rem;
+}
+
+.hint p {
+    font-style: italic;
+}
+
+code {
+    font-weight: bold;
+}

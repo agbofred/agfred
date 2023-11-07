@@ -1,0 +1,10 @@
+Temp: 50  Humidity: 40
+Temp: 60  Humidity: 40
+Temp: 70  Humidity: 43
+Temp: 80  Humidity: 45
+Temp: 23  Humidity: 34
+Temp: 50  Humidity: 60
+Temp: 20  Humidity: 34
+Temp: 25  Humidity: 35
+Temp: 123  Humidity: 23
+Temp:   Humidity: 

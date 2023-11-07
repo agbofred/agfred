@@ -1,0 +1,9 @@
+[duration]
+60
+[start_time]
+10:20
+[font_size]
+24
+[notes]
+### 2
+Solution: \pyi {'\{:<12,.2f\} & \{:0<4d\}'.format(1.01234984e5, 32//8)}

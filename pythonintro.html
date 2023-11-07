@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+
+  .top-menu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    overflow: hidden;
+  }
+
+  .top-menu a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+  }
+
+  .top-menu a:hover {
+    background-color: #555;
+  }
+  .content {
+    padding-top: 60px; /* Add padding to account for fixed menu */
+    padding-left: 30px;
+    text-align: justify;
+  }
+  .two-column-container {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .column {
+    flex: 1;
+    padding: 20px;
+    border: 0px solid #ccc;
+    box-sizing: border-box;
+  }
+  .custom-list {
+    list-style:circle; /* Remove default bullets */
+    padding-left: 0; /* Remove default padding */
+    text-align: justify;
+  }
+
+  .custom-list li {
+    margin-bottom: 10px; /* Add spacing between items */
+  }
+  .container {
+    padding-top: 60px; /* Add padding to account for fixed menu */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: 20px;
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -10px; /* Add negative margin to counteract padding */
+  }
+
+  .col {
+    flex: 1;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+
+  .col:nth-child(odd) {
+    background-color: #e0e0e0;
+  }
+
+  .col:nth-child(even) {
+    background-color: #f0f0f0;
+  }
+
+  /* Responsive styles */
+  @media (max-width: 768px) {
+    .col {
+      flex: 100%; /* Full width on smaller screens */
+    }
+  }
+</style>
+<title>Fred's page</title>
+</head>
+<body>
+  <div class="top-menu">
+    <a href="index.html">Home</a>
+    <a href="aboutme.html">About me</a>
+    <!--<a href="#services">Services</a>
+    <a href="#contact">Contact</a> -->
+  </div>
+
+  <div class="container">
+    <h1>Welcome to intro to programming with Python course page</h1>
+    <div class="row">
+      <div class="col">
+        <h2>Week 1</h2>
+        <h3> Karel the Robot</h3>
+        <p>This topic is on Karel the Robot</p>
+        <ul>
+            <li><a href="Lecture/slides/Ch0_1.html" target="_blank">Kickoff with Karel the robot</a></li>
+            <li><a href="Lecture/slides/Ch0_2.html" target="_blank">Controlling Karel</a></li>
+            <li><a href="Lecture/slides/Ch0_3.html" target="_blank">Smarty Karel</a></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h2>Week 2</h2>
+        <h3> Chapter 1: Data types</h3>
+        <p>
+          <ul>
+            <li><a href="Lecture/slides/Ch0_4.html" target="_blank">Stepwise Refinement</a></li>
+            <li><a href="Lecture/slides/Ch1.html" target="_blank">Ch1: Data Type</a></li>
+           <!-- <li><a href="Lecture/slides/Ch0_3.html" target="_blank">Smarty Karel</a></li>
+            -->
+        </ul>
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <h2>Week 3</h2>
+        <h3>Chapter 2: Function and Algorithm</h3>
+        <p>
+          <ul>
+            <li><a href="Lecture/slides/Ch1_2.html" target="_blank">Ch1-2: Functional Control</a></li>
+            <li><a href="Lecture/slides/Ch2.html" target="_blank">Ch2: Testing Ranges</a></li>
+            <li><a href="Lecture/slides/Ch3_1.html" target="_blank">Ch3: Ranging, Algorithm and Debugging</a></li>
+            
+        </p>
+      </div>
+      <div class="col">
+        <h2>Week 4</h2>
+        <h3>Chapter 7: String </h3>
+        <p><!--This is the content of column 4.-->
+          <li><a href="Lecture/slides/Ch6_1.html" target="_blank">Ch7: Binary Representation </a></li> 
+              <ul>
+                <li><a href="Lecture/hw/ps3/PS3.html" target="_blank">PS3</a></li>
+              </ul>
+          <li><a href="Lecture/slides/Ch6_2.html" target="_blank">Ch7: String </a></li> 
+          <li><a href="Lecture/slides/Ch6_3.html" target="_blank">Ch7: String Formatting</a></li> 
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h2>Week 5</h2>
+        <h3>Chapter 7 & 4: String and Graphics</h3>
+        <p><!--This is the content of column 4.-->
+          <li><a href="Lecture/slides/Ch6_5_Format_String_Wordle.html" target="_blank">Ch7: String & English Word  </a></li> 
+          <ul>
+            <li><a href="https://willamette.edu/~jjrembold/class_files/cs151/Projects/Project_Wordle.html" target="_blank">Project: Wordle</a></li>
+          </ul>
+          <li><a href="Lecture/slides/Ch4_1_F23.html" target="_blank">Ch4: Simple Graphics </a></li> 
+          <li><a href="Lecture/slides/Ch4_2_F23.html" target="_blank">Ch4: Graphical Smile</a></li> 
+            
+        </p>
+      </div>
+      <div class="col">
+        <h2>Week 6</h2>
+        <h3>Chapter 5 & 6:  </h3>
+        <p><!--This is the content of column 4.-->
+          <li><a href="Lecture/slides/Ch5_1.html" target="_blank">Ch5: Scoping Function </a></li>
+          <li><a href="Lecture/slides/Ch5_1_2_F23.html" target="_blank">Ch5: Functional Arguments </a></li> 
+            <!--<ul>
+                <li><a href="Lecture/hw/ps3/PS3.html" target="_blank">Mid Term 1 - Practice </a></li>
+              </ul>
+          <li><a href="Lecture/slides/Ch6_2.html" target="_blank">Ch7: String </a></li> 
+          <li><a href="Lecture/slides/Ch6_3.html" target="_blank">Ch7: String Formatting</a></li> 
+            -->
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h2>Week 7</h2>
+        <h3>Chapter 6: Interactive Programs</h3>
+        <p><!--This is the content of column 4.-->
+          <li><a href="Lecture/slides/Ch5_2.html" target="_blank">Ch6: Interactive programs </a></li> 
+            <ul>
+              <li><a href="Lecture/hw/ps4/PS4.html" target="_blank">PS4</a></li>
+              <li><a href="Lecture/hw/graphicscontestmaterials/GraphicsContest.html" target="_blank">Graphics Contest</a></li>
+            </ul>
+          <li><a href="Lecture/slides/Ch5_3.html" target="_blank">Ch6: Graphics Animation </a></li> 
+          <!--<li><a href="Lecture/slides/Ch4_2_F23.html" target="_blank">Ch4: Graphical Smile</a></li> 
+        -->
+        </p>
+      </div>
+      <div class="col">
+        <h2>Week 8</h2>
+        <h3>Chapter 8: List  </h3>
+        <p><!--This is the content of column 4.-->
+          <li><a href="Lecture/slides/Ch5_4.html" target="_blank"> Ch6: Complex Graphics </a></li>
+            <ul>
+                <li><a href="Lecture/projects/Breakout_guide/Project_Breakout.html" target="_blank">Project Breakout</a></li>
+              </ul>
+          <li><a href="Lecture/slides/Ch7_1.html" target="_blank">Ch8: Arrays and Lists </a></li> 
+          <li><a href="Lecture/slides/Ch7_2.html" target="_blank">Ch8: List Comprehension</a></li> 
+          <!--<li><a href="Lecture/slides/Ch6_3.html" target="_blank">Ch7: String Formatting</a></li> 
+            -->
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h2>Week 9</h2>
+        <h3>Chapter 8: List and multidimensional arrays</h3>
+        <p><!--This is the content of column 4.-->
+          <li><a href="Lecture/slides/Ch7_2_2.html" target="_blank">Ch8: List Comprehension and multidimensional arrays</a></li> 
+            <ul>
+              <li><a href="Lecture/hw/ps5/PS5.html" target="_blank">PS5</a></li>
+            </ul>
+          <li><a href="Lecture/slides/Ch7_3_fj.html" target="_blank">Ch8: GImage, Pixals & File </a></li> 
+          <li><a href="Lecture/slides/Ch7_6_Files.html" target="_blank">Ch8: Reading & Writing</a></li> 
+        </p>
+      </div>
+      <div class="col">
+        <h2>Week 10</h2>
+        <h3>Chapter 10: Classes and Objects  </h3>
+        <p><!--This is the content of column 4.-->
+          <li><a href="Lecture/slides/Ch9_0_Imageshop.html" target="_blank"> Ch9: ImageShops </a></li>
+            <ul>
+                <li><a href="https://willamette.edu/~jjrembold/class_files/cs151/Projects/Project_ImageShop.html" target="_blank">Project ImageShop</a></li>
+              </ul>
+          <li><a href="Lecture/slides/Ch9_2.html" target="_blank">Ch10: Classes and Objects </a></li> 
+          <li><a href="Lecture/slides/Ch9_4.html" target="_blank">Ch10: Classes and Constructor</a></li> 
+          <!--<li><a href="Lecture/slides/Ch6_3.html" target="_blank">Ch7: String Formatting</a></li> 
+            -->
+        </p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col">
+        <h2>Week 11</h2>
+        <h3>Chapter 11: Dictionary and Sets</h3>
+        <p><!--This is the content of column 4.-->
+          <li><a href="Lecture/slides/ch9_4_b.html" target="_blank">Ch11: Representing Dictionary</a></li> 
+          <li><a href="Lecture/slides/Ch9_5.html" target="_blank">Ch11: Representing Dictionary V2</a></li> 
+            <ul>
+              <li><a href="#" target="_blank">Midterm 2 Practice</a></li>
+            </ul>
+          <!--<li><a href="Lecture/slides/Ch7_3_fj.html" target="_blank">Ch8: GImage, Pixals & File </a></li> 
+          <li><a href="Lecture/slides/Ch7_6_Files.html" target="_blank">Ch8: Reading & Writing</a></li> 
+          -->
+        </p>
+      </div>
+      <div class="col">
+        <h2>Week 12</h2>
+        <h3>Chapter 11: XX XXX</h3>
+        <p><!--This is the content of column 4.-->
+         <!-- <li><a href="Lecture/slides/Ch9_0_Imageshop.html" target="_blank"> Ch9: ImageShops </a></li>
+            <ul>
+                <li><a href="https://willamette.edu/~jjrembold/class_files/cs151/Projects/Project_ImageShop.html" target="_blank">Project ImageShop</a></li>
+              </ul>
+          <li><a href="Lecture/slides/Ch9_2.html" target="_blank">Ch10: Classes and Objects </a></li> 
+          <li><a href="Lecture/slides/Ch9_4.html" target="_blank">Ch10: Classes and Constructor</a></li> 
+          <li><a href="Lecture/slides/Ch7_2_2.html" target="_blank">Ch8: List Comprehension and multidimensional arrays</a></li> 
+          <li><a href="Lecture/slides/Ch6_3.html" target="_blank">Ch7: String Formatting</a></li> 
+            -->
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

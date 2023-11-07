@@ -1,0 +1,158 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics, multicol}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes, fit}
+
+%Preamble
+\title{Collaborative Coding}
+\author{Jed Rembold}
+\date{April 20, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item If you haven't turned in any hw, try to get it in soon!
+				\item I'm grading midterm projects, then hw, then late hw
+			\end{itemize}
+		\item Group Projects
+			\begin{itemize}
+				\item Emails with group assignments should have gone out. Start thinking through and talking what you want to create as a group!
+				\item I'll be getting shared Github repositories made for each group to collaborate with. Will let you know once I have the details.
+				\item Let me know if you are looking for ideas or want to bounce some ideas off me!
+			\end{itemize}
+		\item No class on Wednesday! Support the seniors by attending their talks virtually!
+		\item Polling: \nolinkurl{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Approach to Large Projects}
+	\vspace{5mm}
+	\begin{enumerate}
+		\item<+-> Have a clear idea of the core of what you want to build:
+			\begin{itemize}
+				\footnotesize
+				\item Eg. A sofware terminal application to detect and record video and still images of shooting stars
+			\end{itemize}
+		\item<+-> Have clear goals for what you think success in the project would look like:
+			\begin{itemize}
+				\footnotesize
+				\item System should reliably detect shooting stars
+				\item System should periodically save current images of the night sky
+				\item System should save video clips of shooting star events
+				\item System processing should be able to run at real time framerates
+				\item Starting, stopping, and changing settings should be accessible through a terminal interface
+			\end{itemize}
+	\end{enumerate}
+	\begin{alertblock}{Important}<+->
+		\begin{itemize}
+			\item The more specific you can be, the easier life will be later.
+			\item Everyone should know and be in agreement about these goals.
+			\item Optional goals beyond the core features are totally ok.
+		\end{itemize}
+	\end{alertblock}
+\end{frame}
+
+\begin{frame}{Break It Up!}
+	\begin{itemize}
+		\item Divide goals into self-contained chunks of code
+		\item Map out graphically how those chunks of code are related
+			\begin{itemize}
+				\item What depends on what? Or what will use objects defined in other code blocks?
+				\item Be as specific as you can!
+				\item Can help to make sure there is at least one chunk per group member, though more is fine
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Example Breakdown}
+	\begin{center}
+		\begin{tikzpicture}[
+			block/.style={draw, very thick, rounded corners, minimum size=2cm, text width=3cm, align=center},
+			v path/.style ={to path={|- (\tikztotarget)}}
+			]
+			\node[block, Red](detect) at (0,0) {Detection Algorithm and Functions};
+			\node[block, Orange](vidsave) at (4,0) {Saving Video Clips};
+			\node[block, Blue](imgsave) at (8,0) {Saving Sky Images};
+			\node[block, Teal](control) at (4,-3) {Control and Main Script};
+			\node[block, Red](gui) at (8,-3) {Terminal GUI};
+
+			\path[ultra thick, -stealth, v path, draw, SynPurple]
+				(detect.south) |- ([yshift=5mm]control.north) -- (control.north)
+				(vidsave.south) -- (control.north)
+				(imgsave) |- ([yshift=5mm]control.north) -- (control.north);
+			\path[ultra thick, -stealth, v path, draw, SynPurple]
+				(control.east) -- (gui.west);
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Code Block Details}
+	\begin{itemize}
+		\item For each code chunk:
+			\begin{itemize}
+				\item List out what inputs you think you'll need
+				\item Look at the calling code block and your goals to see what you should be returning
+				\item Decide if the needed functionality can best be served by a set of functions or a class
+					\begin{itemize}
+						\item If a class, what getters and setters do you need? What methods?
+						\item If a function(s), do you really want just a collection of functions? Or would a class be a better fit?
+						\item Either way, \emph{include docstrings and documentation!}
+					\end{itemize}
+					
+				\item Each code chunk should be functional given the proper inputs without the other pieces!
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Testing}
+	\begin{itemize}
+		\item Since code chunks should function independently, you should be able (and should!) test your chunk.
+		\item Should test to make sure:
+			\begin{itemize}
+				\item Any desired goals are being met
+				\item You are returning the correct or necessary things
+			\end{itemize}
+		\item Can write a few testing functions to help yourself if desired.
+		\item Above all, just make sure you \textcolor{Red}{TEST IT!} Mistakes that come from your code are \emph{your} fault!
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{N'Sync}
+	\begin{itemize}
+		\item Need a method to reliably share your parts of the code with everyone
+			\begin{itemize}
+				\item Shared Github repositories are a good solution.
+				\item Should check for updates from others each time before working on your portion
+				\item Version control can save you if you manage to totally break something you once had working
+			\end{itemize}
+		\item Problems can be mitigated if everyone is working on a different file
+		\item Use imports to bring everything together
+		\item \textcolor{Red}{Don't wait until the last minute to upload your portion!}
+			\begin{itemize}
+				\item Errors or misunderstandings will crop up
+				\item Give your group-mates time to react or adjust their parts to your code (or for you to adjust your parts to theirs)
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+
+
+
+
+
+\end{document}
+

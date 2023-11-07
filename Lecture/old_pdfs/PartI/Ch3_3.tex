@@ -1,0 +1,297 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+
+\usetheme{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{Only in horseshoes and hand-grenades (and coding)}
+\author{Jed Rembold}
+\date{February 12, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework 
+			\begin{itemize}
+				\item You should be able to do everything on homework 3 after today!
+				\item All submitted HW2 scores should be in your repository. Look them over before submitting the next assignment!
+			\end{itemize}
+		\item CS Tea tomorrow at 11:35 in Ford 202
+			\begin{itemize}
+				\item WU Alum David Chidester speaking about Data Engineering
+			\end{itemize}
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Review Question}
+	In which of the following situations would using a \pyi{for} loop (without a \pyi{break} statement) \alert{not} be recommended?
+	\begin{poll}
+	\item Finding all integers between 1 and 100 which are evenly divisible by 7.
+	\item Calculating the position of a dropped ball over the first 60 seconds of its flight in 2 second intervals.
+	\item Finding the fifth prime number greater than 50.
+	\item Counting the number of capital letters in an arbitrary string.
+	\end{poll}
+	\exsol{Finding the fifth prime number greater than 50.}
+\end{frame}
+
+\begin{frame}[fragile]{Pythagorean Integers: For Loop Version}
+	\vspace{5mm}
+	\begin{itemize}
+		\item Let's revisit our problem of finding all positive \emph{integers} $a$ and $b$ such that
+			\[a^2 + b^2 = 250\]
+	\end{itemize}
+	\vspace{-5mm}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\begin{block}{While Loops}
+			\scriptsize
+			\begin{pythoncode}[basicstyle=\color{FG}\ttfamily]
+				a = 0
+				while 250 - a > 0:
+					b = 0
+					while 250 - b > 0:
+						if a**2 + b**2 == 250:
+							print('-----')
+							print('A=',a)
+							print('B=',b)
+						b = b + 1
+					a = a + 1
+			\end{pythoncode}
+		\end{block}
+		\column{0.5\textwidth}
+		\begin{block}{For Loops}
+			\scriptsize
+			\begin{pythoncode}[basicstyle=\color{FG}\ttfamily]
+				for a in range(250):
+					for b in range(250):
+						if a**2 + b**2 == 250:
+							print('-----')
+							print('A=',a)
+							print('B=',b)
+			\end{pythoncode}
+		\end{block}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{Making the Choice}
+	\begin{columns}
+		\column{0.5\textwidth}
+			\textcolor{Teal}{While Loops:}
+				\begin{itemize}
+					\item Very general and flexible
+					\item Can check and terminate on any condition you can imagine
+					\item You are responsible for initializing and updating needed variables
+					\item Need to be careful of infinite loops
+					\item Can mimic behavior of any for loop
+				\end{itemize}
+		\column{0.5\textwidth}
+			\textcolor{Teal}{For Loops:}
+			\begin{itemize}
+				\item Only iterate over sequences
+				\item Variable initialization and updating is handled by the sequence
+				\item Impossible to get an infinite loop
+				\item Simpler syntax in general
+				\item Can not mimic every while loop
+			\end{itemize}
+	\end{columns}
+\end{frame}
+
+\begin{frame}{More Involved Example}
+	Let \pyi{s} be a string that contains a sequence of decimal numbers separated by commas. For example, \pyi{s = 1.23,4.67,8.37}. Write a program that prints the sum of the numbers in \pyi{s}.
+\end{frame}
+
+\begin{frame}{When Close Counts}
+	\begin{itemize}[<+->]
+		\item Computers work with literals and operations, not symbolic mathematics
+			\begin{itemize}
+				\item Solutions of numeric problem must return actual numbers, either integer or float
+				\item Many values can not be represented exactly with a limited number of digits 
+			\end{itemize}
+		\item Need to decide beforehand how exact of a solution to your problem that you need
+			\begin{itemize}
+				\item How close is ``close enough''?
+			\end{itemize}
+			
+		\item Just because approximate, does not mean it is inferior to the ``exact'' solution!!
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Determining ``Close Enough''}
+	\begin{itemize}[<+->]
+		\item Often dependent on the problem
+			\begin{itemize}
+				\item ``How old are you?''
+				\item ``How long is the blink of an eye?''
+			\end{itemize}
+		\item For now, let's mimic the mathematicians and consider ``close enough'' to be within some value, $\varepsilon$ = \pyi{epsilon}, of the true value
+			\begin{itemize}
+				\item ``How old are you?''
+					\begin{itemize}
+						\item $\varepsilon \approx 1$ year
+					\end{itemize}
+				\item Eyeblink
+					\begin{itemize}
+						\item $\varepsilon \approx 1$ microsecond?
+					\end{itemize}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Cubic Example}
+	\begin{example}
+		Suppose we wanted to find the cube root of 27, and didn't know how to invert powers. We require that our answer, when cubed, is within 0.1 of the value 27.
+	\end{example}
+	\pause
+	\begin{itemize}
+		\item<2-> Might seem like a good \pyi{for} loop problem, since we can write down the sequence from 0 to 27 with some step size
+			\begin{itemize}
+				\item \textcolor{Red}{Careful!} The \pyi{step} parameter of range must be an integer!
+				\item Means it will probably be easier to just use a \pyi{while} loop
+			\end{itemize}
+		\item<3-> Introducing some new syntax:
+			\begin{itemize}
+				\item \pyi{x = x + 1} is the same as \pyi{x += 1}
+				\item \pyi{y = y - 2} is the same as \pyi{y -= 2}
+				\item \pyi{z = z * n} is the same as \pyi{z *= n}
+				\item And similarly for division, integer division, etc
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Example: Ball Drop}
+	\begin{example}
+		\footnotesize
+		The equation that governs the motion of a ball moving purely vertically is:
+		\[y = y_i + v_0 t - \frac{1}{2}gt^2\]
+		where
+		\begin{align*}
+			y_i &= \text{ the initial height}\\
+			v_0 &= \text{ the initial velocity}\\
+			g &= \text{ the acceleration due to gravity (9.8 on Earth)}\\
+			t &= \text{ the elapsed time}
+		\end{align*}
+
+		When does a ball which is tossed upwards at \SI{1}{\meter\per\second} from a height of \SI{2}{\meter} strike the ground ($y=0$)?
+		
+	\end{example}
+\end{frame}
+
+
+\begin{frame}{Playing with Approximations}
+	\begin{itemize}
+		\item There are always tradeoffs in choosing \pyi{epsilon}
+			\begin{itemize}
+				\item The smaller, the more accurate the answer
+				\item But it will often take \emph{FAR} more time to find that answer
+			\end{itemize}
+		\item Usually good for the problem, as it forces you to debate ``What is the biggest error I'd find acceptable?''
+		\item But sometimes it is just time to shift to a different, smarter algorithm
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Bisection Searches}
+	\begin{itemize}
+		\item<+-> Finding a word in a dictionary
+			\begin{itemize}
+				\item Open in initial guess
+				\item Check what letters are you are
+				\item Make a new guess going in the correct direction
+				\item Open to the new guess, and repeat
+			\end{itemize}
+			
+		\item<+-> Guessing game with higher/lower
+			\begin{itemize}
+				\item Guessing a number in the middle
+				\item Depending on higher or lower, take that new range and guess a number in the middle of that
+			\end{itemize}
+		\item<+-> Bisection searches take advantage of the fact that numbers are \alert{totally ordered}!
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Visualizing the Guessing Game}
+	\begin{center}
+		\begin{tikzpicture}
+			\fill[BG] (0,1.5) rectangle (10,-3.5);
+			\coordinate(term) at (0,-3);
+			\node(0) at (0,0) {0};
+			\node(100) at (10,0) {100};
+
+			\node<2-> (50) at (5,0) {50};
+			\draw<2-3>[latex-, ultra thick, Orange] (50) -- +(0,1);
+			\node<3>[font=\tt, anchor=west] at (term) {Your number is too low!};
+
+			\draw<4,5>[ultra thick,Green] (50) |- ($(100)-(0,1)$) -- (100);
+
+			\node<5->(75) at (7.5,0) {75};
+			\draw<5,6>[latex-, ultra thick, Orange] (75) -- +(0,1);
+			\node<6>[font=\tt, anchor=west] at (term)
+				{Your number is too high!};
+			\draw<7,8>[ultra thick,Green] (50) |- ($(75)-(0,1)$) -- (75);
+
+			\node<8->(62) at (6.2,0) {62};
+			\draw<8,9>[latex-, ultra thick, Orange] (62) -- +(0,1);
+			\node<9>[font=\tt, anchor=west] at (term)
+				{Your number is too low!};
+			\draw<10,11>[ultra thick,Green] (62) |- ($(75)-(0,1)$) -- (75);
+
+			\draw<11>[latex-, ultra thick, Orange] (6.8,0) -- +(0,1);
+		\end{tikzpicture}
+	\end{center}
+\end{frame}
+
+\begin{frame}{Bisection Requirements}
+	\begin{itemize}
+		\item You need to have known edge points to begin!
+			\begin{itemize}
+				\item What is initially the low end of your range?
+				\item What is initially the high end of your range?
+			\end{itemize}
+		\item You must update your low and high ends according to how your guess compares to the actual value
+			\begin{itemize}
+				\item If guess is too low, then that guess becomes the new low end of the range
+				\item If guess is too high, then guess becomes the new high end of the range
+			\end{itemize}
+		\item Take your new guess to be the average of the low and high points
+			\begin{itemize}
+				\item Gets you a point exactly in the middle
+				\item Lets you best leverage the information provided by the number ordering
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Bisection Examples}
+	\begin{example}
+		Let's implement a bisection search in our program to find the cube root of 27. How does the number of iterations required to find an answer compare?
+	\end{example}
+
+	\pause
+	\begin{example}
+		Let's write a program to try to guess an unknown number between 1 and 100. Essentially, let's write a program to play the game you wrote on HW2.
+	\end{example}
+\end{frame}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
+

@@ -1,0 +1,197 @@
+\documentclass[pdf, aspectratio=169, 12pt]{beamer}
+\usepackage[]{hyperref, graphicx, siunitx, lmodern, tikz, booktabs, physics}
+\usepackage[mode=buildnew]{standalone}
+\usepackage{pdfpc-commands}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
+\usetheme[sols]{Python}
+
+\graphicspath{ {Images/} }
+
+\sisetup{per-mode=symbol}
+\usetikzlibrary{calc, patterns, decorations.markings, decorations.pathmorphing, shapes}
+
+%Preamble
+\title{The 3 R's and a touch of imports}
+\author{Jed Rembold}
+\date{February 28, 2020}
+
+\begin{document}
+
+\begin{frame}{Announcements}
+	\begin{itemize}
+		\item Homework
+			\begin{itemize}
+				\item Homework 5 due tomorrow night
+				\item I'm still working through the HW4 scoring
+					\begin{itemize}
+						\item Make sure you are filling out the commented metadata at the top of files please
+					\end{itemize}
+			\end{itemize}
+		\item I do still plan on getting the grade reports out over the weekend. Sorry, its been a bit of a crazy week\ldots
+		\item Polling: \url{rembold-class.ddns.net}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Review Question}
+	\begin{columns}
+		\column{0.5\textwidth}
+		Given the function and function call below, what would be printed?
+		\column{0.5\textwidth}
+		\begin{poll}
+		\item \pyi{"My Name Is ABE"}
+		\item \pyi{"MyNameIsABE"}
+		\item \pyi{"My Name Is Abe"}
+		\item \pyi{"mYnamEiSabE"}
+		\end{poll}
+	\end{columns}
+	\exsol{\pyi{"MyNameIsABE"}}
+	\vspace{-2mm}
+	\begin{pythoncode}
+		def rec(s):
+			if len(s) <= 1:
+				return s.upper()
+			elif s[-2] == ' ':
+				return rec(s[:-2]) + s[-1].upper()
+			else:
+				return rec(s[:-1]) + s[-1]
+
+		print(rec("My name is ABE"))
+	\end{pythoncode}
+\end{frame}
+
+\begin{frame}{Graphical Recursion}
+	\begin{example}
+		It was mentioned that recursion can show up in graphical applications as well. Let's try to reproduce the Sierpinski triangle in arcade!
+	\end{example}
+\end{frame}
+
+\begin{frame}{Writing Example}
+	\begin{example}
+		Suppose I wanted to try my hand at some ASCII art and fill a text file with an oscillating vertical sine wave comprised of \pyi{o}'s. How could I generate and write it to file? How could I break the problem up into smaller bits? How could I make my solution more general and flexible?
+	\end{example}
+\end{frame}
+
+\begin{frame}{Reading Example}
+	\begin{example}
+		I want to make a name generator which combines the first and last portions of the first names of random students in this class. I have all the first names in a text file called \texttt{Class.txt}. How could I do it? How can I break the problem up into smaller, more manageable chunks?
+	\end{example}
+\end{frame}
+
+\begin{frame}{Appending (Writing More) Example}
+	\begin{example}
+		Often, you want to add some text to the end of an existing document. A case I had come up this summer was recording the temperature and humidity from a sensor. We don't have the sensor here, but let's construct how that would work with user input for the temperature and humidity.
+	\end{example}
+\end{frame}
+
+%\begin{frame}{Going Global}
+	%\begin{itemize}
+		%\item<+-> Thus far, functions are localized
+			%\begin{itemize}
+				%\item Some inputs in the form of arguments
+				%\item Some output in the from of what is returned
+				%\item This is one of the major benefits of functions!
+			%\end{itemize}
+		%\item<+-> Sometimes though, we need some more flexibility
+			%\begin{itemize}
+				%\item Take our Fibonacci function. We would currently have no way to keep track of the number of times the function recursed
+			%\end{itemize}
+		%\item<+-> In these situations, one can use what are called \alert{global variables}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{Global Details}
+	%\vspace{5mm}
+	%\begin{itemize}
+		%\item A global variable is defined at the outermost scope of the program
+			%\begin{itemize}
+				%\item This can make it accessible to all functions in the program
+			%\end{itemize}
+		%\item To change a global variable, a function must declare explicitly within its code block that it wants to treat that variable name as a global variable
+		%\item Syntax is: 
+			%\begin{pythoncode}
+				%def func(x):
+					%global y
+					%y += x
+
+				%y = 2
+				%func(5)
+				%print(y)
+			%\end{pythoncode}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}[fragile]{HW4 Example}
+	%\vspace{5mm}
+	%\begin{example}
+	%On HW4 there was a scoping issue with the below code. How could we fix it with a global variable?
+	%\begin{pythoncode}[backgroundcolor=, numbers=left]
+		%def odd_sum(maxnum=10):
+			%def add_odd(x,total):
+				%if x % 2 == 1:
+					%total += x
+
+			%total = 0
+			%for n in range(maxnum+1):
+				%add_odd(n,total)
+			%return total
+	%\end{pythoncode}
+	%\end{example}
+%\end{frame}
+
+%\begin{frame}{With Great Power\ldots}
+	%\begin{itemize}
+		%\item The whole point of functions is to improve readability by keeping everything in a function local
+		%\item Global variables destroy that localization
+		%\item \textcolor{Red}{Wanton use of globals can wreck havoc on the clarity and readability of your code!}
+			%\begin{itemize}
+				%\item Use with caution and only where they are really needed
+				%\item Can you achieve something without them? Then it is almost always better to do without
+			%\end{itemize}
+			
+	%\end{itemize}
+	
+%\end{frame}
+
+%\begin{frame}{\textcolor{Blue}{Import}ant Ideas}
+	%\begin{itemize}
+		%\item At some point, programs will reach a complexity where it would be nice to separate them over multiple files
+			%\begin{itemize}
+				%\item This helps with teamwork as well, since different people can easily work on different files then
+			%\end{itemize}
+		%\item Need some way to bring all those files together in a master program when the program is run
+		%\item Python does this through the use of \pyi{import}
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Modules}
+	%\begin{itemize}
+		%\item A \alert{module} is a \texttt{.py} file which is imported into another program
+		%\item Can consist of both executable statements as well as function definitions
+			%\begin{itemize}
+				%\item Usually mostly function definitions
+				%\item Statements usually just for initialization
+			%\end{itemize}
+		%\item Can think of as a library, from which you can checkout a particular function that you want to use
+		%\item \pyi{import}ing the module gives you access to all or some subset of those functions
+	%\end{itemize}
+%\end{frame}
+
+%\begin{frame}{Usage example}
+	%\begin{example}
+		%Importing and using the module \texttt{circles.py}
+	%\end{example}
+%\end{frame}
+
+%\begin{frame}{Namespaces}
+	%\begin{itemize}
+		%\item If just imported, functions and constants exist only in that modules namespace
+			%\begin{itemize}
+				%\item Need to refer to them with module name first, ie. \pyi{circles.area()}
+			%\end{itemize}
+		%\item This prevents conflicts with any other functions you might have also called \pyi{area()}!
+	%\end{itemize}
+%\end{frame}
+\end{document}
+
