@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Jed Rembold &amp; Fred Agbo">
+  <meta name="dcterms.date" content="2023-11-05">
+  <title>Representing Dictionaries</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reset.css">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../html_srcs/reveal.js/dist/theme/python_monokai.css" id="theme">
+  <link rel="stylesheet" href="../html_srcs/reveal.js/plugin/highlight/monokai.css">
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide">
+  <h1 class="title">Representing Dictionaries</h1>
+  <p class="author">Jed Rembold &amp; Fred Agbo</p>
+  <p class="date">November 5, 2023</p>
+</section>
+
+<section id="announcements" class="slide level2">
+<h2>Announcements</h2>
+<ul>
+<li>Grading of problem sets 5 is not ready yet! Apologies!.</li>
+<li>Project 3 is due <em>tomorrow</em> at 12:00 PM.</li>
+<li>Midterm 2 is <strong>this week Friday at 9:10-10:10 am</strong>
+<ul>
+<li>I’m going to post practice exams and learning objectives for you
+today</li>
+<li>Focused on Chapters 4-6, and 8 (graphics, functions, and lists)</li>
+<li>No problem set this week: just studying for exam</li>
+</ul></li>
+<li>Wednesday class will welcome a guest faculty - Prof. Calvin
+<ul>
+<li>Talk on CS/DS Fall Advising Preview!</li>
+<li>Calvin will be briefly discussing what classes are being
+offered</li>
+<li>then how to help folks out with advising, major declarations,
+etc.</li>
+</ul></li>
+<li>Polling: <a
+href="https://www.polleverywhere.com/agbofred203">https://www.polleverywhere.com/agbofred203</a></li>
+</ul>
+</section>
+<section id="review-question" class="slide level2"
+data-notes="Solution: Loly, black, 4 becuase color in constructor was not referenced but defualted">
+<h2
+data-notes="Solution: Loly, black, 4 becuase color in constructor was not referenced but defualted">Review
+Question</h2>
+<div class="cols">
+<div class="col">
+<p>What would be the output of the printed statement in the code to the
+right?</p>
+<div class="poll">
+<ol>
+<li>Loly black 2</li>
+<li>Loly brown 4</li>
+<li>Loly, black, 4</li>
+<li>Loly, brown, 4</li>
+</ol>
+</div>
+</div>
+<div class="col">
+<pre ><code class="python" style="min-height:940px; width: 1200px">class Pet:
+    def __init__(self, name, color, age):
+        self.name = name
+        self.color="black"
+        self.age = age
+
+    def bmi(self, weight, height):
+        if weight/height > 2:
+            self.age = self.age*2
+        else:
+            self.age += 1
+dog = Pet("Loly", "brown", 2)
+dog.bmi(180,45)
+print(f'{dog.name}, {dog.color}, {dog.age}')
+</code></pre>
+</div>
+</div>
+</section>
+<section id="whats-your-method" class="slide level2">
+<h2>What’s your Method?</h2>
+<ul>
+<li><p>Most classes define additional functions called methods to allow
+clients to read or update attributes or manipulate the object</p></li>
+<li><p>Methods look like a normal function definition but will
+<strong>always</strong> declare the parameter
+<code class="python">self</code> at the beginning of the parameter
+list</p>
+<ul>
+<li>This is true even if the method has no other parameters</li>
+</ul></li>
+<li><p>Methods are defined in the body of the class and would thus look
+something like:</p>
+<pre ><code class="python">def method_name (self, other_parameters):
+  ...body of the method...</code></pre></li>
+<li><p>For example</p>
+<pre ><code class="python">def give_raise(self, amount):
+  self.salary += amount</code></pre></li>
+</ul>
+</section>
+<section id="accessing-and-using-methods" class="slide level2">
+<h2>Accessing and Using Methods</h2>
+<ul>
+<li>After definition, there are two mains ways you can access and use
+the method:
+<ul>
+<li><strong>Dot Notation (Conventional)</strong>
+<ul>
+<li><p>Python sets <code class="python">self</code> to be a reference to
+the <em>receiver</em>, which is the object to which the method is
+applied</p>
+<pre ><code class="python">clerk = Employee('Bob', 'clerk', 15)
+clerk.give_raise(15)</code></pre></li>
+</ul></li>
+<li><strong>Function Notation</strong>
+<ul>
+<li><p>You retrieve the method from the class itself, and then provide
+self manually</p>
+<pre ><code class="python">clerk = Employee('Bob', 'clerk', 15)
+Employee.give_raise(clerk, 15)</code></pre></li>
+</ul></li>
+</ul></li>
+</ul>
+</section>
+<section id="visualization-summary" class="slide level2">
+<h2>Visualization Summary</h2>
+<ul>
+<li>To summarize in a visual manner, we can look at everything together
+on <a
+href="http://pythontutor.com/live.html#code=class%20Employee%3A%0A%20%20%20%20def%20__init__%28self,%20name,%20title,%20salary%29%3A%0A%20%20%20%20%20%20%20%20self.name%20%3D%20name%0A%20%20%20%20%20%20%20%20self.title%20%3D%20title%0A%20%20%20%20%20%20%20%20self.salary%20%3D%20salary%0A%20%20%20%20%20%20%20%20%0A%20%20%20%20def%20give_raise%28self,%20amount%29%3A%0A%20%20%20%20%20%20%20%20current%20%3D%20self.salary%0A%20%20%20%20%20%20%20%20self.salary%20%2B%3D%20amount%0A%20%20%20%20%20%20%20%20%0A%0Aclerk%20%3D%20Employee%28%22Bob%20Cratchit%22,%20%22clerk%22,%2015%29%0Aboss%20%3D%20Employee%28%22Scrooge%22,%20%22founder%22,%201000%29%0A%0Aclerk.give_raise%2820%29&amp;cumulative=false&amp;curInstr=1&amp;heapPrimitives=nevernest&amp;mode=display&amp;origin=opt-live.js&amp;py=3&amp;rawInputLstJSON=%5B%5D&amp;textReferences=false">PythonTutor</a></li>
+</ul>
+<p><img data-src="../images/ConstructorPythonTutor.png"
+style="width:50.0%" /></p>
+</section>
+<section id="getters-and-setters" class="slide level2">
+<h2>Getters and Setters</h2>
+<ul>
+<li><p>In the object-oriented model, the client is not supposed to
+muck-about with the object internals</p></li>
+<li><p>The implementation should therefore provide methods to retrieve
+desired attributes (called <em>getters</em>) or to make changes to
+desired attributes (called <em>setters</em>)</p></li>
+<li><p>Setting up getters and setters for the attribute
+<code class="python">salary</code> might look like:</p>
+<pre ><code class="python">def get_salary(self):
+  return self.salary
+
+def set_salary(self, new_salary):
+  self.salary = new_salary</code></pre></li>
+<li><p>Getters are far more common than setters, as you don’t always
+want the client to have the freedom to change attributes on a
+whim</p></li>
+</ul>
+</section>
+<section id="internal-representation" class="slide level2">
+<h2>Internal Representation</h2>
+<ul>
+<li>The idea behind object oriented programming is that we interact with
+the class though methods, and the class takes care of the internal
+representation</li>
+<li>Python works well with this, but it doesn’t really enforce it
+<ul>
+<li>We can freely access, change, or even add new attributes to the
+class</li>
+<li>But <strong>we really should not</strong>
+<ul>
+<li>Maybe the class will get updated in a way that changes all the
+internal variable names. Now all our code refering to them is
+broken!</li>
+</ul></li>
+<li>Use (and define) getters and setters for your classes!</li>
+</ul></li>
+<li>Convention is that we preface a class attribute with an underscore
+if we really want to make clear that the client should
+<strong>not</strong> mess with that attribute
+<ul>
+<li>This is just convention. Python will still allow it to be altered,
+but it is a really bad practice to get in the habit of doing</li>
+</ul></li>
+</ul>
+</section>
+<section id="understanding-check" class="slide level2">
+<h2>Understanding Check</h2>
+<div class="cols">
+<div class="col">
+<p>The code block to the right starts defining a class. Only 1 of the
+below options for defining an <code class="python">increment</code>
+method will work. Which one?</p>
+</div>
+<div class="col">
+<pre ><code class="python">class BestCounter:
+  def __init__(self, start):
+    self.counter = start</code></pre>
+</div>
+</div>
+<div class="cols">
+<div class="col">
+<div class="block" name="A">
+<pre ><code class="python">def increment(self, value):
+    counter += value</code></pre>
+</div>
+<div class="block" name="C">
+<pre ><code class="python">def increment(value):
+    counter += self.value</code></pre>
+</div>
+</div>
+<div class="col">
+<div class="block" name="B">
+<pre ><code class="python">def increment(self, value):
+    self.counter += self.value</code></pre>
+</div>
+<div class="block" name="D">
+<pre ><code class="python">def increment(self, value):
+    self.counter += value</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="representation" class="slide level2">
+<h2>Representation</h2>
+<ul>
+<li><p>Printing out an object that you just created as an instance of a
+custom class will look ugly:</p>
+<pre ><code class="python-repl">>>> C = Employee('Bob', 'clerk', 15)
+>>> print(C)
+<__main__.Employee object at 0x7f942ba13550></code></pre></li>
+<li><p>You can define special methods for a class that specify how your
+object should be converted to a string (or anything else really)</p>
+<ul>
+<li>All these special methods have double underscores before and after,
+and hence are frequently termed “dunder” (double underscore)
+methods</li>
+<li>Define the <code class="python">__str__</code> or
+<code class="python">__repr__</code> method to specify how your object
+should be printed</li>
+</ul></li>
+</ul>
+</section>
+<section id="a-good-employee" class="slide level2">
+<h2>A Good Employee</h2>
+<pre ><code class="python" style="max-height:900px">class Employee:
+    def __init__(self, name, title, salary):
+        self.name = name
+        self.title = title
+        self.salary = salary
+
+    def __str__(self):
+        return f"{self.name} ({self.title}): {self.salary}"
+
+    def get_salary(self):
+        return self.salary
+
+    def set_salary(self, new_salary):
+        self.salary = new_salary</code></pre>
+<!--
+## Return of the Firework
+```{.python style="max-height:900px; font-size:0.8em;"}
+from pgl import GWindow, GOval, GRect
+import random
+
+GW_WIDTH = 500
+GW_HEIGHT = 500
+
+def random_color():
+    color = "#"
+    for _ in range(6):
+        color += random.choice("0123456789ABCDEF")
+    return color
+
+class Firework:
+    """ Creates a new firework with initial flight and then 
+    explosion. 
+    """
+    def __init__(self, size):
+        self.obj = GOval(GW_WIDTH/2, GW_HEIGHT, size, size)
+        self.obj.set_filled(True)
+        self.obj.set_color("white")
+        self.speed = 5
+        self.heading = random.randint(60,120)
+        self.fuse = random.randint(50,100)
+        self.maxsize = random.randint(60,100)
+        self.color = random_color()
+        self.mode = 0
+
+    def get_object(self):
+        """ Returns the firework graphical object. """
+        return self.obj
+
+    def should_terminate(self):
+        """ Checks if the firework should be removed. """
+        return self.mode > 1
+
+    def move(self):
+        """ Moves the firework in its initial flight. """
+        self.obj.move_polar(self.speed, self.heading)
+        self.fuse -= 1
+        if self.fuse < 0:
+            self.mode += 1
+            self.obj.set_color(self.color)
+
+    def explode(self):
+        """ Grows the firework explosion upon detonation. """
+        R = 2
+        x = self.obj.get_x()
+        y = self.obj.get_y()
+        S = self.obj.get_width()
+        self.obj.set_bounds(x-R/2, y-R/2, S+R, S+R)
+        if self.obj.get_width() >= self.maxsize:
+            self.mode += 1
+
+    def update(self):
+        """ Controls what the firework should be doing during 
+        each stage. 
+        """
+        if self.mode == 0:
+            self.move()
+        elif self.mode == 1:
+            self.explode()
+       
+
+def fireworks_show():
+    """ Makes a fireworks show! """
+    def step():
+        """ Calls up update method on all fireworks in the box 
+        and removes if necessary.
+        """
+        for f in firework_box[:]:
+            f.update()
+            if f.should_terminate():
+                gw.remove(f.get_object())
+                firework_box.remove(f)
+
+
+    def give_me_more_fireworks():
+        """ Adds more fireworks to the box. """
+        new = Firework(2)
+        firework_box.append(new)
+        gw.add(new.get_object())
+
+    gw = GWindow(GW_WIDTH, GW_HEIGHT)
+    sky = GRect(GW_WIDTH, GW_HEIGHT)
+    sky.set_filled(True)
+    gw.add(sky)
+    firework_box = []
+
+    gw.set_interval(step, 20)
+    gw.set_interval(give_me_more_fireworks, 100)
+
+if __name__ == '__main__':
+    fireworks_show()
+```
+-->
+</section>
+<section id="maps-and-dictionaries" class="slide level2">
+<h2>Maps and Dictionaries</h2>
+<ul>
+<li>A common form of information associates pairs of data values
+<ul>
+<li>Commonly called a <em>map</em> in computer science</li>
+<li>Python calls such a structure a <em>dictionary</em></li>
+</ul></li>
+<li>A dictionary associates two different values:
+<ul>
+<li>A simple value called the <em>key</em>, which is often a string but
+doesn’t need to be</li>
+<li>A larger and more complex object called the <em>value</em></li>
+</ul></li>
+<li>This idea of associating pairs of values is exhibited all over in
+the real world
+<ul>
+<li>Actual dictionaries! The words are the keys, the definitions the
+values.</li>
+<li>Web addresses! Keys are the urls, the values are the webpage
+contents.</li>
+</ul></li>
+</ul>
+</section>
+<section id="creating-dictionaries" class="slide level2">
+<h2>Creating Dictionaries</h2>
+<ul>
+<li><p>Python dictionaries use squiggly brackets
+<code class="python">{}</code> to enclose their contents</p></li>
+<li><p>Can create an empty dictionary by providing no key-value
+pairs:</p>
+<pre ><code class="python">empty_dict = {}</code></pre></li>
+<li><p>If creating a dictionary with key-value pairs</p>
+<ul>
+<li>Keys are separated from values with a colon
+<code class="python">:</code></li>
+<li>Pairs are separated by a comma <code class="python">,</code></li>
+</ul>
+<pre ><code class="python">generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}</code></pre></li>
+</ul>
+</section>
+<section id="keys-and-values" class="slide level2">
+<h2>Keys and Values</h2>
+<ul>
+<li>The value of a key-value pair can be <strong>any</strong> Python
+object, mutable or immutable
+<ul>
+<li>This include other dictionaries!</li>
+</ul></li>
+<li>The key is more restricted:
+<ul>
+<li>Must be immutable
+<ul>
+<li>So dictionaries or lists can <strong>not</strong> work as a key</li>
+<li>Tuples can though!</li>
+</ul></li>
+<li>Must be unique per dictionary</li>
+</ul></li>
+</ul>
+<div class="cols">
+<div class="col">
+<div class="block" name="Viable">
+<pre ><code class="python">A = {True: 'Seth', False: 'Jesse'}
+B = {'Jill': 13, 'Jack': 12}
+C = {(1,2): {'x':1}}</code></pre>
+</div>
+</div>
+<div class="col">
+<div class="block" name="Illegal" style="border-color:var(--red)">
+<pre ><code class="python">X = {{'x': 1, 'y': 2}: 'Shark'}
+Y = {[1,3,5]: 'Odd'}
+Z = {'A': 13, 'B': 24, 'A': 15}</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="selection" class="slide level2">
+<h2>Selection</h2>
+<ul>
+<li><p>The fundamental operation on dictionaries is selection, which is
+still indicated with square brackets:
+<code class="python">[]</code></p></li>
+<li><p>Dictionaries though are <strong>unordered</strong>, so it is not
+a numeric index that goes inside the
+<code class="python">[ ]</code></p></li>
+<li><p>You instead use the key directly to select corresponding
+values:</p>
+<pre ><code class="python-repl">>>> A = {'Jack': 12, 'Jill': 13}['Jack']
+>>> print(A)
+12
+>>> B = {True: 13, 0: 'Why?'}[0]
+>>> print(B)
+Why?</code></pre></li>
+</ul>
+</section>
+<section id="losing-your-keys" class="slide level2">
+<h2>Losing your keys</h2>
+<ul>
+<li><p>If you attempt to index out a key that doesn’t exist:</p>
+<pre ><code class="python badcode">A = {'Jack': 12, 'Jill': 13}
+print(A['Jil'])</code></pre>
+<p>you will get an error!</p></li>
+<li><p>If in doubt, check for the presence of a key with the
+<code class="python">in</code> operator:</p>
+<pre ><code class="python">if 'Jil' in A:
+    print(A['Jil'])</code></pre></li>
+</ul>
+</section>
+<section id="rewriting-the-dictionary" class="slide level2">
+<h2>Rewriting the Dictionary</h2>
+<ul>
+<li>Dictionaries are <em>mutable</em>!
+<ul>
+<li>We can add new key-value pairs</li>
+<li>We can change the value of corresponding keys</li>
+</ul>
+<pre ><code class="python-repl">>>> d = {}
+>>> d['A'] = 10
+>>> d['B'] = 12
+>>> print(d)
+{'A':10, 'B':12}
+>>> d['A'] = d['B']
+>>> print(d)
+{'A':12, 'B':12}</code></pre></li>
+</ul>
+<!--
+## Class Hierarchies
+- Much of the power of modern object-oriented languages comes from them supporting the idea of _class hierarchies_
+    - Any class can be designated as a _subclass_ of another class, which is then called its _superclass_
+- Each subclass represents some sort of **specialization** of its superclass
+    - Creating an object of a subclass also means that object is an instance of all the other classes above it in the superclass chain
+- When defining a new class in Python, it _inherits_ the behavior of its superclass
+- Python does support _multiple inheritance_, but most class hierarchies operation on _single inheritance_, where a subclass has only one unique superclass
+
+
+## Recalling the `GObject` Hierarchy
+
+![\ ](../images/GObject_Hierarchy.svg)
+
+
+## Specifying Inheritance
+- Subclass definitions in Python differ from standalone classes in two ways:
+    #. A subclass definition includes the name of its superclass in parentheses after the name of the subclass
+    #. The constructor for the subclass explicitly calls the constructor for its superclass before doing its own initialization
+- Together, they form the following pattern:
+```python
+class subclass(superclass):
+    def __init__(self, parameters):
+        superclass.__init__(self, any_relevant_parameters)
+        # Rest of subclass initialization
+```
+
+## A Swashbuckling Example
+\begin{tikzpicture}%%width=70%
+[
+every node/.style={minimum size = 2cm, rounded corners, draw, ultra thick, font=\bf, align=left},
+]
+    \node[Orange](human) at (0,0) {Human};
+    \node[Red, right=1cm of human](pirate) {Pirate};
+    \node[Blue, above right=0mm and 1cm of pirate](pegleg) {PegLeg};
+    \node[Blue, below right=0mm and 1cm of pirate](patch) {Patch};
+
+    \path[very thick, -stealth, white]
+        (pegleg) edge (pirate)
+        (patch) edge (pirate)
+        (pirate) edge (human);
+\end{tikzpicture}
+
+## Some Swashbuckling Code
+```{.python style='max-height:900px'}
+class Human:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+        self.legs = 2
+
+    def __str__(self):
+        return f'Human({self.name},{self.age})'
+
+    def agree(self):
+        print('Sure!')
+
+class Pirate(Human):
+    def agree(self):
+        print("Aye matey!")
+
+    def __str__(self):
+        return f'Pirate({self.name},{self.age})'
+
+class Pegleg(Pirate):
+    def __init__(self, name, age):
+        Pirate.__init__(self, name, age)
+        self.legs = 1
+    
+    def __repr__(self):
+        return f'Pegleg({self.name},{self.age})'
+
+class Patch(Pirate):
+    def __init__(self, age):
+        Pirate.__init__(self, name, age)
+        self.eyes = 1
+
+    def __repr__(self):
+        return f'Patch({self.name}, {self.age})'
+
+
+```
+
+## Overusing Inheritance
+- Inheritance is often used in situations where it does not really apply
+    - A common example you might see in textbooks is a `Pizza` class with various subclasses of pizza, like Pepperoni or Hawaiian.
+    - This is silly, there is only one point of difference between those: the ingredients
+        - Just make a pizza class with a list of ingredients as an attribute
+- Inheritance makes sense when subclasses share behavior
+
+
+-->
+</section>
+    </div>
+  </div>
+
+  <script src="../html_srcs/reveal.js/dist/reveal.js"></script>
+
+  // reveal.js plugins
+  <script src="../html_srcs/reveal.js/plugin/notes/notes.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/search/search.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/zoom/zoom.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/Chart.min.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chart/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/chalkboard/plugin.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/math/math.js"></script>
+  <script src="../html_srcs/reveal.js/plugin/highlight/highlight.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+		//autoAnimateEasing: 'ease-in',
+		//autoAnimateDuration: 1.0,
+		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
+        // Display controls in the bottom right corner
+        controls: true,
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: true,
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'bottom-right',
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+        // Display a presentation progress bar
+        progress: true,
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+        // Push each slide change to the browser history
+        history: false,
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+        // Enable the slide overview mode
+        overview: true,
+        // Vertical centering of slides
+        center: false,
+        // Enables touch navigation on devices with touch input
+        touch: true,
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'default',
+        // Turns fragments on and off globally
+        fragments: true,
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: true,
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+        // Global override for autoplaying embedded media (video/audio/iframe)
+        // - null: Media will only autoplay if data-autoplay is present
+        // - true: All media will autoplay, regardless of individual setting
+        // - false: No media will autoplay, regardless of individual setting
+        autoPlayMedia: null,
+        // Global override for preloading lazy-loaded iframes
+        // - null: Iframes with data-src AND data-preload will be loaded when within
+        //   the viewDistance, iframes with only data-src will be loaded when visible
+        // - true: All iframes with data-src will be loaded when within the viewDistance
+        // - false: All iframes with data-src will be loaded only when visible
+        preloadIframes: null,
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+        // Transition style
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Transition speed
+        transitionSpeed: 'default', // default/fast/slow
+        // Transition style for full page slide backgrounds
+        backgroundTransition: 'fade', // none/fade/slide/convex/concave/zoom
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1920,
+        height: 1200,
+        // The display mode that will be used to show slides
+        display: 'block',
+		math: {
+		  <!--mathjax: '../html_srcs/reveal.js/plugin/math/mathjax/tex-mml-chtml.js',-->
+		  <!--config: 'tex-mml-chtml',-->
+		  <!--tex2jax: {-->
+			<!--inlineMath: [['\\(','\\)']],-->
+			<!--displayMath: [['\\[','\\]']],-->
+			<!--balanceBraces: true,-->
+			<!--processEscapes: false,-->
+			<!--processRefs: true,-->
+			<!--processEnvironments: true,-->
+			<!--preview: 'TeX',-->
+			<!--skipTags: ['script','noscript','style','textarea','pre','code'],-->
+			<!--ignoreClass: 'tex2jax_ignore',-->
+			<!--processClass: 'tex2jax_process'-->
+		  <!--},-->
+		  CommonHTML: {scale: 80},
+		},
+	reveald3: {
+			runLastState: true, // true/false, default: true
+			onSlideChangedDelay: 200,
+			mapPath: false, // true / false / "spefific/path/as/string", default: false
+			tryFallbackURL: true, // true/false, default false
+			disableCheckFile: false, //default false
+		 },
+
+        // reveal.js plugins
+        plugins: [
+		  RevealMath,
+          RevealHighlight,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom,
+		  RevealChart,
+		  RevealChalkboard,
+        ],
+		chalkboard: {
+		boardmarkerWidth: 4,
+        chalkWidth: 5,
+		boardmarkers : [
+                { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
+                { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
+                { color: 'rgba(249,38,114,1)', cursor: 'url(' + path + 'img/boardmarker-red.png), auto'},
+                { color: 'rgba(166,226,46,1)', cursor: 'url(' + path + 'img/boardmarker-green.png), auto'},
+                { color: 'rgba(253,151,31,1)', cursor: 'url(' + path + 'img/boardmarker-orange.png), auto'},
+                { color: 'rgba(174,129,255,1)', cursor: 'url(' + path + 'img/boardmarker-purple.png), auto'},
+                { color: 'rgba(255,231,146,1)', cursor: 'url(' + path + 'img/boardmarker-yellow.png), auto'}
+        ],
+        chalks: [
+                { color: 'rgba(248,248,242,0.5)', cursor: 'url(' + path + 'img/chalk-white.png), auto'},
+                { color: 'rgba(102,217,239,0.5)', cursor: 'url(' + path + 'img/chalk-blue.png), auto'},
+                { color: 'rgba(249,38,114,0.5)', cursor: 'url(' + path + 'img/chalk-red.png), auto'},
+                { color: 'rgba(166,226,46,0.5)', cursor: 'url(' + path + 'img/chalk-green.png), auto'},
+                { color: 'rgba(253,151,31,0.5)', cursor: 'url(' + path + 'img/chalk-orange.png), auto'},
+                { color: 'rgba(174,129,255,0.5)', cursor: 'url(' + path + 'img/chalk-purple.png), auto'},
+                { color: 'rgba(255,231,146,0.5)', cursor: 'url(' + path + 'img/chalk-yellow.png), auto'}
+        ]
+		},
+		dependencies: [
+			{ src: "../html_srcs/reveal.js/plugin/title-footer/title-footer.js", async: true, callback: function() { title_footer.initialize({css:"../html_srcs/reveal.js/plugin/title-footer/title-footer.css"}); } },
+			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
+		],
+      });
+      
+    </script>
+    </body>
+</html>
