@@ -433,7 +433,7 @@ Z = {'A': 13, 'B': 24, 'A': 15}
 :::
 ::::
 ::::::
--->
+
 ## Selection
 - The fundamental operation on dictionaries is selection, which is still indicated with square brackets: ```[]```
 - Dictionaries though are **unordered**, so it is not a numeric index that goes inside the ```[ ]```
@@ -446,6 +446,21 @@ Z = {'A': 13, 'B': 24, 'A': 15}
   >>> print(B)
   Why?
   ```
+-->
+## Losing your keys
+- If you attempt to index out a key that doesn't exist:
+  ```{.python .badcode}
+  A = {'Jack': 12, 'Jill': 13}
+  print(A['Jil'])
+  ```
+  you will get an error!
+- If in doubt, check for the presence of a key with the ```in``` operator:
+  ```python
+  if 'Jil' in A:
+	  print(A['Jil'])
+  ```
+
+
 
 
 

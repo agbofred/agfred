@@ -502,13 +502,34 @@ Z = {'A': 13, 'B': 24, 'A': 15}</code></pre>
 </div>
 </div>
 </div>
-<p>–&gt; ## Selection - The fundamental operation on dictionaries is
-selection, which is still indicated with square brackets:
-<code class="python">[]</code> - Dictionaries though are
-<strong>unordered</strong>, so it is not a numeric index that goes
-inside the <code class="python">[ ]</code> - You instead use the key
-directly to select corresponding values:
-<code class="python">python-repl   >>> A = {'Jack': 12, 'Jill': 13}['Jack']   >>> print(A)   12   >>> B = {True: 13, 0: 'Why?'}[0]   >>> print(B)   Why?</code></p>
+</section>
+<section id="selection" class="slide level2">
+<h2>Selection</h2>
+<ul>
+<li><p>The fundamental operation on dictionaries is selection, which is
+still indicated with square brackets:
+<code class="python">[]</code></p></li>
+<li><p>Dictionaries though are <strong>unordered</strong>, so it is not
+a numeric index that goes inside the
+<code class="python">[ ]</code></p></li>
+<li><p>You instead use the key directly to select corresponding
+values:</p>
+<pre ><code class="python-repl">>>> A = {'Jack': 12, 'Jill': 13}['Jack']
+>>> print(A)
+12
+>>> B = {True: 13, 0: 'Why?'}[0]
+>>> print(B)
+Why?</code></pre>
+<p>–&gt; ## Losing your keys</p></li>
+<li><p>If you attempt to index out a key that doesn’t exist:</p>
+<pre ><code class="python badcode">A = {'Jack': 12, 'Jill': 13}
+print(A['Jil'])</code></pre>
+<p>you will get an error!</p></li>
+<li><p>If in doubt, check for the presence of a key with the
+<code class="python">in</code> operator:</p>
+<pre ><code class="python">if 'Jil' in A:
+    print(A['Jil'])</code></pre></li>
+</ul>
 </section>
     </div>
   </div>
