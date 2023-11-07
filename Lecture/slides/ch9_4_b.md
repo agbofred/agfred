@@ -281,3 +281,198 @@ print(A.make, A.color, A.year)
 
 ![](../images/ConstructorPythonTutor.png){width=50%}
 
+## Getters and Setters
+- In the object-oriented model, the client is not supposed to muck-about with the object internals
+- The implementation should therefore provide methods to retrieve desired attributes (called _getters_) or to make changes to desired attributes (called _setters_)
+- Setting up getters and setters for the attribute ```salary``` might look like:
+  ```python
+  def get_salary(self):
+  	return self.salary
+  
+  def set_salary(self, new_salary):
+  	self.salary = new_salary
+  ```
+- Getters are far more common than setters, as you don't always want the client to have the freedom to change attributes on a whim
+
+## Understanding check {data-notes="Solution: D"}
+:::::cols
+::::col
+The code block to the right starts defining a class. Only 1 of the below options for defining an ```increment``` method will work. Which one?
+::::
+
+::::col
+```python
+class BestCounter:
+  def __init__(self, start):
+    self.counter = start
+```
+
+::::
+::::::
+
+::::::cols
+::::col
+
+:::{.block name=A}
+```python
+def increment(self, value):
+    counter += value
+```
+:::
+
+:::{.block name=B}
+```python
+def increment(self, value):
+    self.counter += self.value
+```
+:::
+
+
+::::
+
+::::col
+
+:::{.block name=C}
+```python
+def increment(value):
+    counter += self.value
+```
+:::
+
+:::{.block name=D}
+```python
+def increment(self, value):
+    self.counter += value
+```
+:::
+
+::::
+::::::
+
+
+## Representation
+- Printing out an object that you just created as an instance of a custom class will look ugly:
+  ```python-repl
+  >>> C = Employee('Bob', 'clerk', 15)
+  >>> print(C)
+  <__main__.Employee object at 0x7f942ba13550>
+  ```
+- You can define special methods for a class that specify how your object should be converted to a string (or anything else really)
+	- All these special methods have double underscores before and after, and hence are frequently termed "dunder" (double underscore) methods
+	- You can the ```__str__``` or ```__repr__``` method to specify how your object should be printed
+
+## A Good Employee
+```{.python style='max-height:900px'}
+class Employee:
+	def __init__(self, name, title, salary):
+		self.name = name
+		self.title = title
+		self.salary = salary
+
+	def __str__(self):
+		return f"{self.name} ({self.title}): {self.salary}"
+
+	def get_salary(self):
+		return self.salary
+
+	def set_salary(self, new_salary):
+		self.salary = new_salary
+```
+
+## Maps and Dictionaries
+- A common form of information associates pairs of data values
+	- Commonly called a _map_ in computer science
+	- Python calls such a structure a _dictionary_
+- A dictionary associates two different values:
+	- A simple value called the _key_, which is often a string but doesn't need to be
+	- A larger and more complex object called the _value_
+- This idea of associating pairs of values is exhibited all over in the real world
+	- Actual dictionaries! The words are the keys, the definitions the values.
+	- Web addresses! Keys are the urls, the values are the webpage contents.
+
+## Creating Dictionaries
+- Python dictionaries use squiggly brackets ```{}``` to enclose their contents
+- Can create an empty dictionary by providing no key-value pairs:
+  ```python
+  empty_dict = {}
+  ```
+- If creating a dictionary with key-value pairs
+	- Keys are separated from values with a colon ```:```
+	- Pairs are separated by a comma ```,```
+  ```python
+  generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}
+  ```
+
+## Keys and Values
+- The value of a key-value pair can be **any** Python object, mutable or immutable
+	- This include other dictionaries!
+- The key is more restricted:
+	- Must be immutable
+		- So dictionaries or lists can **not** work as a key
+		- Tuples can though!
+	- Must be unique per dictionary
+
+::::::cols
+::::col
+:::{.block name=Viable}
+```python
+A = {True: 'Seth', False: 'Jesse'}
+B = {'Jill': 13, 'Jack': 12}
+C = {(1,2): {'x':1}}
+```
+:::
+::::
+
+::::col
+:::{.block name=Illegal style='border-color:var(--red)'}
+```python
+X = {{'x': 1, 'y': 2}: 'Shark'}
+Y = {[1,3,5]: 'Odd'}
+Z = {'A': 13, 'B': 24, 'A': 15}
+```
+:::
+::::
+::::::
+
+
+
+## Selection
+- The fundamental operation on dictionaries is selection, which is still indicated with square brackets: ```[]```
+- Dictionaries though are **unordered**, so it is not a numeric index that goes inside the ```[ ]```
+- You instead use the key directly to select corresponding values:
+  ```python-repl
+  >>> A = {'Jack': 12, 'Jill': 13}['Jack']
+  >>> print(A)
+  12
+  >>> B = {True: 13, 0: 'Why?'}[0]
+  >>> print(B)
+  Why?
+  ```
+
+## Losing your keys
+- If you attempt to index out a key that doesn't exist:
+  ```{.python .badcode}
+  A = {'Jack': 12, 'Jill': 13}
+  print(A['Jil'])
+  ```
+  you will get an error!
+- If in doubt, check for the presence of a key with the ```in``` operator:
+  ```python
+  if 'Jil' in A:
+	  print(A['Jil'])
+  ```
+
+## Rewriting the Dictionary
+- Dictionaries are _mutable_!
+	- We can add new key-value pairs
+	- We can change the value of corresponding keys
+```python-repl
+>>> d = {}
+>>> d['A'] = 10
+>>> d['B'] = 12
+>>> print(d)
+{'A':10, 'B':12}
+>>> d['A'] = d['B']
+>>> print(d)
+{'A':12, 'B':12}
+```
