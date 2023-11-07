@@ -245,7 +245,7 @@ print(A.make, A.color, A.year)
 -->
 ## What's your Method?
 - Most classes define additional functions called methods to allow clients to read or update attributes or manipulate the object
-- Methods look like a normal function definition but will **always** declare the parameter `self` at the beginning of the parameter list
+- Methods look like a normal function definition but will **always** declare the parameter ```self``` at the beginning of the parameter list
 	- This is true even if the method has no other parameters
 - Methods are defined in the body of the class and would thus look something like:
   ```python
@@ -261,7 +261,7 @@ print(A.make, A.color, A.year)
 ## Accessing and Using Methods
 - After definition, there are two mains ways you can access and use the method:
 	- **Dot Notation (Conventional)**
-		- Python sets `self` to be a reference to the _receiver_, which is the object to which the method is applied
+		- Python sets ```self``` to be a reference to the _receiver_, which is the object to which the method is applied
 
 		  ```python
 		  clerk = Employee('Bob', 'clerk', 15)
@@ -284,7 +284,7 @@ print(A.make, A.color, A.year)
 ## Getters and Setters
 - In the object-oriented model, the client is not supposed to muck-about with the object internals
 - The implementation should therefore provide methods to retrieve desired attributes (called _getters_) or to make changes to desired attributes (called _setters_)
-- Setting up getters and setters for the attribute `salary` might look like:
+- Setting up getters and setters for the attribute ```salary``` might look like:
   ```python
   def get_salary(self):
   	return self.salary
@@ -359,7 +359,7 @@ def increment(self, value):
   ```
 - You can define special methods for a class that specify how your object should be converted to a string (or anything else really)
 	- All these special methods have double underscores before and after, and hence are frequently termed "dunder" (double underscore) methods
-	- You can the `__str__` or `__repr__` method to specify how your object should be printed
+	- You can the ```__str__``` or ```__repr__``` method to specify how your object should be printed
 
 ## A Good Employee
 ```{.python style='max-height:900px'}
@@ -391,14 +391,14 @@ class Employee:
 	- Web addresses! Keys are the urls, the values are the webpage contents.
 
 ## Creating Dictionaries
-- Python dictionaries use squiggly brackets `{}` to enclose their contents
+- Python dictionaries use squiggly brackets ```{}``` to enclose their contents
 - Can create an empty dictionary by providing no key-value pairs:
   ```python
   empty_dict = {}
   ```
 - If creating a dictionary with key-value pairs
-	- Keys are separated from values with a colon `:`
-	- Pairs are separated by a comma `,`
+	- Keys are separated from values with a colon ```:```
+	- Pairs are separated by a comma ```,```
   ```python
   generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}
   ```
@@ -456,7 +456,7 @@ Z = {'A': 13, 'B': 24, 'A': 15}
   print(A['Jil'])
   ```
   you will get an error!
-- If in doubt, check for the presence of a key with the `in` operator:
+- If in doubt, check for the presence of a key with the ```in``` operator:
   ```python
   if 'Jil' in A:
 	  print(A['Jil'])
