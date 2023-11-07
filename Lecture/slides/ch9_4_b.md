@@ -281,3 +281,101 @@ print(A.make, A.color, A.year)
 
 ![](../images/ConstructorPythonTutor.png){width=50%}
 
+## Getters and Setters
+- In the object-oriented model, the client is not supposed to muck-about with the object internals
+- The implementation should therefore provide methods to retrieve desired attributes (called _getters_) or to make changes to desired attributes (called _setters_)
+- Setting up getters and setters for the attribute ```salary``` might look like:
+  ```python
+  def get_salary(self):
+  	return self.salary
+  
+  def set_salary(self, new_salary):
+  	self.salary = new_salary
+  ```
+- Getters are far more common than setters, as you don't always want the client to have the freedom to change attributes on a whim
+
+## Understanding check {data-notes="Solution: D"}
+:::::cols
+::::col
+The code block to the right starts defining a class. Only 1 of the below options for defining an ```increment``` method will work. Which one?
+::::
+
+::::col
+```python
+class BestCounter:
+  def __init__(self, start):
+    self.counter = start
+```
+
+::::
+::::::
+
+::::::cols
+::::col
+
+:::{.block name=A}
+```python
+def increment(self, value):
+    counter += value
+```
+:::
+
+:::{.block name=B}
+```python
+def increment(self, value):
+    self.counter += self.value
+```
+:::
+
+
+::::
+
+::::col
+
+:::{.block name=C}
+```python
+def increment(value):
+    counter += self.value
+```
+:::
+
+:::{.block name=D}
+```python
+def increment(self, value):
+    self.counter += value
+```
+:::
+
+::::
+::::::
+
+
+## Representation
+- Printing out an object that you just created as an instance of a custom class will look ugly:
+  ```python-repl
+  >>> C = Employee('Bob', 'clerk', 15)
+  >>> print(C)
+  <__main__.Employee object at 0x7f942ba13550>
+  ```
+- You can define special methods for a class that specify how your object should be converted to a string (or anything else really)
+	- All these special methods have double underscores before and after, and hence are frequently termed "dunder" (double underscore) methods
+	- You can the ```__str__``` or ```__repr__``` method to specify how your object should be printed
+
+## A Good Employee
+```{.python style='max-height:900px'}
+class Employee:
+	def __init__(self, name, title, salary):
+		self.name = name
+		self.title = title
+		self.salary = salary
+
+	def __str__(self):
+		return f"{self.name} ({self.title}): {self.salary}"
+
+	def get_salary(self):
+		return self.salary
+
+	def set_salary(self, new_salary):
+		self.salary = new_salary
+```
+

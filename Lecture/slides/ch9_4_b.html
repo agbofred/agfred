@@ -336,6 +336,101 @@ href="http://pythontutor.com/live.html#code=class%20Employee%3A%0A%20%20%20%20de
 <p><img data-src="../images/ConstructorPythonTutor.png"
 style="width:50.0%" /></p>
 </section>
+<section id="getters-and-setters" class="slide level2">
+<h2>Getters and Setters</h2>
+<ul>
+<li><p>In the object-oriented model, the client is not supposed to
+muck-about with the object internals</p></li>
+<li><p>The implementation should therefore provide methods to retrieve
+desired attributes (called <em>getters</em>) or to make changes to
+desired attributes (called <em>setters</em>)</p></li>
+<li><p>Setting up getters and setters for the attribute
+<code class="python">salary</code> might look like:</p>
+<pre ><code class="python">def get_salary(self):
+  return self.salary
+
+def set_salary(self, new_salary):
+  self.salary = new_salary</code></pre></li>
+<li><p>Getters are far more common than setters, as you don’t always
+want the client to have the freedom to change attributes on a
+whim</p></li>
+</ul>
+</section>
+<section id="understanding-check" class="slide level2"
+data-notes="Solution: D">
+<h2 data-notes="Solution: D">Understanding check</h2>
+<div class="cols">
+<div class="col">
+<p>The code block to the right starts defining a class. Only 1 of the
+below options for defining an <code class="python">increment</code>
+method will work. Which one?</p>
+</div>
+<div class="col">
+<pre ><code class="python">class BestCounter:
+  def __init__(self, start):
+    self.counter = start</code></pre>
+</div>
+</div>
+<div class="cols">
+<div class="col">
+<div class="block" name="A">
+<pre ><code class="python">def increment(self, value):
+    counter += value</code></pre>
+</div>
+<div class="block" name="B">
+<pre ><code class="python">def increment(self, value):
+    self.counter += self.value</code></pre>
+</div>
+</div>
+<div class="col">
+<div class="block" name="C">
+<pre ><code class="python">def increment(value):
+    counter += self.value</code></pre>
+</div>
+<div class="block" name="D">
+<pre ><code class="python">def increment(self, value):
+    self.counter += value</code></pre>
+</div>
+</div>
+</div>
+</section>
+<section id="representation" class="slide level2">
+<h2>Representation</h2>
+<ul>
+<li><p>Printing out an object that you just created as an instance of a
+custom class will look ugly:</p>
+<pre ><code class="python-repl">>>> C = Employee('Bob', 'clerk', 15)
+>>> print(C)
+<__main__.Employee object at 0x7f942ba13550></code></pre></li>
+<li><p>You can define special methods for a class that specify how your
+object should be converted to a string (or anything else really)</p>
+<ul>
+<li>All these special methods have double underscores before and after,
+and hence are frequently termed “dunder” (double underscore)
+methods</li>
+<li>You can the <code class="python">__str__</code> or
+<code class="python">__repr__</code> method to specify how your object
+should be printed</li>
+</ul></li>
+</ul>
+</section>
+<section id="a-good-employee" class="slide level2">
+<h2>A Good Employee</h2>
+<pre ><code class="python" style="max-height:900px">class Employee:
+    def __init__(self, name, title, salary):
+        self.name = name
+        self.title = title
+        self.salary = salary
+
+    def __str__(self):
+        return f"{self.name} ({self.title}): {self.salary}"
+
+    def get_salary(self):
+        return self.salary
+
+    def set_salary(self, new_salary):
+        self.salary = new_salary</code></pre>
+</section>
     </div>
   </div>
 
