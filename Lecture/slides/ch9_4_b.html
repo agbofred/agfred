@@ -469,18 +469,14 @@ pairs:</p>
 <code class="python">:</code></li>
 <li>Pairs are separated by a comma <code class="python">,</code></li>
 </ul>
-<pre ><code class="python">generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}</code></pre></li>
-</ul>
-</section>
-<section id="keys-and-values" class="slide level2">
-<h2>Keys and Values</h2>
-<ul>
-<li>The value of a key-value pair can be <strong>any</strong> Python
-object, mutable or immutable
+<pre ><code class="python">generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}</code></pre>
+<p>&lt;!– ## Keys and Values</p></li>
+<li><p>The value of a key-value pair can be <strong>any</strong> Python
+object, mutable or immutable</p>
 <ul>
 <li>This include other dictionaries!</li>
 </ul></li>
-<li>The key is more restricted:
+<li><p>The key is more restricted:</p>
 <ul>
 <li>Must be immutable
 <ul>
@@ -506,6 +502,13 @@ Z = {'A': 13, 'B': 24, 'A': 15}</code></pre>
 </div>
 </div>
 </div>
+<p>–&gt; ## Selection - The fundamental operation on dictionaries is
+selection, which is still indicated with square brackets:
+<code class="python">[]</code> - Dictionaries though are
+<strong>unordered</strong>, so it is not a numeric index that goes
+inside the <code class="python">[ ]</code> - You instead use the key
+directly to select corresponding values:
+<code class="python">python-repl   >>> A = {'Jack': 12, 'Jill': 13}['Jack']   >>> print(A)   12   >>> B = {True: 13, 0: 'Why?'}[0]   >>> print(B)   Why?</code></p>
 </section>
     </div>
   </div>

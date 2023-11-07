@@ -402,7 +402,7 @@ class Employee:
   ```python
   generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}
   ```
-
+<!--
 ## Keys and Values
 - The value of a key-value pair can be **any** Python object, mutable or immutable
 	- This include other dictionaries!
@@ -433,6 +433,19 @@ Z = {'A': 13, 'B': 24, 'A': 15}
 :::
 ::::
 ::::::
+-->
+## Selection
+- The fundamental operation on dictionaries is selection, which is still indicated with square brackets: ```[]```
+- Dictionaries though are **unordered**, so it is not a numeric index that goes inside the ```[ ]```
+- You instead use the key directly to select corresponding values:
+  ```python-repl
+  >>> A = {'Jack': 12, 'Jill': 13}['Jack']
+  >>> print(A)
+  12
+  >>> B = {True: 13, 0: 'Why?'}[0]
+  >>> print(B)
+  Why?
+  ```
 
 
 
