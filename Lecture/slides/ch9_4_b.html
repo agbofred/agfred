@@ -519,8 +519,12 @@ values:</p>
 12
 >>> B = {True: 13, 0: 'Why?'}[0]
 >>> print(B)
-Why?</code></pre>
-<p>–&gt; ## Losing your keys</p></li>
+Why?</code></pre></li>
+</ul>
+</section>
+<section id="losing-your-keys" class="slide level2">
+<h2>Losing your keys</h2>
+<ul>
 <li><p>If you attempt to index out a key that doesn’t exist:</p>
 <pre ><code class="python badcode">A = {'Jack': 12, 'Jill': 13}
 print(A['Jil'])</code></pre>
@@ -529,6 +533,25 @@ print(A['Jil'])</code></pre>
 <code class="python">in</code> operator:</p>
 <pre ><code class="python">if 'Jil' in A:
     print(A['Jil'])</code></pre></li>
+</ul>
+</section>
+<section id="rewriting-the-dictionary" class="slide level2">
+<h2>Rewriting the Dictionary</h2>
+<ul>
+<li>Dictionaries are <em>mutable</em>!
+<ul>
+<li>We can add new key-value pairs</li>
+<li>We can change the value of corresponding keys</li>
+</ul>
+<pre ><code class="python-repl">>>> d = {}
+>>> d['A'] = 10
+>>> d['B'] = 12
+>>> print(d)
+{'A':10, 'B':12}
+>>> d['A'] = d['B']
+>>> print(d)
+{'A':12, 'B':12}</code></pre>
+–&gt;</li>
 </ul>
 </section>
     </div>

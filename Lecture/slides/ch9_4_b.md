@@ -446,7 +446,7 @@ Z = {'A': 13, 'B': 24, 'A': 15}
   >>> print(B)
   Why?
   ```
--->
+
 ## Losing your keys
 - If you attempt to index out a key that doesn't exist:
   ```{.python .badcode}
@@ -460,7 +460,20 @@ Z = {'A': 13, 'B': 24, 'A': 15}
 	  print(A['Jil'])
   ```
 
-
-
+## Rewriting the Dictionary
+- Dictionaries are _mutable_!
+	- We can add new key-value pairs
+	- We can change the value of corresponding keys
+```python-repl
+>>> d = {}
+>>> d['A'] = 10
+>>> d['B'] = 12
+>>> print(d)
+{'A':10, 'B':12}
+>>> d['A'] = d['B']
+>>> print(d)
+{'A':12, 'B':12}
+```
+-->
 
 
