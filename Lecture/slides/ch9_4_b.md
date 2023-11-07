@@ -403,3 +403,36 @@ class Employee:
   generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}
   ```
 
+## Keys and Values
+- The value of a key-value pair can be **any** Python object, mutable or immutable
+	- This include other dictionaries!
+- The key is more restricted:
+	- Must be immutable
+		- So dictionaries or lists can **not** work as a key
+		- Tuples can though!
+	- Must be unique per dictionary
+
+::::::cols
+::::col
+:::{.block name=Viable}
+```python
+A = {True: 'Seth', False: 'Jesse'}
+B = {'Jill': 13, 'Jack': 12}
+C = {(1,2): {'x':1}}
+```
+:::
+::::
+
+::::col
+:::{.block name=Illegal style='border-color:var(--red)'}
+```python
+X = {{'x': 1, 'y': 2}: 'Shark'}
+Y = {[1,3,5]: 'Odd'}
+Z = {'A': 13, 'B': 24, 'A': 15}
+```
+:::
+::::
+::::::
+
+
+

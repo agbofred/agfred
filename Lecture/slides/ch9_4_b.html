@@ -472,6 +472,41 @@ pairs:</p>
 <pre ><code class="python">generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}</code></pre></li>
 </ul>
 </section>
+<section id="keys-and-values" class="slide level2">
+<h2>Keys and Values</h2>
+<ul>
+<li>The value of a key-value pair can be <strong>any</strong> Python
+object, mutable or immutable
+<ul>
+<li>This include other dictionaries!</li>
+</ul></li>
+<li>The key is more restricted:
+<ul>
+<li>Must be immutable
+<ul>
+<li>So dictionaries or lists can <strong>not</strong> work as a key</li>
+<li>Tuples can though!</li>
+</ul></li>
+<li>Must be unique per dictionary</li>
+</ul></li>
+</ul>
+<div class="cols">
+<div class="col">
+<div class="block" name="Viable">
+<pre ><code class="python">A = {True: 'Seth', False: 'Jesse'}
+B = {'Jill': 13, 'Jack': 12}
+C = {(1,2): {'x':1}}</code></pre>
+</div>
+</div>
+<div class="col">
+<div class="block" name="Illegal" style="border-color:var(--red)">
+<pre ><code class="python">X = {{'x': 1, 'y': 2}: 'Shark'}
+Y = {[1,3,5]: 'Odd'}
+Z = {'A': 13, 'B': 24, 'A': 15}</code></pre>
+</div>
+</div>
+</div>
+</section>
     </div>
   </div>
 
