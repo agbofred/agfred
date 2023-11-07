@@ -1,6 +1,6 @@
 ---
 title: "Inheriting Snakes"
-author: Jed Rembold
+author: Jed Rembold & FJ
 date: November 4, 2022
 slideNumber: true
 theme: "python_monokai"

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="author" content="Jed Rembold">
+  <meta name="author" content="Jed Rembold &amp; FJ">
   <meta name="dcterms.date" content="2022-11-04">
   <title>Inheriting Snakes</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,8 +17,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -33,7 +36,7 @@
 
 <section id="title-slide">
   <h1 class="title">Inheriting Snakes</h1>
-  <p class="author">Jed Rembold</p>
+  <p class="author">Jed Rembold &amp; FJ</p>
   <p class="date">November 4, 2022</p>
 </section>
 
@@ -345,6 +348,7 @@ make_snake()</code></pre>
 		//autoAnimateEasing: 'ease-in',
 		//autoAnimateDuration: 1.0,
 		//autoAnimateUnmatched: false,
+        pdfSeparateFragments: false,
         // Display controls in the bottom right corner
         controls: true,
         // Help the user learn the controls by providing hints, for example by
@@ -465,7 +469,7 @@ make_snake()</code></pre>
         ],
 		chalkboard: {
 		boardmarkerWidth: 4,
-        chalkWidth: 7,
+        chalkWidth: 5,
 		boardmarkers : [
                 { color: 'rgba(248,248,242,1)', cursor: 'url(' + path + 'img/boardmarker-black.png), auto'},
                 { color: 'rgba(102,217,239,1)', cursor: 'url(' + path + 'img/boardmarker-blue.png), auto'},
@@ -490,6 +494,7 @@ make_snake()</code></pre>
 			{ src: "../html_srcs/reveal.js/plugin/d3/reveald3.js" },
 		],
       });
+      
     </script>
     </body>
 </html>
