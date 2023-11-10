@@ -454,14 +454,14 @@ checking either its values or its keys</p></li>
 <code class="python">for</code> statement, which has the form of:</p>
 <pre ><code class="mypython">for key in dictionary:
     value = dictionary[key]
-    |||code to work with that key and value|||</code></pre></li>
+    code to work with that key and value</code></pre></li>
 <li><p>You can also use the <code class="python">.items</code> method to
 grab both key and values together:</p>
 <ul>
 <li>Returns a tuple with both the key and corresponding pair</li>
 </ul>
 <pre ><code class="mypython">for key, value in dictionary.items():
-    |||code to work with that key and value|||</code></pre></li>
+    code to work with that key and value</code></pre></li>
 </ul>
 </section>
 <section id="finding-students-by-grade" class="slide level2">
@@ -493,29 +493,29 @@ grab both key and values together:</p>
 </thead>
 <tbody>
 <tr class="odd">
-<td><code class="mypython">len(|||dict|||)</code></td>
+<td><code class="python">len(dict)</code></td>
 <td>Returns the number of key-value pairs in the dictionary</td>
 </tr>
 <tr class="even">
-<td><code class="mypython">|||dict|||.get(key, value)</code></td>
+<td><code class="python">dict.get(key, value)</code></td>
 <td>Returns the value associated with the
 <code class="python">key</code> in the dictionary. If the key is not
 found, returns the specified value, which is
-<code class="python">None</code> by default)</td>
+<code class="python">None</code> by default</td>
 </tr>
 <tr class="odd">
-<td><code class="mypython">|||dict|||.pop(key)</code></td>
+<td><code class="python">dict.pop(key)</code></td>
 <td>Removes the key-value pair corresponding to
 <code class="python">key</code> and returns the associated value. Will
 raise an error if the key is not found.</td>
 </tr>
 <tr class="even">
-<td><code class="mypython">|||dict|||.clear()</code></td>
+<td><code class="python">dict.clear()</code></td>
 <td>Removes all key-value pairs from the dictionary, leaving it
 empty.</td>
 </tr>
 <tr class="odd">
-<td><code class="mypython">|||dict|||.items()</code></td>
+<td><code class="python">dict.items()</code></td>
 <td>Returns an iterable object that cycles through the successive tuples
 consisting of a key-value pair.</td>
 </tr>
