@@ -15,7 +15,7 @@ history: false
 
 
 ## Announcements
-- PS 5 feedback not ready yet!
+- PS 5 feedback not ready yet. Apologies!
 - Exam 2 on Friday!
 	- Learning Objectives posted
 	- Practice Exam 1 & 2 posted with their solutions
@@ -243,7 +243,7 @@ if __name__ == '__main__':
 - If creating a dictionary with key-value pairs
 	- Keys are separated from values with a colon `:`
 	- Pairs are separated by a comma `,`
-  ```mypython
+  ```python
   generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}
   ```
 
@@ -259,7 +259,7 @@ if __name__ == '__main__':
 ::::::cols
 ::::col
 :::{.block name=Viable}
-```mypython
+```python
 A = {True: 'Seth', False: 'Jesse'}
 B = {'Jill': 13, 'Jack': 12}
 C = {(1,2): {'x': 1}}
@@ -269,7 +269,7 @@ C = {(1,2): {'x': 1}}
 
 ::::col
 :::{.block name=Illegal style='border-color:var(--red)'}
-```mypython
+```python
 X = {{'x': 1, 'y': 2}: 'Shark'}
 Y = {[1,3,5]: 'Odd'}
 Z = {'A': 13, 'B': 24, 'A': 15}
@@ -325,7 +325,7 @@ Z = {'A': 13, 'B': 24, 'A': 15}
 
 ## Grade Sheet Example
 - Suppose we had a file of student ids and accompanying scores that we wanted to read into a dictionary and then access.
-  ```{.mypython style='max-height:700px; font-size:.8em; line-heigh:2em;'}
+  ```{.python style='max-height:700px; font-size:.8em; line-heigh:2em;'}
   def read_to_dict(filename):
       dictionary = {}
       with open(filename) as f:
@@ -350,7 +350,7 @@ Z = {'A': 13, 'B': 24, 'A': 15}
 
 ## Understanding Check {data-notes="Solution: [125,167,204]"}
 What is the printed value of the below code?
-```mypython
+```python
 A = [
 	{'name': 'Jill',  'weight':125, 'height':62},
 	{'name': 'Sam',   'height':68},
@@ -382,20 +382,20 @@ print([d['weight'] for d in A if 'weight' in d])
 ## Iterating through a Dictionary
 - Frequently we might want to iterate through a dictionary, checking either its values or its keys
 - Python supports iteration with the `for` statement, which has the form of:
-  ```mypython
+  ```python
   for key in dictionary:
   	  value = dictionary[key]
-  	  |||code to work with that key and value|||
+  	  code to work with that key and value
   ```
 - You can also use the `.items` method to grab both key and values together:
 	- Returns a tuple with both the key and corresponding pair
-  ```mypython
+  ```python
   for key, value in dictionary.items():
-  	  |||code to work with that key and value|||
+  	  code to work with that key and value
   ```
 
 ## Finding Students by grade
-```{.mypython style='max-height:900px'}
+```{.python style='max-height:900px'}
 def get_students_with_score():
     scores = read_to_dict('SampleGrades.txt')
     done = False

@@ -294,7 +294,7 @@ pairs:</p>
 <code class="python">:</code></li>
 <li>Pairs are separated by a comma <code class="python">,</code></li>
 </ul>
-<pre ><code class="mypython">generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}</code></pre></li>
+<pre ><code class="python">generic_dict = {'Bob': 21, 0: False, 13: 'Thirteen'}</code></pre></li>
 </ul>
 </section>
 <section id="keys-and-values" class="slide level2">
@@ -318,14 +318,14 @@ object, mutable or immutable
 <div class="cols">
 <div class="col">
 <div class="block" name="Viable">
-<pre ><code class="mypython">A = {True: 'Seth', False: 'Jesse'}
+<pre ><code class="python">A = {True: 'Seth', False: 'Jesse'}
 B = {'Jill': 13, 'Jack': 12}
 C = {(1,2): {'x': 1}}</code></pre>
 </div>
 </div>
 <div class="col">
 <div class="block" name="Illegal" style="border-color:var(--red)">
-<pre ><code class="mypython">X = {{'x': 1, 'y': 2}: 'Shark'}
+<pre ><code class="python">X = {{'x': 1, 'y': 2}: 'Shark'}
 Y = {[1,3,5]: 'Odd'}
 Z = {'A': 13, 'B': 24, 'A': 15}</code></pre>
 </div>
@@ -387,7 +387,7 @@ print(A['Jil'])</code></pre>
 <ul>
 <li><p>Suppose we had a file of student ids and accompanying scores that
 we wanted to read into a dictionary and then access.</p>
-<pre ><code class="mypython" style="max-height:700px; font-size:.8em; line-heigh:2em;">def read_to_dict(filename):
+<pre ><code class="python" style="max-height:700px; font-size:.8em; line-heigh:2em;">def read_to_dict(filename):
     dictionary = {}
     with open(filename) as f:
         for line in f:
@@ -413,7 +413,7 @@ def get_student_score():
 data-notes="Solution: [125,167,204]">
 <h2 data-notes="Solution: [125,167,204]">Understanding Check</h2>
 <p>What is the printed value of the below code?</p>
-<pre ><code class="mypython">A = [
+<pre ><code class="python">A = [
     {'name': 'Jill',  'weight':125, 'height':62},
     {'name': 'Sam',   'height':68},
     {'name': 'Bobby', 'height':72},
@@ -452,21 +452,21 @@ print([d['weight'] for d in A if 'weight' in d])</code></pre>
 checking either its values or its keys</p></li>
 <li><p>Python supports iteration with the
 <code class="python">for</code> statement, which has the form of:</p>
-<pre ><code class="mypython">for key in dictionary:
+<pre ><code class="python">for key in dictionary:
     value = dictionary[key]
-    |||code to work with that key and value|||</code></pre></li>
+    code to work with that key and value</code></pre></li>
 <li><p>You can also use the <code class="python">.items</code> method to
 grab both key and values together:</p>
 <ul>
 <li>Returns a tuple with both the key and corresponding pair</li>
 </ul>
-<pre ><code class="mypython">for key, value in dictionary.items():
-    |||code to work with that key and value|||</code></pre></li>
+<pre ><code class="python">for key, value in dictionary.items():
+    code to work with that key and value</code></pre></li>
 </ul>
 </section>
 <section id="finding-students-by-grade" class="slide level2">
 <h2>Finding Students by grade</h2>
-<pre ><code class="mypython" style="max-height:900px">def get_students_with_score():
+<pre ><code class="python" style="max-height:900px">def get_students_with_score():
     scores = read_to_dict('SampleGrades.txt')
     done = False
     while not done:
