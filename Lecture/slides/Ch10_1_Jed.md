@@ -270,7 +270,7 @@ C = {(1,2): {'x': 1}}
 ::::col
 :::{.block name=Illegal style='border-color:var(--red)'}
 ```python
-X = {{'x': 1, 'y': 2}: 'Shark'}
+#X = {{'x': 1, 'y': 2}: 'Shark'}
 Y = {[1,3,5]: 'Odd'}
 Z = {'A': 13, 'B': 24, 'A': 15}
 ```
