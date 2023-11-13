@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
-  <meta name="author" content="Jed Rembold">
-  <meta name="dcterms.date" content="2023-04-12">
+  <meta name="author" content="Jed Rembold &amp; Fred Agbo">
+  <meta name="dcterms.date" content="2023-11-13">
   <title>Sets</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -17,8 +17,11 @@
     div.columns{display: flex; gap: min(4vw, 1.5em);}
     div.column{flex: auto; overflow-x: auto;}
     div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-    ul.task-list{list-style: none;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
     ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
       width: 0.8em;
       margin: 0 0.8em 0.2em -1.6em;
       vertical-align: middle;
@@ -33,32 +36,22 @@
 
 <section id="title-slide">
   <h1 class="title">Sets</h1>
-  <p class="author">Jed Rembold</p>
-  <p class="date">April 12, 2023</p>
+  <p class="author">Jed Rembold &amp; Fred Agbo</p>
+  <p class="date">November 13, 2023</p>
 </section>
 
-<section id="announcements" class="slide level2">
-<h2>Announcements</h2>
-<ul>
-<li>Problem Set 6 due on <em>Saturday</em>!
-<ul>
-<li>I was still working on getting some autotests up for the new Problem
-2, maybe they are up by now?</li>
-</ul></li>
-<li>New grade reports will be posted as soon as I have all of the
-Breakout scores in from the section leaders</li>
-<li>Winner of the Graphics contest was Dash, with a neat rectangle
-artwork program!
-<ul>
-<li>I really enjoyed all the submissions though, and the others will be
-entered into a drawing at the end of the semester. Thank you for
-submitting!</li>
-<li>The last contest of the semester will be a Game Contest.
-Instructions up by the end of the week.</li>
-</ul></li>
-<li>Polling: <a
-href="http://rembold-class.ddns.net">rembold-class.ddns.net</a></li>
-</ul>
+<section class="slide level2">
+
+<!--
+## Announcements
+- Problem Set 6 due on _Saturday_!
+    - I was still working on getting some autotests up for the new Problem 2, maybe they are up by now?
+- New grade reports will be posted as soon as I have all of the Breakout scores in from the section leaders
+- Winner of the Graphics contest was Dash, with a neat rectangle artwork program!
+    - I really enjoyed all the submissions though, and the others will be entered into a drawing at the end of the semester. Thank you for submitting!
+    - The last contest of the semester will be a Game Contest. Instructions up by the end of the week.
+- Polling: [rembold-class.ddns.net](http://rembold-class.ddns.net)
+-->
 <!--
 ## Review Question {data-notes="Solution: [125,167,204]"}
 What is the printed value of the below code?

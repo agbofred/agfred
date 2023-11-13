@@ -1,7 +1,7 @@
 ---
 title: "Sets"
-author: Jed Rembold
-date: April 12, 2023
+author: Jed Rembold & Fred Agbo
+date: November 13, 2023
 slideNumber: true
 theme: "python_monokai"
 highlightjs-theme: monokai
@@ -13,7 +13,7 @@ history: false
 
 ---
 
-
+<!--
 ## Announcements
 - Problem Set 6 due on _Saturday_!
 	- I was still working on getting some autotests up for the new Problem 2, maybe they are up by now?
@@ -22,7 +22,7 @@ history: false
 	- I really enjoyed all the submissions though, and the others will be entered into a drawing at the end of the semester. Thank you for submitting!
 	- The last contest of the semester will be a Game Contest. Instructions up by the end of the week.
 - Polling: [rembold-class.ddns.net](http://rembold-class.ddns.net)
-
+-->
 <!--
 ## Review Question {data-notes="Solution: [125,167,204]"}
 What is the printed value of the below code?
